@@ -59,51 +59,51 @@ Dependencias declaradas en `package.json`:
 ## 5. Estructura del proyecto
 ```text
 safeZoneFrontend/
-├── src/
-│   ├── app/
-│   │   ├── core/
-│   │   │   ├── guards/
-│   │   │   ├── http/
-│   │   │   └── layout/
-│   │   ├── features/
-│   │   │   ├── auth/
-│   │   │   │   └── login/
-│   │   │   ├── public/
-│   │   │   │   ├── inicio/
-│   │   │   │   ├── denuncia/
-│   │   │   │   └── mis-casos/
-│   │   │   ├── usuario/
-│   │   │   │   ├── usuario-layout/
-│   │   │   │   ├── usuario-dashboard/
-│   │   │   │   ├── perfil/
-│   │   │   │   ├── denuncias/
-│   │   │   │   ├── casos/
-│   │   │   │   ├── citas/
-│   │   │   │   ├── evidencias/
-│   │   │   │   └── notificaciones/
-│   │   │   └── admin/
-│   │   │       ├── admin-layout/
-│   │   │       ├── admin-dashboard/
-│   │   │       ├── usuarios/
-│   │   │       ├── victimas/
-│   │   │       ├── casos/
-│   │   │       ├── asignaciones/
-│   │   │       ├── citas/
-│   │   │       ├── evidencias/
-│   │   │       ├── reportes/
-│   │   │       ├── notificaciones/
-│   │   │       ├── auditoria/
-│   │   │       └── configuracion/
-│   │   ├── shared/
-│   │   │   ├── components/
-│   │   │   ├── services/
-│   │   │   └── utils/
-│   │   ├── app.routes.ts
-│   │   └── app.config.ts
-│   └── styles.css
-├── angular.json
-├── package.json
-└── README.md
+├── src/                                      # Codigo fuente principal de Angular.
+│   ├── app/                                  # Aplicacion, rutas, modulos y componentes.
+│   │   ├── core/                             # Elementos transversales usados por toda la app.
+│   │   │   ├── guards/                       # Guards para autenticacion y autorizacion por rol.
+│   │   │   ├── http/                         # Endpoints, interceptors y configuracion HTTP.
+│   │   │   └── layout/                       # Layout publico con header y footer.
+│   │   ├── features/                         # Funcionalidades separadas por dominio.
+│   │   │   ├── auth/                         # Modulo de autenticacion y seguridad.
+│   │   │   │   └── login/                    # Pantalla de inicio de sesion.
+│   │   │   ├── public/                       # Pantallas publicas o de acceso inicial.
+│   │   │   │   ├── inicio/                   # Pagina inicial de SafeZone.
+│   │   │   │   ├── denuncia/                 # Inicio o registro de denuncia.
+│   │   │   │   └── mis-casos/                # Consulta inicial del historial autorizado.
+│   │   │   ├── usuario/                      # Portal de usuario/victima sin sidebar.
+│   │   │   │   ├── usuario-layout/           # Layout de usuario con header y footer.
+│   │   │   │   ├── usuario-dashboard/        # Panel principal de la victima.
+│   │   │   │   ├── perfil/                   # Datos personales y contacto seguro.
+│   │   │   │   ├── denuncias/                # Denuncias asociadas a la victima.
+│   │   │   │   ├── casos/                    # Casos e historial de atencion.
+│   │   │   │   ├── citas/                    # Citas psicologicas o legales.
+│   │   │   │   ├── evidencias/               # Evidencias vinculadas a sus casos.
+│   │   │   │   └── notificaciones/           # Alertas y mensajes para la victima.
+│   │   │   └── admin/                        # Panel administrativo y operativo.
+│   │   │       ├── admin-layout/             # Layout interno con navegacion lateral.
+│   │   │       ├── admin-dashboard/          # Panel principal administrativo.
+│   │   │       ├── usuarios/                 # Gestion de usuarios y roles.
+│   │   │       ├── victimas/                 # Registro y administracion de victimas.
+│   │   │       ├── casos/                    # Gestion de casos y denuncias.
+│   │   │       ├── asignaciones/             # Asignacion de psicologos y defensores.
+│   │   │       ├── citas/                    # Programacion y control de citas.
+│   │   │       ├── evidencias/               # Gestion de evidencias digitales.
+│   │   │       ├── reportes/                 # Reportes y estadisticas del sistema.
+│   │   │       ├── notificaciones/           # Alertas por riesgo, citas y cambios.
+│   │   │       ├── auditoria/                # Trazabilidad de acciones criticas.
+│   │   │       └── configuracion/            # Parametros de seguridad y sesion.
+│   │   ├── shared/                           # Recursos reutilizables entre modulos.
+│   │   │   ├── components/                   # Componentes comunes de interfaz.
+│   │   │   ├── services/                     # Servicios compartidos de UI o estado.
+│   │   │   └── utils/                        # Funciones utilitarias.
+│   │   ├── app.routes.ts                     # Archivo principal de rutas de Angular.
+│   │   └── app.config.ts                     # Configuracion principal de la aplicacion.
+│   └── styles.css                            # Estilos globales.
+├── angular.json                              # Configuracion del workspace Angular.
+├── package.json                              # Scripts y dependencias del proyecto.
+└── README.md                                 # Documentacion del frontend.
 ```
 
 ## 6. Modulos previstos
