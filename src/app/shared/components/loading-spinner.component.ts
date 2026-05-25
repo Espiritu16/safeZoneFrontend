@@ -1,0 +1,1 @@
+// Placeholder para componente compartido de carga.
