@@ -135,106 +135,122 @@ import { FormsModule } from '@angular/forms';
     </div>
   `,
   styles: [`
+
     .contacto-container {
       width: 100%;
     }
 
     .header-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 4rem 2rem;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: var(--space-16) var(--space-6);
       text-align: center;
     }
 
     .header-section h1 {
-      font-size: 3rem;
+      font-size: var(--text-5xl);
       margin: 0;
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .subtitle {
-      font-size: 1.3rem;
-      margin: 1rem 0 0 0;
+      font-size: var(--text-lg);
+      margin: var(--space-4) 0 0 0;
       opacity: 0.9;
+      font-family: var(--font-sans);
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 0 var(--space-6);
     }
 
     .content-section {
-      padding: 4rem 2rem;
+      padding: var(--space-16) var(--space-6);
     }
 
     .contact-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      gap: var(--space-12);
     }
 
     .contact-form h2,
     .contact-info h2 {
-      color: #333;
+      color: var(--color-foreground);
       margin-top: 0;
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
+      font-size: var(--text-2xl);
     }
 
     form {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      background: var(--color-background);
+      padding: var(--space-8);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
     }
 
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: var(--space-6);
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 0.5rem;
-      color: #333;
-      font-weight: 600;
+      margin-bottom: var(--space-2);
+      color: var(--color-foreground);
+      font-weight: var(--font-semibold);
+      font-family: var(--font-sans);
     }
 
     .form-group input,
     .form-group select,
     .form-group textarea {
       width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 1rem;
-      transition: border-color 0.3s;
+      padding: var(--space-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      transition: all var(--duration-base) var(--ease-in-out);
     }
 
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
     }
 
     .btn {
-      padding: 1rem 2rem;
+      padding: var(--space-4) var(--space-6);
       border: none;
-      border-radius: 6px;
-      font-weight: 600;
+      border-radius: var(--radius-md);
+      font-weight: var(--font-semibold);
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all var(--duration-base) var(--ease-in-out);
       width: 100%;
+      font-family: var(--font-sans);
+      min-height: 44px;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--color-ring);
+      outline-offset: 2px;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
     }
 
     .btn-primary:hover:not(:disabled) {
+      background-color: var(--color-primary-light);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      box-shadow: var(--shadow-md);
     }
 
     .btn:disabled {
@@ -243,73 +259,88 @@ import { FormsModule } from '@angular/forms';
     }
 
     .success-message {
-      background: #d4edda;
-      color: #155724;
-      padding: 1rem;
-      border-radius: 6px;
-      margin-top: 1rem;
-      border: 1px solid #c3e6cb;
+      background: var(--color-success-lighter);
+      color: var(--color-success-dark);
+      padding: var(--space-4);
+      border-radius: var(--radius-md);
+      margin-top: var(--space-4);
+      border: 1px solid var(--color-success);
+      font-family: var(--font-sans);
     }
 
     .contact-info {
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: var(--space-8);
     }
 
     .info-block {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      border-left: 4px solid #667eea;
+      background: var(--color-background);
+      padding: var(--space-6);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border-left: 4px solid var(--color-primary);
     }
 
     .info-block h3 {
       margin-top: 0;
-      color: #667eea;
+      color: var(--color-primary);
+      font-family: var(--font-serif);
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
     }
 
     .info-block p {
-      margin: 0.5rem 0;
-      color: #666;
-      line-height: 1.6;
+      margin: var(--space-2) 0;
+      color: var(--color-muted-foreground);
+      line-height: var(--leading-normal);
+      font-family: var(--font-sans);
     }
 
     .info-block a {
-      color: #667eea;
+      color: var(--color-primary);
       text-decoration: none;
+      transition: all var(--duration-fast) var(--ease-in-out);
     }
 
     .info-block a:hover {
       text-decoration: underline;
+      color: var(--color-primary-light);
+    }
+
+    .info-block a:focus-visible {
+      outline: 2px solid var(--color-ring);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
     }
 
     .highlight {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #667eea;
+      font-size: var(--text-xl);
+      font-weight: var(--font-bold);
+      color: var(--color-primary);
+      font-family: var(--font-sans);
     }
 
     .info-block.emergency {
-      background: #fff3cd;
-      border-left-color: #ff6b6b;
+      background: var(--color-warning-lighter);
+      border-left-color: var(--color-destructive);
     }
 
     .info-block.emergency h3 {
-      color: #ff6b6b;
+      color: var(--color-destructive);
     }
 
     .info-block ul {
       list-style: none;
       padding: 0;
-      margin: 1rem 0 0 0;
+      margin: var(--space-4) 0 0 0;
+      font-family: var(--font-sans);
     }
 
     .info-block li {
-      padding: 0.5rem 0;
-      color: #333;
-      padding-left: 1.5rem;
+      padding: var(--space-2) 0;
+      color: var(--color-foreground);
+      padding-left: var(--space-6);
       position: relative;
     }
 
@@ -317,8 +348,8 @@ import { FormsModule } from '@angular/forms';
       content: '▸';
       position: absolute;
       left: 0;
-      color: #ff6b6b;
-      font-weight: bold;
+      color: var(--color-destructive);
+      font-weight: var(--font-bold);
     }
 
     .social-block {
@@ -326,14 +357,17 @@ import { FormsModule } from '@angular/forms';
     }
 
     .social-block h3 {
-      color: #667eea;
+      color: var(--color-primary);
+      font-family: var(--font-serif);
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
     }
 
     .social-links {
       display: flex;
-      gap: 1rem;
+      gap: var(--space-4);
       justify-content: center;
-      margin-top: 1rem;
+      margin-top: var(--space-4);
     }
 
     .social-links a {
@@ -342,25 +376,32 @@ import { FormsModule } from '@angular/forms';
       justify-content: center;
       width: 44px;
       height: 44px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 50%;
-      color: white;
+      background-color: var(--color-primary);
+      border-radius: var(--radius-full);
+      color: var(--color-on-primary);
       text-decoration: none;
-      font-weight: bold;
-      transition: transform 0.3s;
+      font-weight: var(--font-bold);
+      transition: all var(--duration-base) var(--ease-in-out);
     }
 
     .social-links a:hover {
       transform: scale(1.1);
+      background-color: var(--color-primary-light);
+    }
+
+    .social-links a:focus-visible {
+      outline: 2px solid var(--color-ring);
+      outline-offset: 2px;
     }
 
     @media (max-width: 768px) {
       .contact-grid {
         grid-template-columns: 1fr;
+        gap: var(--space-8);
       }
 
       .header-section h1 {
-        font-size: 2rem;
+        font-size: var(--text-3xl);
       }
 
       .contact-info {

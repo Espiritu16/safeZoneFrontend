@@ -146,54 +146,61 @@ import { CommonModule } from '@angular/common';
     </div>
   `,
   styles: [`
+
     .politicas-container {
       width: 100%;
     }
 
     .header-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 4rem 2rem;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: var(--space-16) var(--space-6);
       text-align: center;
     }
 
     .header-section h1 {
-      font-size: 3rem;
+      font-size: var(--text-5xl);
       margin: 0;
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .subtitle {
-      font-size: 1.3rem;
-      margin: 1rem 0 0 0;
+      font-size: var(--text-lg);
+      margin: var(--space-4) 0 0 0;
       opacity: 0.9;
+      font-family: var(--font-sans);
     }
 
     .container {
       max-width: 900px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 0 var(--space-6);
     }
 
     .content-section {
-      padding: 3rem 2rem;
+      padding: var(--space-12) var(--space-6);
     }
 
     .politicas-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      line-height: 1.8;
-      color: #666;
+      background: var(--color-background);
+      padding: var(--space-8);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-base);
+      line-height: var(--leading-relaxed);
+      color: var(--color-foreground-secondary);
+      font-family: var(--font-sans);
     }
 
     .politicas-content h2 {
-      color: #667eea;
-      font-size: 1.8rem;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid #667eea;
+      color: var(--color-primary);
+      font-size: var(--text-3xl);
+      margin-top: var(--space-8);
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-4);
+      border-bottom: 2px solid var(--color-primary);
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .politicas-content h2:first-child {
@@ -201,55 +208,58 @@ import { CommonModule } from '@angular/common';
     }
 
     .politicas-content h3 {
-      color: #333;
-      font-size: 1.2rem;
-      margin-top: 1.5rem;
-      margin-bottom: 1rem;
+      color: var(--color-foreground);
+      font-size: var(--text-xl);
+      margin-top: var(--space-6);
+      margin-bottom: var(--space-4);
+      font-family: var(--font-serif);
+      font-weight: var(--font-semibold);
     }
 
     .politicas-content p {
-      margin-bottom: 1rem;
+      margin-bottom: var(--space-4);
     }
 
     .politicas-content ul {
-      margin: 1rem 0;
-      padding-left: 2rem;
+      margin: var(--space-4) 0;
+      padding-left: var(--space-8);
     }
 
     .politicas-content li {
-      margin: 0.5rem 0;
+      margin: var(--space-2) 0;
     }
 
     .politicas-content hr {
       border: none;
-      border-top: 1px solid #e0e0e0;
-      margin: 2rem 0;
+      border-top: 1px solid var(--color-border);
+      margin: var(--space-8) 0;
     }
 
     .last-updated {
-      background: #f8f9fa;
-      padding: 1.5rem;
-      border-radius: 8px;
-      border-left: 4px solid #667eea;
-      margin-top: 2rem;
+      background: var(--color-muted);
+      padding: var(--space-6);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--color-primary);
+      margin-top: var(--space-8);
     }
 
     .last-updated p {
-      margin: 0.5rem 0;
-      color: #999;
+      margin: var(--space-2) 0;
+      color: var(--color-muted-foreground);
+      font-size: var(--text-sm);
     }
 
     @media (max-width: 768px) {
       .header-section h1 {
-        font-size: 2rem;
+        font-size: var(--text-3xl);
       }
 
       .politicas-content {
-        padding: 1.5rem;
+        padding: var(--space-6);
       }
 
       .politicas-content h2 {
-        font-size: 1.5rem;
+        font-size: var(--text-2xl);
       }
     }
   `]

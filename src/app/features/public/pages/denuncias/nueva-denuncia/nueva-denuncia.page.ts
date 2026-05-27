@@ -175,57 +175,63 @@ import { FormsModule } from '@angular/forms';
     </div>
   `,
   styles: [`
+
     .nueva-denuncia-container {
       width: 100%;
     }
 
     .header-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 4rem 2rem;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: var(--space-16) var(--space-6);
       text-align: center;
     }
 
     .header-section h1 {
-      font-size: 3rem;
+      font-size: var(--text-5xl);
       margin: 0;
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .subtitle {
-      font-size: 1.3rem;
-      margin: 1rem 0 0 0;
+      font-size: var(--text-lg);
+      margin: var(--space-4) 0 0 0;
       opacity: 0.9;
+      font-family: var(--font-sans);
     }
 
     .container {
       max-width: 900px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 0 var(--space-6);
     }
 
     .content-section {
-      padding: 3rem 2rem;
+      padding: var(--space-12) var(--space-6);
     }
 
     .form-wrapper {
       display: grid;
       grid-template-columns: 300px 1fr;
-      gap: 2rem;
+      gap: var(--space-8);
     }
 
     .form-info {
-      background: #f8f9fa;
-      padding: 2rem;
-      border-radius: 12px;
+      background: var(--color-muted);
+      padding: var(--space-8);
+      border-radius: var(--radius-lg);
       height: fit-content;
       position: sticky;
-      top: 2rem;
+      top: var(--space-6);
     }
 
     .form-info h2 {
       margin-top: 0;
-      color: #667eea;
-      font-size: 1.2rem;
+      color: var(--color-primary);
+      font-size: var(--text-lg);
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .form-info ul {
@@ -235,20 +241,21 @@ import { FormsModule } from '@angular/forms';
     }
 
     .form-info li {
-      margin: 1rem 0;
-      color: #666;
-      line-height: 1.6;
+      margin: var(--space-4) 0;
+      color: var(--color-muted-foreground);
+      line-height: var(--leading-normal);
+      font-family: var(--font-sans);
     }
 
     .denuncia-form {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background: var(--color-background);
+      padding: var(--space-8);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
     }
 
     .form-step {
-      animation: fadeIn 0.3s ease-out;
+      animation: fadeIn var(--duration-base) var(--ease-out);
     }
 
     @keyframes fadeIn {
@@ -261,111 +268,130 @@ import { FormsModule } from '@angular/forms';
     }
 
     .form-step h3 {
-      color: #667eea;
+      color: var(--color-primary);
       margin-top: 0;
-      font-size: 1.5rem;
+      font-size: var(--text-2xl);
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .form-step p {
-      color: #666;
+      color: var(--color-muted-foreground);
+      font-family: var(--font-sans);
     }
 
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: var(--space-6);
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 0.5rem;
-      color: #333;
-      font-weight: 600;
+      margin-bottom: var(--space-2);
+      color: var(--color-foreground);
+      font-weight: var(--font-semibold);
       cursor: pointer;
+      font-family: var(--font-sans);
     }
 
     .form-group label input[type="checkbox"] {
-      margin-right: 0.5rem;
+      margin-right: var(--space-2);
       cursor: pointer;
+      accent-color: var(--color-primary);
+      width: 18px;
+      height: 18px;
     }
 
     .form-group label span {
       display: block;
-      margin-left: 1.5rem;
+      margin-left: var(--space-6);
     }
 
     .form-group small {
       display: block;
-      margin-left: 1.5rem;
-      color: #999;
-      font-size: 0.85rem;
+      margin-left: var(--space-6);
+      color: var(--color-muted-foreground);
+      font-size: var(--text-xs);
     }
 
     .form-group input,
     .form-group select,
     .form-group textarea {
       width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 1rem;
-      transition: border-color 0.3s;
+      padding: var(--space-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      transition: all var(--duration-base) var(--ease-in-out);
     }
 
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
     }
 
     .form-group small {
-      margin-top: 0.25rem;
+      margin-top: var(--space-1);
       display: block;
-      color: #999;
+      color: var(--color-muted-foreground);
     }
 
     .warning {
-      background: #fff3cd;
-      padding: 1rem;
-      border-radius: 6px;
-      color: #856404;
-      margin-bottom: 1.5rem;
+      background: var(--color-warning-lighter);
+      padding: var(--space-4);
+      border-radius: var(--radius-md);
+      color: var(--color-warning-dark);
+      margin-bottom: var(--space-6);
+      font-family: var(--font-sans);
     }
 
     .form-actions {
       display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
+      gap: var(--space-4);
+      margin-top: var(--space-8);
     }
 
     .btn {
-      padding: 0.75rem 1.5rem;
+      padding: var(--space-3) var(--space-6);
       border: none;
-      border-radius: 6px;
-      font-weight: 600;
+      border-radius: var(--radius-md);
+      font-weight: var(--font-semibold);
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all var(--duration-base) var(--ease-in-out);
       flex: 1;
+      font-family: var(--font-sans);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--color-ring);
+      outline-offset: 2px;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
     }
 
     .btn-primary:hover {
+      background-color: var(--color-primary-light);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      box-shadow: var(--shadow-md);
     }
 
     .btn-secondary {
-      background: #e0e0e0;
-      color: #333;
+      background-color: var(--color-muted);
+      color: var(--color-foreground);
     }
 
     .btn-secondary:hover:not(:disabled) {
-      background: #d0d0d0;
+      background-color: var(--color-border);
     }
 
     .btn:disabled {
@@ -374,68 +400,85 @@ import { FormsModule } from '@angular/forms';
     }
 
     .btn-success {
-      background: #28a745;
-      color: white;
+      background-color: var(--color-success);
+      color: var(--color-on-success);
     }
 
     .btn-success:hover {
-      background: #218838;
+      background-color: var(--color-success-light);
       transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
     .progress-bar {
       width: 100%;
       height: 4px;
-      background: #e0e0e0;
-      border-radius: 2px;
-      margin-top: 2rem;
+      background: var(--color-border);
+      border-radius: var(--radius-full);
+      margin-top: var(--space-8);
       overflow: hidden;
     }
 
     .progress-bar div {
       height: 100%;
-      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-      transition: width 0.3s ease;
+      background-color: var(--color-primary);
+      transition: width var(--duration-base) var(--ease-in-out);
     }
 
     .success-panel {
       text-align: center;
-      padding: 3rem 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: var(--space-12) var(--space-8);
+      background: var(--color-background);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
     }
 
     .success-icon {
-      font-size: 4rem;
-      color: #28a745;
-      margin-bottom: 1rem;
+      font-size: var(--text-5xl);
+      color: var(--color-success);
+      margin-bottom: var(--space-4);
     }
 
     .success-panel h2 {
-      color: #333;
+      color: var(--color-foreground);
       margin-top: 0;
+      font-family: var(--font-serif);
+      font-size: var(--text-3xl);
+      font-weight: var(--font-bold);
+    }
+
+    .success-panel p {
+      color: var(--color-muted-foreground);
+      font-family: var(--font-sans);
     }
 
     .code-box {
-      background: #f8f9fa;
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin: 2rem 0;
-      border: 2px solid #667eea;
+      background: var(--color-muted);
+      padding: var(--space-6);
+      border-radius: var(--radius-md);
+      margin: var(--space-8) 0;
+      border: 2px solid var(--color-primary);
+    }
+
+    .code-box p {
+      color: var(--color-muted-foreground);
+      margin: 0;
+      font-family: var(--font-sans);
     }
 
     .code-box h3 {
-      font-size: 1.8rem;
-      color: #667eea;
-      margin: 0.5rem 0 0 0;
-      font-family: monospace;
+      font-size: var(--text-3xl);
+      color: var(--color-primary);
+      margin: var(--space-2) 0 0 0;
+      font-family: var(--font-mono);
       letter-spacing: 2px;
+      font-weight: var(--font-bold);
     }
 
     .important {
-      color: #ff6b6b;
-      font-weight: 600;
+      color: var(--color-destructive);
+      font-weight: var(--font-bold);
+      font-family: var(--font-sans);
     }
 
     @media (max-width: 768px) {
@@ -448,7 +491,7 @@ import { FormsModule } from '@angular/forms';
       }
 
       .header-section h1 {
-        font-size: 2rem;
+        font-size: var(--text-3xl);
       }
 
       .form-actions {

@@ -33,6 +33,16 @@ export const PUBLIC_ROUTES: Routes = [
         component: PublicInformacionPage,
         data: { title: 'Información - SafeZone' }
       },
+      {
+        path: 'informacion/tipos-violencia',
+        redirectTo: 'informacion',
+        pathMatch: 'full'
+      },
+      {
+        path: 'informacion/derechos',
+        redirectTo: 'informacion',
+        pathMatch: 'full'
+      },
 
       {
         path: 'contacto',

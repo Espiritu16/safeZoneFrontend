@@ -12,7 +12,7 @@ import { PublicFooterComponent } from './footer.component';
     <div class="public-layout">
       <app-public-header></app-public-header>
 
-      <main class="public-main">
+      <main id="contenido-principal" class="public-main" tabindex="-1">
         <router-outlet></router-outlet>
       </main>
 
@@ -20,16 +20,19 @@ import { PublicFooterComponent } from './footer.component';
     </div>
   `,
   styles: [`
+
     .public-layout {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      background-color: var(--color-background);
     }
 
     .public-main {
       flex: 1;
       width: 100%;
     }
+    .public-main:focus { outline: none; }
   `]
 })
 export class PublicLayoutComponent {}

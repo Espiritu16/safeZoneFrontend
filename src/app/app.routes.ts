@@ -4,6 +4,9 @@ import { roleGuard } from './core/guards/role.guard';
 import { PUBLIC_ROUTES } from './features/public/public.routes';
 
 export const routes: Routes = [
+  // Landing pública por defecto
+  { path: '', pathMatch: 'full', redirectTo: 'public' },
+
   // Rutas públicas (sin autenticación requerida)
   {
     path: 'public',
@@ -35,7 +38,7 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/denuncias/denuncias.component').then((m) => m.DenunciasComponent),
-        data: { roles: ['Administrador', 'Recepcionista', 'Víctima'] },
+        data: { roles: ['Administrador', 'Recepcionista'] },
       },
       {
         path: 'casos',
@@ -96,6 +99,5 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     ],
   },
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'public' },
 ];

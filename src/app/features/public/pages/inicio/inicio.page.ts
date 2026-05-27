@@ -114,10 +114,11 @@ import { RouterLink } from '@angular/router';
     </section>
   `,
   styles: [`
+
     .hero {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 4rem 2rem;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: var(--space-16) var(--space-6);
       min-height: 600px;
       display: flex;
       align-items: center;
@@ -132,8 +133,8 @@ import { RouterLink } from '@angular/router';
       right: -10%;
       width: 500px;
       height: 500px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-full);
       pointer-events: none;
     }
 
@@ -143,35 +144,38 @@ import { RouterLink } from '@angular/router';
       width: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      gap: var(--space-16);
       align-items: center;
       position: relative;
       z-index: 1;
     }
 
     .hero-text h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin: 0 0 0.5rem 0;
+      font-size: var(--text-5xl);
+      font-weight: var(--font-bold);
+      margin: 0 0 var(--space-2) 0;
+      font-family: var(--font-serif);
     }
 
     .hero-text h2 {
-      font-size: 2rem;
-      font-weight: 600;
-      margin: 0 0 1.5rem 0;
+      font-size: var(--text-3xl);
+      font-weight: var(--font-semibold);
+      margin: 0 0 var(--space-6) 0;
       opacity: 0.95;
+      font-family: var(--font-serif);
     }
 
     .hero-text p {
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-      line-height: 1.8;
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-8);
+      line-height: var(--leading-relaxed);
       opacity: 0.9;
+      font-family: var(--font-sans);
     }
 
     .hero-actions {
       display: flex;
-      gap: 1rem;
+      gap: var(--space-4);
       flex-wrap: wrap;
     }
 
@@ -183,8 +187,8 @@ import { RouterLink } from '@angular/router';
 
     .hero-icon {
       font-size: 15rem;
-      opacity: 0.3;
-      animation: float 6s ease-in-out infinite;
+      opacity: 0.2;
+      animation: float var(--duration-slow) ease-in-out infinite;
     }
 
     @keyframes float {
@@ -193,157 +197,187 @@ import { RouterLink } from '@angular/router';
     }
 
     .btn {
-      padding: 1rem 2rem;
-      border-radius: 8px;
+      padding: var(--space-4) var(--space-6);
+      border-radius: var(--radius-md);
       text-decoration: none;
-      font-weight: 600;
+      font-weight: var(--font-semibold);
       display: inline-block;
-      transition: all 0.3s;
+      transition: all var(--duration-base) var(--ease-in-out);
       cursor: pointer;
+      border: none;
+      font-family: var(--font-sans);
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--color-ring);
+      outline-offset: 2px;
     }
 
     .btn-large {
-      padding: 1.2rem 2.5rem;
-      font-size: 1.1rem;
+      padding: var(--space-5) var(--space-8);
+      font-size: var(--text-lg);
     }
 
     .btn-primary {
-      background: white;
-      color: #667eea;
+      background-color: var(--color-accent);
+      color: white;
     }
 
     .btn-primary:hover {
+      background-color: var(--color-accent-light);
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--shadow-lg);
     }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: 2px solid white;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: var(--color-on-primary);
+      border: 2px solid var(--color-on-primary);
     }
 
     .btn-secondary:hover {
-      background: white;
-      color: #667eea;
+      background-color: var(--color-accent);
+      color: white;
+      border-color: var(--color-accent);
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 0 var(--space-6);
     }
 
     .features {
-      padding: 4rem 2rem;
-      background: #f8f9fa;
+      padding: var(--space-16) var(--space-6);
+      background: var(--color-background);
     }
 
     .features h2 {
       text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 3rem;
-      color: #333;
+      font-size: var(--text-4xl);
+      margin-bottom: var(--space-12);
+      color: var(--color-foreground);
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
+      gap: var(--space-8);
     }
 
     .feature-card {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      background: var(--color-background);
+      padding: var(--space-8);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
       text-align: center;
-      transition: all 0.3s;
+      transition: all var(--duration-base) var(--ease-in-out);
+      border: 1px solid var(--color-border);
     }
 
     .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-primary);
     }
 
     .feature-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
+      font-size: var(--text-5xl);
+      margin-bottom: var(--space-4);
     }
 
     .feature-card h3 {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-      color: #333;
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-4);
+      color: var(--color-foreground);
+      font-family: var(--font-serif);
+      font-weight: var(--font-semibold);
     }
 
     .feature-card p {
-      color: #666;
-      line-height: 1.6;
+      color: var(--color-muted-foreground);
+      line-height: var(--leading-relaxed);
+      font-family: var(--font-sans);
     }
 
     .cta-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 4rem 2rem;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: var(--space-16) var(--space-6);
       text-align: center;
     }
 
     .cta-section h2 {
-      font-size: 2.2rem;
-      margin-bottom: 1rem;
+      font-size: var(--text-4xl);
+      margin-bottom: var(--space-4);
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .cta-section p {
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-8);
       opacity: 0.95;
+      font-family: var(--font-sans);
     }
 
     .emergency-contact {
       background: rgba(255, 255, 255, 0.1);
-      padding: 2rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      border: 2px solid white;
+      padding: var(--space-8);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-8);
+      border: 2px solid var(--color-accent);
     }
 
     .emergency-contact h3 {
-      font-size: 2rem;
-      margin: 0 0 0.5rem 0;
+      font-size: var(--text-3xl);
+      margin: 0 0 var(--space-2) 0;
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
+      color: var(--color-accent);
     }
 
     .emergency-contact p {
       margin: 0;
-      font-size: 1rem;
+      font-size: var(--text-base);
+      font-family: var(--font-sans);
     }
 
     .info-section {
-      padding: 4rem 2rem;
+      padding: var(--space-16) var(--space-6);
     }
 
     .info-section h2 {
       text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 3rem;
-      color: #333;
+      font-size: var(--text-4xl);
+      margin-bottom: var(--space-12);
+      color: var(--color-foreground);
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .info-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
+      gap: var(--space-8);
     }
 
     .info-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 2rem;
-      border-radius: 12px;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: var(--space-8);
+      border-radius: var(--radius-lg);
       text-decoration: none;
-      transition: all 0.3s;
+      transition: all var(--duration-base) var(--ease-in-out);
       position: relative;
       overflow: hidden;
+      border: 1px solid var(--color-primary-light);
     }
 
     .info-card::before {
@@ -353,58 +387,69 @@ import { RouterLink } from '@angular/router';
       left: -100%;
       width: 100%;
       height: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      transition: left 0.3s;
+      background: var(--color-accent);
+      opacity: 0.1;
+      transition: left var(--duration-base) var(--ease-in-out);
     }
 
     .info-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-accent);
     }
 
     .info-card:hover::before {
       left: 100%;
     }
 
+    .info-card:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
     .info-card h3 {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-4);
       position: relative;
       z-index: 1;
+      font-family: var(--font-serif);
+      font-weight: var(--font-semibold);
     }
 
     .info-card p {
       margin: 0;
       position: relative;
       z-index: 1;
+      font-family: var(--font-sans);
     }
 
     .arrow {
       display: inline-block;
-      margin-left: 0.5rem;
-      transition: margin-left 0.3s;
+      margin-left: var(--space-2);
+      transition: margin-left var(--duration-base) var(--ease-in-out);
     }
 
     .info-card:hover .arrow {
-      margin-left: 1rem;
+      margin-left: var(--space-4);
     }
 
     @media (max-width: 768px) {
       .hero {
-        padding: 2rem;
+        padding: var(--space-8) var(--space-4);
         min-height: auto;
       }
 
       .hero-content {
         grid-template-columns: 1fr;
+        gap: var(--space-8);
       }
 
       .hero-text h1 {
-        font-size: 2.5rem;
+        font-size: var(--text-4xl);
       }
 
       .hero-text h2 {
-        font-size: 1.5rem;
+        font-size: var(--text-2xl);
       }
 
       .hero-icon {
@@ -414,7 +459,7 @@ import { RouterLink } from '@angular/router';
       .features h2,
       .info-section h2,
       .cta-section h2 {
-        font-size: 1.8rem;
+        font-size: var(--text-3xl);
       }
 
       .hero-actions {
@@ -423,7 +468,6 @@ import { RouterLink } from '@angular/router';
 
       .btn {
         width: 100%;
-        text-align: center;
       }
     }
   `]

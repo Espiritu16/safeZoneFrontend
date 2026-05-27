@@ -111,103 +111,116 @@ interface FaqItem {
     </div>
   `,
   styles: [`
+
     .faq-container {
       width: 100%;
     }
 
     .header-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 4rem 2rem;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: var(--space-16) var(--space-6);
       text-align: center;
     }
 
     .header-section h1 {
-      font-size: 3rem;
+      font-size: var(--text-5xl);
       margin: 0;
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .subtitle {
-      font-size: 1.3rem;
-      margin: 1rem 0 0 0;
+      font-size: var(--text-lg);
+      margin: var(--space-4) 0 0 0;
       opacity: 0.9;
+      font-family: var(--font-sans);
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 0 var(--space-6);
     }
 
     .content-section {
-      padding: 4rem 2rem;
+      padding: var(--space-16) var(--space-6);
     }
 
     .faq-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-bottom: 4rem;
+      gap: var(--space-8);
+      margin-bottom: var(--space-16);
     }
 
     .faq-section h2 {
-      color: #667eea;
-      font-size: 1.5rem;
+      color: var(--color-primary);
+      font-size: var(--text-xl);
       margin-top: 0;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid #667eea;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 2px solid var(--color-primary);
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .accordion {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: var(--space-4);
     }
 
     .accordion-item {
-      background: white;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
+      background: var(--color-background);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
       overflow: hidden;
     }
 
     .accordion-header {
       width: 100%;
-      padding: 1rem;
-      background: white;
+      padding: var(--space-4);
+      background: var(--color-background);
       border: none;
       cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #333;
+      font-size: var(--text-base);
+      font-weight: var(--font-semibold);
+      color: var(--color-foreground);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.3s;
+      transition: all var(--duration-base) var(--ease-in-out);
+      font-family: var(--font-sans);
+      min-height: 44px;
     }
 
     .accordion-header:hover {
-      background: #f8f9fa;
-      color: #667eea;
+      background: var(--color-muted);
+      color: var(--color-primary);
+    }
+
+    .accordion-header:focus-visible {
+      outline: 2px solid var(--color-ring);
+      outline-offset: -2px;
     }
 
     .accordion-header.abierto {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
     }
 
     .accordion-header .icon {
-      font-size: 1.5rem;
-      font-weight: bold;
-      transition: transform 0.3s;
+      font-size: var(--text-xl);
+      font-weight: var(--font-bold);
+      transition: transform var(--duration-base) var(--ease-in-out);
     }
 
     .accordion-content {
-      padding: 1rem;
-      background: #f8f9fa;
-      border-top: 1px solid #e0e0e0;
-      animation: slideDown 0.3s ease-out;
+      padding: var(--space-4);
+      background: var(--color-muted);
+      border-top: 1px solid var(--color-border);
+      animation: slideDown var(--duration-base) var(--ease-out);
     }
 
     @keyframes slideDown {
@@ -223,51 +236,68 @@ interface FaqItem {
 
     .accordion-content p {
       margin: 0;
-      color: #666;
-      line-height: 1.8;
+      color: var(--color-muted-foreground);
+      line-height: var(--leading-relaxed);
+      font-family: var(--font-sans);
     }
 
     .cta-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 3rem;
-      border-radius: 12px;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: var(--space-12);
+      border-radius: var(--radius-lg);
       text-align: center;
     }
 
     .cta-section h2 {
       margin-top: 0;
-      margin-bottom: 1rem;
+      margin-bottom: var(--space-4);
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
+      font-size: var(--text-2xl);
     }
 
     .cta-section p {
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
+      margin-bottom: var(--space-8);
+      font-size: var(--text-lg);
+      font-family: var(--font-sans);
     }
 
     .btn {
-      padding: 1rem 2rem;
-      border-radius: 8px;
+      padding: var(--space-4) var(--space-6);
+      border-radius: var(--radius-md);
       text-decoration: none;
-      font-weight: 600;
+      font-weight: var(--font-semibold);
       display: inline-block;
-      transition: all 0.3s;
+      transition: all var(--duration-base) var(--ease-in-out);
       cursor: pointer;
+      border: none;
+      font-family: var(--font-sans);
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--color-ring);
+      outline-offset: 2px;
     }
 
     .btn-primary {
-      background: white;
-      color: #667eea;
+      background-color: var(--color-accent);
+      color: white;
     }
 
     .btn-primary:hover {
+      background-color: var(--color-accent-light);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: var(--shadow-md);
     }
 
     @media (max-width: 768px) {
       .header-section h1 {
-        font-size: 2rem;
+        font-size: var(--text-3xl);
       }
 
       .faq-grid {

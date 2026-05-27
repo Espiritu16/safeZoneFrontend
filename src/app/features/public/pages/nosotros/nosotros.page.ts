@@ -101,158 +101,194 @@ import { CommonModule } from '@angular/common';
     </div>
   `,
   styles: [`
+
     .nosotros-container {
       width: 100%;
     }
 
     .header-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 4rem 2rem;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: var(--space-16) var(--space-6);
       text-align: center;
     }
 
     .header-section h1 {
-      font-size: 3rem;
+      font-size: var(--text-5xl);
       margin: 0;
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .subtitle {
-      font-size: 1.3rem;
-      margin: 1rem 0 0 0;
+      font-size: var(--text-lg);
+      margin: var(--space-4) 0 0 0;
       opacity: 0.9;
+      font-family: var(--font-sans);
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 0 var(--space-6);
     }
 
     .content-section {
-      padding: 4rem 2rem;
+      padding: var(--space-16) var(--space-6);
     }
 
     .vision-mision-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-bottom: 4rem;
+      gap: var(--space-8);
+      margin-bottom: var(--space-16);
     }
 
     .card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      padding: var(--space-8);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
     }
 
     .card h2 {
       margin-top: 0;
-      font-size: 1.5rem;
+      font-size: var(--text-2xl);
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .card p {
       margin: 0;
-      line-height: 1.8;
+      line-height: var(--leading-relaxed);
+      font-family: var(--font-sans);
     }
 
     .values-section h2,
     .team-section h2 {
-      font-size: 2rem;
-      color: #333;
+      font-size: var(--text-3xl);
+      color: var(--color-foreground);
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: var(--space-8);
+      font-family: var(--font-serif);
+      font-weight: var(--font-bold);
     }
 
     .values-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-      margin-bottom: 4rem;
+      gap: var(--space-8);
+      margin-bottom: var(--space-16);
     }
 
     .value-card {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      border-left: 4px solid #667eea;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s;
+      background: var(--color-background);
+      padding: var(--space-8);
+      border-radius: var(--radius-lg);
+      border-left: 4px solid var(--color-primary);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--duration-base) var(--ease-in-out);
     }
 
     .value-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+      border-left-color: var(--color-accent);
     }
 
     .value-card h3 {
       margin-top: 0;
-      color: #667eea;
+      color: var(--color-primary);
+      font-family: var(--font-serif);
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+    }
+
+    .value-card p {
+      color: var(--color-muted-foreground);
+      font-family: var(--font-sans);
     }
 
     .team-section {
-      background: #f8f9fa;
-      padding: 3rem;
-      border-radius: 12px;
+      background: var(--color-muted);
+      padding: var(--space-12);
+      border-radius: var(--radius-lg);
     }
 
     .team-intro {
       text-align: center;
-      font-size: 1.1rem;
-      color: #666;
-      margin-bottom: 2rem;
+      font-size: var(--text-lg);
+      color: var(--color-muted-foreground);
+      margin-bottom: var(--space-8);
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
+      font-family: var(--font-sans);
     }
 
     .team-members {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 2rem;
+      gap: var(--space-8);
     }
 
     .team-member {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
+      background: var(--color-background);
+      padding: var(--space-6);
+      border-radius: var(--radius-lg);
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--duration-base) var(--ease-in-out);
+    }
+
+    .team-member:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
     }
 
     .avatar {
       width: 60px;
       height: 60px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border-radius: 50%;
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+      border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      font-size: 1.2rem;
-      margin: 0 auto 1rem;
+      font-weight: var(--font-bold);
+      font-size: var(--text-lg);
+      margin: 0 auto var(--space-4);
+      font-family: var(--font-sans);
     }
 
     .team-member h4 {
-      margin: 0 0 0.5rem 0;
-      color: #333;
+      margin: 0 0 var(--space-2) 0;
+      color: var(--color-foreground);
+      font-family: var(--font-serif);
+      font-size: var(--text-base);
+      font-weight: var(--font-semibold);
     }
 
     .team-member p {
       margin: 0;
-      color: #667eea;
-      font-size: 0.9rem;
+      color: var(--color-primary);
+      font-size: var(--text-sm);
+      font-family: var(--font-sans);
+      font-weight: var(--font-medium);
     }
 
     @media (max-width: 768px) {
       .header-section h1 {
-        font-size: 2rem;
+        font-size: var(--text-3xl);
       }
 
       .team-members {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+
+      .team-section {
+        padding: var(--space-8);
       }
     }
   `]
