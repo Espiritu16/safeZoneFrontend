@@ -1,0 +1,8 @@
+# pnpm specific
+.pnpm-store/
+pnpm-debug.log
+pnpm-error.log
+
+# Exclude lock files from gitignore (we want to commit pnpm-lock.yaml)
+# Remove the line below if it exists in .gitignore
+# pnpm-lock.yaml
