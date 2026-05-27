@@ -1,0 +1,32 @@
+@use '../abstracts/colors' as colors;
+@use '../abstracts/mixins' as mixins;
+
+body {
+  background-color: colors.$color-bg-main;
+  color: colors.$color-text-primary;
+  overflow-x: hidden;
+  @include mixins.custom-scrollbar;
+}
+
+// Estilos globales de selección
+::selection {
+  background-color: colors.$color-brand-soft;
+  color: colors.$color-brand-medium;
+}
+
+// Estructura principal
+.sz-app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// Contenedores genéricos
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}

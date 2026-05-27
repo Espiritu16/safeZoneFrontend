@@ -1,0 +1,209 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+@use '../abstracts/mixins' as mixins;
+@use '../abstracts/breakpoints' as bp;
+
+.sz-header {
+  height: 70px;
+  @include mixins.glass(0.8, 12px);
+  border-bottom: 1px solid colors.$color-border-subtle;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+
+  @include bp.mobile {
+    margin-left: 0;
+    padding: 0 16px;
+  }
+
+  &.is-collapsed {
+    margin-left: 70px;
+  }
+
+  // Hamburger móvil
+  &-menu-toggle {
+    display: none;
+    color: colors.$color-text-primary;
+    padding: 8px;
+    margin-right: 8px;
+    border-radius: vars.$radius-md;
+    transition: vars.$transition-fast;
+
+    &:hover {
+      background-color: colors.$color-bg-main;
+    }
+
+    @include bp.mobile {
+      display: block;
+    }
+  }
+
+  // Búsqueda global
+  &-search {
+    position: relative;
+    max-width: 320px;
+    width: 100%;
+
+    @include bp.mobile {
+      display: none; // Ocultar en móviles para dar espacio al selector de roles
+    }
+
+    &-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: colors.$color-text-muted;
+      pointer-events: none;
+      width: 16px;
+      height: 16px;
+    }
+
+    &-input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      border: 1px solid colors.$color-border-subtle;
+      border-radius: vars.$radius-md;
+      font-size: 0.8125rem;
+      background-color: rgba(colors.$color-bg-main, 0.5);
+      transition: vars.$transition-fast;
+
+      &:focus {
+        @include mixins.focus-ring;
+        background-color: colors.$color-white;
+      }
+
+      &::placeholder {
+        color: colors.$color-text-muted;
+      }
+    }
+  }
+
+  // Acciones en la derecha
+  &-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    @include bp.mobile {
+      gap: 8px;
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+
+  // Selector de roles interactivo
+  &-role-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: colors.$color-white;
+    border: 1px solid colors.$color-border-subtle;
+    padding: 6px 12px;
+    border-radius: vars.$radius-md;
+    box-shadow: vars.$shadow-sm;
+
+    label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: colors.$color-text-secondary;
+      white-space: nowrap;
+
+      @include bp.mobile {
+        display: none;
+      }
+    }
+
+    select {
+      border: none;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: colors.$color-brand-medium;
+      background-color: transparent;
+      cursor: pointer;
+      outline: none;
+      padding-right: 4px;
+    }
+  }
+
+  // Notificaciones
+  &-notifications {
+    position: relative;
+
+    &-trigger {
+      color: colors.$color-text-secondary;
+      padding: 8px;
+      border-radius: vars.$radius-full;
+      position: relative;
+      transition: vars.$transition-fast;
+
+      &:hover {
+        background-color: colors.$color-bg-main;
+        color: colors.$color-text-primary;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2;
+      }
+
+      .badge-dot {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 8px;
+        height: 8px;
+        background-color: colors.$color-danger;
+        border-radius: vars.$radius-full;
+        border: 2px solid colors.$color-white;
+      }
+    }
+  }
+
+  // Perfil rápido
+  &-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+
+    &-info {
+      text-align: right;
+      @include bp.mobile {
+        display: none;
+      }
+    }
+
+    &-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: colors.$color-text-primary;
+    }
+
+    &-role {
+      font-size: 0.7rem;
+      color: colors.$color-text-muted;
+    }
+
+    &-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: vars.$radius-full;
+      background-color: colors.$color-brand-soft;
+      color: colors.$color-brand-medium;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.8125rem;
+      border: 1px solid colors.$color-border-subtle;
+    }
+  }
+}

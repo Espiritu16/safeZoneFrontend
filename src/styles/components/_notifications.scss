@@ -1,0 +1,127 @@
+@use 'sass:color';
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+@use '../abstracts/mixins' as mixins;
+
+// Alertas Inline (Banners)
+.sz-alert {
+  padding: 12px 16px;
+  border-radius: vars.$radius-md;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  &-title {
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  &-desc {
+    color: inherit;
+  }
+
+  // Variantes
+  &-success {
+    background-color: colors.$color-success-bg;
+    color: color.adjust(colors.$color-success, $lightness: -10%);
+    border-color: rgba(colors.$color-success, 0.2);
+  }
+
+  &-warning {
+    background-color: colors.$color-warning-bg;
+    color: color.adjust(colors.$color-warning, $lightness: -20%);
+    border-color: rgba(colors.$color-warning, 0.2);
+  }
+
+  &-danger {
+    background-color: colors.$color-danger-bg;
+    color: color.adjust(colors.$color-danger, $lightness: -15%);
+    border-color: rgba(colors.$color-danger, 0.2);
+  }
+
+  &-info {
+    background-color: colors.$color-info-bg;
+    color: color.adjust(colors.$color-info, $lightness: -15%);
+    border-color: rgba(colors.$color-info, 0.2);
+  }
+}
+
+// Sistema de Toasts (Notificaciones Flotantes)
+.sz-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+  width: 100%;
+  pointer-events: none;
+}
+
+.sz-toast {
+  pointer-events: auto;
+  background-color: colors.$color-white;
+  border: 1px solid colors.$color-border-subtle;
+  border-radius: vars.$radius-lg;
+  box-shadow: vars.$shadow-lg;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.8125rem;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  &-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: vars.$radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &.is-success {
+      background-color: colors.$color-success-bg;
+      color: colors.$color-success;
+    }
+    &.is-error {
+      background-color: colors.$color-danger-bg;
+      color: colors.$color-danger;
+    }
+    &.is-warning {
+      background-color: colors.$color-warning-bg;
+      color: colors.$color-warning;
+    }
+  }
+
+  &-content {
+    flex: 1;
+    color: colors.$color-text-primary;
+    font-weight: 500;
+  }
+
+  &-close {
+    color: colors.$color-text-muted;
+    cursor: pointer;
+    transition: vars.$transition-fast;
+    padding: 2px;
+    border-radius: vars.$radius-xs;
+
+    &:hover {
+      color: colors.$color-text-primary;
+      background-color: colors.$color-bg-main;
+    }
+  }
+}

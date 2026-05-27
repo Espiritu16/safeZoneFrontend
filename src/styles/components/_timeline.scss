@@ -1,0 +1,116 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+@use '../abstracts/mixins' as mixins;
+
+.sz-timeline {
+  position: relative;
+  padding-left: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  // Línea vertical principal
+  &::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    width: 2px;
+    height: calc(100% - 12px);
+    background-color: colors.$color-border-subtle;
+  }
+
+  &-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    // Nodo (Punto) de la línea de tiempo
+    &-node {
+      position: absolute;
+      left: -28px;
+      top: 4px;
+      width: 18px;
+      height: 18px;
+      border-radius: vars.$radius-full;
+      background-color: colors.$color-white;
+      border: 2px solid colors.$color-border-subtle;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: vars.$transition-fast;
+
+      &.is-active {
+        border-color: colors.$color-brand-light;
+        background-color: colors.$color-brand-soft;
+        &::after {
+          content: '';
+          width: 8px;
+          height: 8px;
+          border-radius: vars.$radius-full;
+          background-color: colors.$color-brand-light;
+        }
+      }
+
+      &.is-success {
+        border-color: colors.$color-success;
+        background-color: colors.$color-success-bg;
+        &::after {
+          content: '';
+          width: 8px;
+          height: 8px;
+          border-radius: vars.$radius-full;
+          background-color: colors.$color-success;
+        }
+      }
+
+      &.is-danger {
+        border-color: colors.$color-danger;
+        background-color: colors.$color-danger-bg;
+        &::after {
+          content: '';
+          width: 8px;
+          height: 8px;
+          border-radius: vars.$radius-full;
+          background-color: colors.$color-danger;
+        }
+      }
+    }
+
+    &-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+
+      .time-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: colors.$color-text-primary;
+      }
+
+      .time-stamp {
+        font-size: 0.75rem;
+        color: colors.$color-text-muted;
+        white-space: nowrap;
+      }
+    }
+
+    &-body {
+      font-size: 0.8125rem;
+      color: colors.$color-text-secondary;
+      line-height: 1.4;
+    }
+
+    &-meta {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: colors.$color-text-muted;
+    }
+  }
+}

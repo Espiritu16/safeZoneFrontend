@@ -1,0 +1,39 @@
+// Abstracts & Design Tokens (Sass Mixins & Variables)
+@use './styles/abstracts/variables';
+@use './styles/abstracts/colors';
+@use './styles/abstracts/mixins';
+@use './styles/abstracts/breakpoints';
+@use './styles/abstracts/animations';
+@use './styles/abstracts/functions';
+
+// Base Styles (Reset, Typography, Globals, Utilities)
+@use './styles/base/reset';
+@use './styles/base/typography';
+@use './styles/base/globals';
+@use './styles/base/utilities';
+
+// Layout Structure
+@use './styles/layout/sidebar';
+@use './styles/layout/header';
+@use './styles/layout/dashboard';
+@use './styles/layout/grid';
+
+// Reusable Components
+@use './styles/components/buttons';
+@use './styles/components/cards';
+@use './styles/components/tables';
+@use './styles/components/forms';
+@use './styles/components/modals';
+@use './styles/components/badges';
+@use './styles/components/timeline';
+@use './styles/components/kanban';
+@use './styles/components/calendar';
+@use './styles/components/notifications';
+
+// Page-specific Modules
+@use './styles/pages/login';
+@use './styles/pages/dashboard' as page-dashboard;
+@use './styles/pages/casos';
+@use './styles/pages/victimas';
+@use './styles/pages/reportes';
+@use './styles/pages/configuracion';

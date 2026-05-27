@@ -1,0 +1,37 @@
+// Responsive Breakpoints
+$breakpoint-mobile: 576px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+$breakpoint-large: 1200px;
+$breakpoint-xlarge: 1440px;
+
+// Media Queries Helpers
+@mixin mobile {
+  @media (max-width: ($breakpoint-tablet - 1px)) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $breakpoint-tablet) and (max-width: ($breakpoint-desktop - 1px)) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (min-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-desktop) {
+    @content;
+  }
+}
+
+@mixin large {
+  @media (min-width: $breakpoint-large) {
+    @content;
+  }
+}

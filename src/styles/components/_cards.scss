@@ -1,0 +1,132 @@
+@use 'sass:color';
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+@use '../abstracts/mixins' as mixins;
+
+.card {
+  background-color: colors.$color-white;
+  border: 1px solid colors.$color-border-subtle;
+  border-radius: vars.$radius-lg;
+  box-shadow: vars.$shadow-sm;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    &-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: colors.$color-text-primary;
+    }
+
+    &-subtitle {
+      font-size: 0.75rem;
+      color: colors.$color-text-muted;
+    }
+  }
+
+  &-body {
+    flex: 1;
+  }
+
+  &-footer {
+    border-top: 1px solid colors.$color-border-subtle;
+    padding-top: 16px;
+    margin-top: 16px;
+    font-size: 0.75rem;
+    color: colors.$color-text-secondary;
+  }
+
+  // Tarjeta interactiva (hover)
+  &-interactive {
+    cursor: pointer;
+    transition: vars.$transition-normal;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: vars.$shadow-md;
+      border-color: color.adjust(colors.$color-border-subtle, $lightness: -5%);
+    }
+  }
+
+  // Tarjeta de KPI/Métrica
+  &-kpi {
+    padding: 20px;
+    
+    .kpi-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: colors.$color-text-secondary;
+      font-weight: 600;
+    }
+
+    .kpi-value-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .kpi-value {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: colors.$color-text-primary;
+      letter-spacing: -0.03em;
+    }
+
+    .kpi-trend {
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: vars.$radius-sm;
+
+      &.trend-up {
+        color: colors.$color-success;
+        background-color: rgba(colors.$color-success, 0.1);
+      }
+
+      &.trend-down {
+        color: colors.$color-danger;
+        background-color: rgba(colors.$color-danger, 0.1);
+      }
+
+      &.trend-neutral {
+        color: colors.$color-text-muted;
+        background-color: rgba(colors.$color-text-muted, 0.1);
+      }
+    }
+
+    .kpi-description {
+      margin-top: 8px;
+      font-size: 0.75rem;
+      color: colors.$color-text-muted;
+    }
+
+    // Variaciones
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background-color: transparent;
+    }
+
+    &-brand::before { background-color: colors.$color-brand-light; }
+    &-success::before { background-color: colors.$color-success; }
+    &-warning::before { background-color: colors.$color-warning; }
+    &-danger::before { background-color: colors.$color-danger; }
+  }
+}

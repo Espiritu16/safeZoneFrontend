@@ -1,0 +1,220 @@
+@use 'sass:color';
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+@use '../abstracts/mixins' as mixins;
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+
+  &.has-error {
+    .form-label {
+      color: colors.$color-danger;
+    }
+    .form-input, .form-select, .form-textarea {
+      border-color: colors.$color-danger;
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+      }
+    }
+    .form-error {
+      display: block;
+    }
+  }
+}
+
+.form-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: colors.$color-text-secondary;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  color: colors.$color-text-primary;
+  background-color: colors.$color-white;
+  border: 1px solid colors.$color-border-subtle;
+  border-radius: vars.$radius-md;
+  box-shadow: vars.$shadow-sm;
+  transition: vars.$transition-fast;
+
+  &::placeholder {
+    color: colors.$color-text-muted;
+  }
+
+  &:hover {
+    border-color: color.adjust(colors.$color-border-subtle, $lightness: -10%);
+  }
+
+  &:focus {
+    @include mixins.focus-ring;
+  }
+
+  &:disabled {
+    background-color: colors.$color-bg-main;
+    color: colors.$color-text-muted;
+    cursor: not-allowed;
+    border-color: colors.$color-border-subtle;
+  }
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.form-error {
+  display: none;
+  font-size: 0.75rem;
+  color: colors.$color-danger;
+  font-weight: 500;
+}
+
+.form-help {
+  font-size: 0.75rem;
+  color: colors.$color-text-muted;
+}
+
+// Checkboxes y Radios Personalizados
+.form-checkbox, .form-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: colors.$color-text-secondary;
+  user-select: none;
+
+  input {
+    width: 16px;
+    height: 16px;
+    border: 1px solid colors.$color-border-subtle;
+    border-radius: vars.$radius-xs;
+    appearance: none;
+    outline: none;
+    transition: vars.$transition-fast;
+    cursor: pointer;
+    position: relative;
+    background-color: colors.$color-white;
+
+    &:checked {
+      background-color: colors.$color-brand-medium;
+      border-color: colors.$color-brand-medium;
+
+      &::after {
+        content: '';
+        position: absolute;
+        width: 4px;
+        height: 8px;
+        border: solid colors.$color-white;
+        border-width: 0 2px 2px 0;
+        left: 5px;
+        top: 2px;
+        transform: rotate(45deg);
+      }
+    }
+  }
+}
+
+.form-radio {
+  input {
+    border-radius: vars.$radius-full;
+    &:checked {
+      &::after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background-color: colors.$color-white;
+        border-radius: vars.$radius-full;
+        left: 4px;
+        top: 4px;
+      }
+    }
+  }
+}
+
+// Subida de archivos (File Upload Area)
+.form-upload {
+  border: 2px dashed colors.$color-border-subtle;
+  border-radius: vars.$radius-lg;
+  padding: 32px 20px;
+  text-align: center;
+  background-color: colors.$color-bg-main;
+  cursor: pointer;
+  transition: vars.$transition-normal;
+
+  &:hover {
+    border-color: colors.$color-brand-light;
+    background-color: colors.$color-brand-soft;
+  }
+
+  &-icon {
+    width: 40px;
+    height: 40px;
+    color: colors.$color-brand-light;
+    margin: 0 auto 12px auto;
+  }
+
+  &-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: colors.$color-text-primary;
+    margin-bottom: 4px;
+  }
+
+  &-description {
+    font-size: 0.75rem;
+    color: colors.$color-text-muted;
+  }
+}
+
+// Switch
+.form-switch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  
+  &-input {
+    appearance: none;
+    width: 36px;
+    height: 20px;
+    background-color: colors.$color-border-subtle;
+    border-radius: vars.$radius-full;
+    position: relative;
+    outline: none;
+    transition: vars.$transition-fast;
+    cursor: pointer;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: vars.$radius-full;
+      background-color: colors.$color-white;
+      top: 2px;
+      left: 2px;
+      transition: vars.$transition-fast;
+      box-shadow: vars.$shadow-sm;
+    }
+
+    &:checked {
+      background-color: colors.$color-success;
+      &::after {
+        left: 18px;
+      }
+    }
+  }
+
+  &-label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: colors.$color-text-secondary;
+  }
+}
