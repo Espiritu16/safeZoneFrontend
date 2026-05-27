@@ -37,3 +37,6 @@
 @use './styles/pages/victimas';
 @use './styles/pages/reportes';
 @use './styles/pages/configuracion';
+
+// Public design tokens (CSS variables)
+@import './app/features/public/styles/design-tokens.css';
