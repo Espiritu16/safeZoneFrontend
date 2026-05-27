@@ -1,0 +1,226 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+@use '../abstracts/mixins' as mixins;
+@use '../abstracts/breakpoints' as bp;
+
+.sz-login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+
+  @include bp.mobile {
+    grid-template-columns: 1fr;
+  }
+
+  @include bp.tablet {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Lado izquierdo (Panel Informativo / Institucional)
+.sz-login-info-panel {
+  background: radial-gradient(circle at top left, colors.$color-brand-medium, colors.$color-brand-dark 80%);
+  color: colors.$color-white;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+
+  @include bp.mobile {
+    display: none;
+  }
+  @include bp.tablet {
+    display: none;
+  }
+
+  // Patrón geométrico sutil en el fondo
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(rgba(colors.$color-white, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  .info-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background-color: colors.$color-brand-light;
+      border-radius: vars.$radius-md;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.15rem;
+      box-shadow: 0 0 16px rgba(74, 144, 226, 0.5);
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  .info-body {
+    max-width: 480px;
+    z-index: 10;
+    margin: auto 0;
+
+    .info-title {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, colors.$color-white, colors.$color-brand-soft 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .info-desc {
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      color: rgba(colors.$color-white, 0.7);
+      margin-bottom: 32px;
+    }
+
+    // Pequeño widget de estadísticas rápidas
+    .info-stats-card {
+      background-color: rgba(colors.$color-white, 0.05);
+      border: 1px solid rgba(colors.$color-white, 0.08);
+      border-radius: vars.$radius-lg;
+      padding: 20px;
+      backdrop-filter: blur(8px);
+      
+      .stat-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+        border-bottom: 1px solid rgba(colors.$color-white, 0.08);
+        
+        &:last-child {
+          padding-bottom: 0;
+          margin-bottom: 0;
+          border-bottom: none;
+        }
+
+        .label {
+          font-size: 0.75rem;
+          color: rgba(colors.$color-white, 0.6);
+        }
+        .value {
+          font-size: 0.875rem;
+          font-weight: 700;
+          color: colors.$color-success;
+        }
+      }
+    }
+  }
+
+  .info-footer {
+    font-size: 0.75rem;
+    color: rgba(colors.$color-white, 0.4);
+    z-index: 10;
+  }
+}
+
+// Lado derecho (Formulario de Login)
+.sz-login-form-panel {
+  background-color: colors.$color-bg-main;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+
+  .form-container {
+    max-width: 380px;
+    width: 100%;
+    background-color: colors.$color-white;
+    border: 1px solid colors.$color-border-subtle;
+    border-radius: vars.$radius-xl;
+    padding: 32px;
+    box-shadow: vars.$shadow-lg;
+    
+    // Logo visible solo en mobile
+    .mobile-logo {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+
+      @include bp.mobile {
+        display: flex;
+      }
+      @include bp.tablet {
+        display: flex;
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        background-color: colors.$color-brand-light;
+        border-radius: vars.$radius-sm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: colors.$color-white;
+        font-weight: 800;
+      }
+      .logo-text {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: colors.$color-brand-dark;
+      }
+    }
+
+    .form-header {
+      margin-bottom: 24px;
+      text-align: left;
+
+      .title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: colors.$color-text-primary;
+        letter-spacing: -0.02em;
+      }
+      .subtitle {
+        font-size: 0.8125rem;
+        color: colors.$color-text-secondary;
+        margin-top: 4px;
+      }
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 0.75rem;
+
+      .forgot-link {
+        color: colors.$color-brand-light;
+        font-weight: 600;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

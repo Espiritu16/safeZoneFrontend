@@ -1,0 +1,109 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+@use '../abstracts/mixins' as mixins;
+@use '../abstracts/breakpoints' as bp;
+
+// Perfil de la víctima
+.sz-victima-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: colors.$color-white;
+  border: 1px solid colors.$color-border-subtle;
+  border-radius: vars.$radius-lg;
+  padding: 24px;
+  box-shadow: vars.$shadow-sm;
+
+  @include bp.mobile {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: vars.$radius-full;
+    background-color: colors.$color-brand-soft;
+    color: colors.$color-brand-medium;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    border: 3px solid colors.$color-border-subtle;
+  }
+
+  .profile-details {
+    flex: 1;
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      @include bp.mobile {
+        justify-content: center;
+      }
+      
+      .name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: colors.$color-text-primary;
+        letter-spacing: -0.02em;
+      }
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 0.8125rem;
+      color: colors.$color-text-secondary;
+      flex-wrap: wrap;
+
+      @include bp.mobile {
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// Historial médico / psicológico de la víctima
+.sz-victima-health-status {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .status-item {
+    background-color: colors.$color-white;
+    border: 1px solid colors.$color-border-subtle;
+    border-radius: vars.$radius-md;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    @include bp.mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .status-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: colors.$color-text-secondary;
+    }
+
+    .status-value {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: colors.$color-text-primary;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}

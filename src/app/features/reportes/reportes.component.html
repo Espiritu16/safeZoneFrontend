@@ -1,0 +1,116 @@
+<div class="animate-slide-up">
+  
+  <div class="sz-page-header">
+    <div class="sz-page-header-info">
+      <h1 class="sz-page-title">Estadísticas y Análisis de Incidencias</h1>
+      <p class="sz-page-description">Gráficos interactivos de tendencias de violencia y respuesta institucional.</p>
+    </div>
+    <div class="sz-page-header-actions">
+      <button class="btn btn-outline btn-sm" (click)="toastService.show('Exportación de reporte excel iniciada.', 'success')">Exportar XLS</button>
+    </div>
+  </div>
+
+  <!-- Report Metrics Grid -->
+  <div class="sz-report-mini-grid mt-6">
+    <div class="card p-4 text-center">
+      <p class="text-xs font-semibold text-muted">Tiempo Promedio Resolución</p>
+      <p class="text-xl font-bold mt-2 text-primary">18.4 Horas</p>
+    </div>
+    <div class="card p-4 text-center">
+      <p class="text-xs font-semibold text-muted">Eficacia de Medidas</p>
+      <p class="text-xl font-bold mt-2 text-success">92.1%</p>
+    </div>
+    <div class="card p-4 text-center">
+      <p class="text-xs font-semibold text-muted">Casos Derivados a Fiscalía</p>
+      <p class="text-xl font-bold mt-2 text-primary">240 casos</p>
+    </div>
+    <div class="card p-4 text-center">
+      <p class="text-xs font-semibold text-muted">Consultas Psicológicas</p>
+      <p class="text-xl font-bold mt-2 text-primary">823 atenciones</p>
+    </div>
+  </div>
+
+  <div class="sz-grid-2 mt-6">
+    
+    <!-- Gráfico de Riesgo (CSS Columns) -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-header-title">Incidencias por Nivel de Riesgo (Semanas Mayo)</h3>
+      </div>
+      <div class="card-body">
+        <div class="sz-chart-bar-container">
+          <div class="bar-item">
+            <div class="bar-pill is-severe" style="height: 80%;">
+              <span class="bar-tooltip">Riesgo Severo: 40 casos</span>
+            </div>
+            <span class="bar-label">Semana 1</span>
+          </div>
+          <div class="bar-item">
+            <div class="bar-pill" style="height: 60%;">
+              <span class="bar-tooltip">Riesgo Moderado: 30 casos</span>
+            </div>
+            <span class="bar-label">Semana 2</span>
+          </div>
+          <div class="bar-item">
+            <div class="bar-pill is-severe" style="height: 90%;">
+              <span class="bar-tooltip">Riesgo Severo: 45 casos</span>
+            </div>
+            <span class="bar-label">Semana 3</span>
+          </div>
+          <div class="bar-item">
+            <div class="bar-pill" style="height: 50%;">
+              <span class="bar-tooltip">Riesgo Leve: 25 casos</span>
+            </div>
+            <span class="bar-label">Semana 4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico de Distritos (Progress bars list) -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-header-title">Distritos con Mayor Reporte de Incidencias</h3>
+      </div>
+      <div class="card-body">
+        <div class="sz-report-list">
+          
+          <div class="list-item">
+            <span class="label">San Juan de Lurigancho</span>
+            <div class="value">
+              <span class="percent-bar"><span class="percent-fill" style="width: 85%; background-color: #EF4444;"></span></span>
+              <span>340 Casos</span>
+            </div>
+          </div>
+
+          <div class="list-item">
+            <span class="label">San Martín de Porres</span>
+            <div class="value">
+              <span class="percent-bar"><span class="percent-fill" style="width: 65%; background-color: #F59E0B;"></span></span>
+              <span>210 Casos</span>
+            </div>
+          </div>
+
+          <div class="list-item">
+            <span class="label">Villa El Salvador</span>
+            <div class="value">
+              <span class="percent-bar"><span class="percent-fill" style="width: 50%;"></span></span>
+              <span>170 Casos</span>
+            </div>
+          </div>
+
+          <div class="list-item">
+            <span class="label">Comas</span>
+            <div class="value">
+              <span class="percent-bar"><span class="percent-fill" style="width: 40%;"></span></span>
+              <span>120 Casos</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

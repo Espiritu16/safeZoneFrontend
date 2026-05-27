@@ -1,0 +1,145 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+@use '../abstracts/mixins' as mixins;
+@use '../abstracts/breakpoints' as bp;
+
+// Contenedor de reportes y analíticas
+.sz-reports-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// Estructura de barra de gráficos (Bar Chart con CSS)
+.sz-chart-bar-container {
+  display: flex;
+  height: 200px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid colors.$color-border-subtle;
+  gap: 12px;
+
+  .bar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    justify-content: flex-end;
+
+    .bar-pill {
+      width: 100%;
+      max-width: 32px;
+      background-color: rgba(colors.$color-brand-light, 0.4);
+      border-radius: vars.$radius-sm vars.$radius-sm 0 0;
+      transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s;
+      position: relative;
+      cursor: pointer;
+
+      &:hover {
+        background-color: colors.$color-brand-light;
+        .bar-tooltip {
+          display: block;
+        }
+      }
+
+      &.is-severe {
+        background-color: rgba(colors.$color-danger, 0.4);
+        &:hover {
+          background-color: colors.$color-danger;
+        }
+      }
+
+      .bar-tooltip {
+        display: none;
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: colors.$color-text-primary;
+        color: colors.$color-white;
+        padding: 4px 8px;
+        border-radius: vars.$radius-xs;
+        font-size: 0.65rem;
+        font-weight: 700;
+        white-space: nowrap;
+        pointer-events: none;
+        box-shadow: vars.$shadow-sm;
+      }
+    }
+
+    .bar-label {
+      font-size: 0.7rem;
+      color: colors.$color-text-secondary;
+      text-align: center;
+      width: 100%;
+      @include mixins.truncate(1);
+    }
+  }
+}
+
+// Tarjetas estadísticas pequeñas dentro de reportes
+.sz-report-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @include bp.mobile {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// Lista de distritos con mayor índice de casos
+.sz-report-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8125rem;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(colors.$color-border-subtle, 0.5);
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .label {
+      font-weight: 500;
+      color: colors.$color-text-primary;
+    }
+
+    .value {
+      font-weight: 700;
+      color: colors.$color-brand-medium;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .percent-bar {
+        width: 60px;
+        height: 6px;
+        background-color: colors.$color-bg-main;
+        border-radius: vars.$radius-full;
+        overflow: hidden;
+        display: block;
+
+        @include bp.mobile {
+          display: none;
+        }
+
+        .percent-fill {
+          height: 100%;
+          background-color: colors.$color-brand-light;
+          border-radius: vars.$radius-full;
+        }
+      }
+    }
+  }
+}

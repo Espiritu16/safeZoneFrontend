@@ -2,13 +2,18 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": "5b1c6225-32c1-4cff-9997-5dc823a7a5fa"
   },
   "newProjectRoot": "projects",
   "projects": {
-    "safe-zone-frontend": {
+    "safezone-frontend": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -18,13 +23,16 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"]
+            "styles": [
+              "src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -54,10 +62,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "safe-zone-frontend:build:production"
+              "buildTarget": "safezone-frontend:build:production"
             },
             "development": {
-              "buildTarget": "safe-zone-frontend:build:development"
+              "buildTarget": "safezone-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"

@@ -1,0 +1,53 @@
+@use '../abstracts/mixins' as mixins;
+@use '../abstracts/breakpoints' as bp;
+
+// Grid systems
+.sz-grid-1 { @include mixins.grid(1, 16px); }
+.sz-grid-2 { @include mixins.grid(2, 24px); }
+.sz-grid-3 { @include mixins.grid(3, 24px); }
+.sz-grid-4 { @include mixins.grid(4, 24px); }
+
+@include bp.mobile {
+  .sz-grid-2, .sz-grid-3, .sz-grid-4 {
+    @include mixins.grid(1, 16px);
+  }
+}
+
+@include bp.tablet {
+  .sz-grid-3, .sz-grid-4 {
+    @include mixins.grid(2, 20px);
+  }
+}
+
+// Layout de dos columnas asimétrico (ej. Perfil o Detalles con Sidebar interno)
+.sz-split-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+
+  @include bp.mobile {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  @include bp.tablet {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.sz-split-layout-reverse {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+
+  @include bp.mobile {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  @include bp.tablet {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

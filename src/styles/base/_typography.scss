@@ -1,0 +1,76 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+
+body {
+  font-family: vars.$font-family;
+  color: colors.$color-text-primary;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: colors.$color-text-primary;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 1.75rem; // 28px
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 1.5rem; // 24px
+}
+
+h3 {
+  font-size: 1.25rem; // 20px
+}
+
+h4 {
+  font-size: 1.125rem; // 18px
+}
+
+h5 {
+  font-size: 1rem; // 16px
+}
+
+p {
+  color: colors.$color-text-secondary;
+  font-size: 0.875rem; // 14px
+  line-height: 1.5;
+}
+
+small, .text-muted {
+  font-size: 0.75rem; // 12px
+  color: colors.$color-text-muted;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}

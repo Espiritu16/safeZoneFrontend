@@ -1,0 +1,126 @@
+@use 'sass:color';
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+@use '../abstracts/mixins' as mixins;
+@use '../abstracts/breakpoints' as bp;
+
+// Lista de alertas críticas
+.sz-critical-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .alert-item {
+    background-color: colors.$color-white;
+    border: 1px solid colors.$color-border-subtle;
+    border-left: 4px solid colors.$color-danger;
+    border-radius: vars.$radius-md;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+
+    @include bp.mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    &-content {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      
+      .icon {
+        color: colors.$color-danger;
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .text-wrapper {
+        .title {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: colors.$color-text-primary;
+        }
+        .meta {
+          font-size: 0.75rem;
+          color: colors.$color-text-muted;
+          margin-top: 2px;
+          display: flex;
+          gap: 12px;
+        }
+      }
+    }
+  }
+}
+
+// Actividad Reciente
+.sz-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .activity-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed rgba(colors.$color-border-subtle, 0.6);
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .badge-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: vars.$radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.75rem;
+      
+      &.type-case {
+        background-color: rgba(colors.$color-brand-light, 0.1);
+        color: colors.$color-brand-medium;
+      }
+      &.type-appointment {
+        background-color: rgba(colors.$color-success, 0.1);
+        color: colors.$color-success;
+      }
+      &.type-evidence {
+        background-color: rgba(colors.$color-warning, 0.1);
+        color: color.adjust(colors.$color-warning, $lightness: -15%);
+      }
+    }
+
+    .details {
+      flex: 1;
+      .text {
+        font-size: 0.8125rem;
+        color: colors.$color-text-primary;
+        strong {
+          font-weight: 600;
+        }
+      }
+      .time {
+        font-size: 0.7rem;
+        color: colors.$color-text-muted;
+        margin-top: 2px;
+      }
+    }
+  }
+}
+
+// Casos Prioritarios
+.sz-priority-cases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}

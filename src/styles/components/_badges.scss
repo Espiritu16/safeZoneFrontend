@@ -1,0 +1,74 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/colors' as colors;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: vars.$radius-sm;
+  line-height: 1;
+  text-transform: capitalize;
+  white-space: nowrap;
+
+  &-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: vars.$radius-full;
+  }
+
+  // Variantes de Estado
+  &-success {
+    background-color: colors.$color-success-bg;
+    color: colors.$color-success;
+    .badge-dot { background-color: colors.$color-success; }
+  }
+
+  &-warning {
+    background-color: colors.$color-warning-bg;
+    color: colors.$color-warning;
+    .badge-dot { background-color: colors.$color-warning; }
+  }
+
+  &-danger {
+    background-color: colors.$color-danger-bg;
+    color: colors.$color-danger;
+    .badge-dot { background-color: colors.$color-danger; }
+  }
+
+  &-info {
+    background-color: colors.$color-info-bg;
+    color: colors.$color-info;
+    .badge-dot { background-color: colors.$color-info; }
+  }
+
+  &-brand {
+    background-color: colors.$color-brand-soft;
+    color: colors.$color-brand-medium;
+    .badge-dot { background-color: colors.$color-brand-light; }
+  }
+
+  // Variantes de Clasificación de Riesgo Específicas
+  &-risk-severe {
+    background-color: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FCA5A5;
+    .badge-dot { background-color: #DC2626; }
+  }
+
+  &-risk-moderate {
+    background-color: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FCD34D;
+    .badge-dot { background-color: #D97706; }
+  }
+
+  &-risk-low {
+    background-color: #EFF6FF;
+    color: #1E40AF;
+    border: 1px solid #93C5FD;
+    .badge-dot { background-color: #2563EB; }
+  }
+}

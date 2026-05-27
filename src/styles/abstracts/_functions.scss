@@ -1,0 +1,7 @@
+// Conversión de px a rem
+@function rem($px) {
+  @if type-of($px) == 'number' {
+    @return calc($px / 16) * 1rem;
+  }
+  @return $px;
+}

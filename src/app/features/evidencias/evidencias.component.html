@@ -1,0 +1,84 @@
+<div class="animate-slide-up">
+  
+  <div class="sz-page-header">
+    <div class="sz-page-header-info">
+      <h1 class="sz-page-title">Gestión de Evidencias Digitales</h1>
+      <p class="sz-page-description">Bóveda digital de archivos cargados bajo encriptación segura del gobierno.</p>
+    </div>
+  </div>
+
+  <!-- Upload Area -->
+  <div class="card mt-6">
+    <div class="card-body">
+      <div class="form-upload" (click)="evidenceInput.click()">
+        <div class="form-upload-icon">📁</div>
+        <p class="form-upload-title">Arrastre archivos multimedia de prueba aquí</p>
+        <p class="form-upload-description">Los archivos se almacenan en servidores seguros con cifrado de grado judicial (AES-256).</p>
+        <input #evidenceInput type="file" style="display: none;" (change)="evidenceService.simulateFileUpload($event)">
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid de Evidencias -->
+  <h3 class="mt-6 mb-3">Evidencias Registradas</h3>
+  <div class="sz-grid-2">
+    @for (file of evidenceService.evidencias(); track file.id) {
+      <div class="card p-4 border-all rounded-lg flex flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="btn btn-outline" style="width: 44px; height: 44px; padding: 0;" (click)="evidenceService.showEvidenceModal.set(true)">
+            @if (file.type === 'PDF') { 📄 } @else if (file.type === 'Audio') { 🔊 } @else { 🖼 }
+          </div>
+          <div>
+            <p class="font-bold text-sm text-primary">{{ file.name }}</p>
+            <p class="text-xs text-muted mt-1">Tamaño: {{ file.size }} | Subido por: {{ file.uploader }}</p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button class="btn btn-outline btn-sm" (click)="evidenceService.showEvidenceModal.set(true)">Previsualizar</button>
+          <button class="btn btn-ghost btn-sm" (click)="toastService.show('Descarga denegada por directiva de privacidad.', 'error')" title="Descargar de forma segura">💾</button>
+        </div>
+      </div>
+    }
+  </div>
+
+</div>
+
+<!-- MODAL: PREVISUALIZAR EVIDENCIA -->
+@if (evidenceService.showEvidenceModal()) {
+  <div class="sz-modal-overlay">
+    <div class="sz-modal sz-modal-lg">
+      <div class="sz-modal-header">
+        <h3 class="sz-modal-header-title">Visor de Evidencia Digital Cifrada</h3>
+        <button class="sz-modal-header-close" (click)="evidenceService.showEvidenceModal.set(false)">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="sz-modal-body text-center p-6">
+        
+        <!-- Mock de Visor de Audio / Documento -->
+        <div class="p-6 bg-brand-soft border-all rounded-lg flex flex-col items-center justify-center gap-4">
+          <span style="font-size: 3rem;">🎵</span>
+          <p class="font-bold">grabacion_audio_amenaza.mp3</p>
+          <div class="w-full bg-border-subtle rounded-full" style="height: 8px; max-width: 320px;">
+            <div class="bg-brand-light rounded-full" style="height: 100%; width: 45%;"></div>
+          </div>
+          <div class="flex gap-4 text-xs text-muted">
+            <span>01:12</span>
+            <span>/</span>
+            <span>03:24</span>
+          </div>
+          <div class="flex gap-4 mt-2">
+            <button class="btn btn-outline btn-sm">▶ Reproducir</button>
+            <button class="btn btn-ghost btn-sm">⏸ Pausa</button>
+          </div>
+        </div>
+
+        <p class="text-xs text-muted mt-4">SafeZone protege la privacidad del material probatorio. Queda estrictamente prohibida la copia o reproducción externa.</p>
+
+      </div>
+      <div class="sz-modal-footer">
+        <button class="btn btn-primary" (click)="evidenceService.showEvidenceModal.set(false)">Cerrar Visor</button>
+      </div>
+    </div>
+  </div>
+}
