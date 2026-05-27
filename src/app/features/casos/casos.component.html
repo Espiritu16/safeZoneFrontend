@@ -1,0 +1,197 @@
+<div class="animate-slide-up">
+  
+  <div class="sz-page-header">
+    <div class="sz-page-header-info">
+      <h1 class="sz-page-title">Centro de Gestión y Control de Casos</h1>
+      <p class="sz-page-description">Búsqueda avanzada, clasificación de riesgo y seguimiento judicial.</p>
+    </div>
+    
+    <div class="sz-page-header-actions">
+      <!-- Cambiar Modo de Vista: Tabla o Kanban -->
+      <div class="flex border-all rounded-md p-1 bg-white">
+        <button class="btn btn-sm btn-ghost" [ngClass]="{'btn-primary': casesViewMode() === 'table'}" (click)="casesViewMode.set('table')">
+          <span>Tabla</span>
+        </button>
+        <button class="btn btn-sm btn-ghost" [ngClass]="{'btn-primary': casesViewMode() === 'kanban'}" (click)="casesViewMode.set('kanban')">
+          <span>Kanban</span>
+        </button>
+      </div>
+
+      <button class="btn btn-primary btn-sm" routerLink="/denuncias">Registrar Denuncia</button>
+    </div>
+  </div>
+
+  <!-- Filtros de Búsqueda -->
+  <div class="sz-table-filters mt-6">
+    <div class="sz-table-filters-left">
+      <div class="form-group m-0" style="min-width: 250px;">
+        <input class="form-input" type="text" placeholder="Buscar por código, víctima, encargado..." 
+               [ngModel]="casesService.casesSearchQuery()" (ngModelChange)="casesService.casesSearchQuery.set($event)">
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" [ngModel]="casesService.casesRiskFilter()" (ngModelChange)="casesService.casesRiskFilter.set($event)">
+          <option value="all">Todos los Riesgos</option>
+          <option value="severo">Riesgo Severo</option>
+          <option value="moderado">Riesgo Moderado</option>
+          <option value="leve">Riesgo Leve</option>
+        </select>
+      </div>
+    </div>
+    <div class="sz-table-filters-right">
+      <span class="text-xs text-muted font-medium">Resultados encontrados: {{ casesService.filteredCasos().length }}</span>
+    </div>
+  </div>
+
+  <!-- MODO 1: VISTA DE TABLA -->
+  @if (casesViewMode() === 'table') {
+    <div class="sz-table-container mt-2">
+      <table class="sz-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Víctima</th>
+            <th>Tipo Violencia</th>
+            <th>Riesgo</th>
+            <th>Encargado</th>
+            <th>Fecha de Ingreso</th>
+            <th>Estado Emocional</th>
+            <th class="col-actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (caso of casesService.filteredCasos(); track caso.id) {
+            <tr>
+              <td class="font-semibold text-primary">{{ caso.codigo }}</td>
+              <td>
+                <div class="flex items-center gap-2">
+                  @if (caso.anonimo) {
+                    <span class="badge badge-info" title="Víctima Anónima con identidad protegida">🔒 {{ caso.victim }}</span>
+                  } @else {
+                    <span>{{ caso.victim }}</span>
+                  }
+                  <span class="text-xs text-muted">({{ caso.edad }} años)</span>
+                </div>
+              </td>
+              <td>{{ caso.tipo }}</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'badge-risk-severe': caso.riesgo === 'Severo',
+                  'badge-risk-moderate': caso.riesgo === 'Moderado',
+                  'badge-risk-low': caso.riesgo === 'Leve'
+                }">
+                  <span class="badge-dot"></span>{{ caso.riesgo }}
+                </span>
+              </td>
+              <td>{{ caso.asignado }}</td>
+              <td>{{ caso.fecha }}</td>
+              <td>
+                <span class="text-xs text-secondary font-medium">{{ caso.emocion }}</span>
+              </td>
+              <td class="col-actions">
+                <button class="btn btn-outline btn-sm" (click)="casesService.viewCaseDetails(caso)">Ficha Digital</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      
+      <div class="sz-table-pagination">
+        <div class="sz-table-pagination-info">Mostrando {{ casesService.filteredCasos().length }} de {{ casesService.totalCasos() }} casos registrados</div>
+        <div class="sz-table-pagination-actions">
+          <button class="btn btn-outline btn-sm" disabled>Anterior</button>
+          <button class="btn btn-outline btn-sm" disabled>Siguiente</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- MODO 2: VISTA KANBAN -->
+  @if (casesViewMode() === 'kanban') {
+    <div class="sz-kanban-board mt-4">
+      
+      <!-- Columna 1: Evaluación -->
+      <div class="sz-kanban-column">
+        <div class="sz-kanban-column-header">
+          <span class="column-title"><span class="badge-dot" style="background-color: #FEF3C7;"></span>Evaluación</span>
+          <span class="column-count">{{ casesService.getCasosByStatus('Evaluación').length }}</span>
+        </div>
+        <div class="sz-kanban-column-list">
+          @for (c of casesService.getCasosByStatus('Evaluación'); track c.id) {
+            <div class="sz-kanban-card">
+              <div class="flex justify-between items-center">
+                <span class="badge" [ngClass]="{
+                  'badge-risk-severe': c.riesgo === 'Severo',
+                  'badge-risk-moderate': c.riesgo === 'Moderado',
+                  'badge-risk-low': c.riesgo === 'Leve'
+                }">{{ c.riesgo }}</span>
+                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En Proceso')" title="Avanzar a En Proceso">→</button>
+              </div>
+              <p class="sz-kanban-card-title">{{ c.victim }}</p>
+              <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
+              <div class="sz-kanban-card-footer">
+                <span>Asignado: {{ c.asignado }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Columna 2: En Proceso -->
+      <div class="sz-kanban-column">
+        <div class="sz-kanban-column-header">
+          <span class="column-title"><span class="badge-dot" style="background-color: #3B82F6;"></span>En Proceso</span>
+          <span class="column-count">{{ casesService.getCasosByStatus('En Proceso').length }}</span>
+        </div>
+        <div class="sz-kanban-column-list">
+          @for (c of casesService.getCasosByStatus('En Proceso'); track c.id) {
+            <div class="sz-kanban-card">
+              <div class="flex justify-between items-center">
+                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'Evaluación')" title="Retroceder a Evaluación">←</button>
+                <span class="badge" [ngClass]="{
+                  'badge-risk-severe': c.riesgo === 'Severo',
+                  'badge-risk-moderate': c.riesgo === 'Moderado',
+                  'badge-risk-low': c.riesgo === 'Leve'
+                }">{{ c.riesgo }}</span>
+                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'Medidas de Protección')" title="Avanzar a Medidas">→</button>
+              </div>
+              <p class="sz-kanban-card-title">{{ c.victim }}</p>
+              <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
+              <div class="sz-kanban-card-footer">
+                <span>Asignado: {{ c.asignado }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Columna 3: Medidas de Protección -->
+      <div class="sz-kanban-column">
+        <div class="sz-kanban-column-header">
+          <span class="column-title"><span class="badge-dot" style="background-color: #10B981;"></span>Medidas Judiciales</span>
+          <span class="column-count">{{ casesService.getCasosByStatus('Medidas de Protección').length }}</span>
+        </div>
+        <div class="sz-kanban-column-list">
+          @for (c of casesService.getCasosByStatus('Medidas de Protección'); track c.id) {
+            <div class="sz-kanban-card">
+              <div class="flex justify-between items-center">
+                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En Proceso')" title="Retroceder a En Proceso">←</button>
+                <span class="badge" [ngClass]="{
+                  'badge-risk-severe': c.riesgo === 'Severo',
+                  'badge-risk-moderate': c.riesgo === 'Moderado',
+                  'badge-risk-low': c.riesgo === 'Leve'
+                }">{{ c.riesgo }}</span>
+              </div>
+              <p class="sz-kanban-card-title">{{ c.victim }}</p>
+              <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
+              <div class="sz-kanban-card-footer">
+                <span>Asignado: {{ c.asignado }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>

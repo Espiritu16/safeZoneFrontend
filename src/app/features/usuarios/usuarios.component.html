@@ -1,0 +1,179 @@
+<div class="animate-slide-up">
+  
+  <div class="sz-page-header">
+    <div class="sz-page-header-info">
+      <h1 class="sz-page-title">Gestión de Usuarios del Sistema</h1>
+      <p class="sz-page-description">Administración de cuentas, roles y permisos del personal institucional.</p>
+    </div>
+    <div class="sz-page-header-actions">
+      <button class="btn btn-primary btn-sm" (click)="openCreate()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        <span>Nuevo Usuario</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- KPIs rápidos -->
+  <div class="sz-grid-4 mt-6">
+    <div class="card card-kpi card-kpi-brand">
+      <p class="kpi-title">Total Usuarios</p>
+      <div class="kpi-value-row">
+        <span class="kpi-value">{{ usersService.users().length }}</span>
+      </div>
+      <p class="kpi-description">Registrados en el sistema</p>
+    </div>
+    <div class="card card-kpi card-kpi-success">
+      <p class="kpi-title">Activos</p>
+      <div class="kpi-value-row">
+        <span class="kpi-value">{{ usersService.totalActivos() }}</span>
+      </div>
+      <p class="kpi-description">Con sesión habilitada</p>
+    </div>
+    <div class="card card-kpi card-kpi-warning">
+      <p class="kpi-title">Inactivos</p>
+      <div class="kpi-value-row">
+        <span class="kpi-value">{{ usersService.totalInactivos() }}</span>
+      </div>
+      <p class="kpi-description">Cuentas suspendidas</p>
+    </div>
+    <div class="card card-kpi card-kpi-danger">
+      <p class="kpi-title">Roles Definidos</p>
+      <div class="kpi-value-row">
+        <span class="kpi-value">6</span>
+      </div>
+      <p class="kpi-description">Perfiles de acceso</p>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="sz-table-filters mt-6">
+    <div class="sz-table-filters-left">
+      <div class="form-group m-0" style="min-width: 250px;">
+        <input class="form-input" type="text" placeholder="Buscar por nombre o email..."
+               [ngModel]="usersService.searchQuery()" (ngModelChange)="usersService.searchQuery.set($event)">
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" [ngModel]="usersService.roleFilter()" (ngModelChange)="usersService.roleFilter.set($event)">
+          <option value="all">Todos los Roles</option>
+          @for (rol of authService.roles; track rol) {
+            <option [value]="rol">{{ rol }}</option>
+          }
+        </select>
+      </div>
+    </div>
+    <div class="sz-table-filters-right">
+      <span class="text-xs text-muted font-medium">Mostrando: {{ usersService.filteredUsers().length }} usuarios</span>
+    </div>
+  </div>
+
+  <!-- Tabla de Usuarios -->
+  <div class="sz-table-container mt-2">
+    <table class="sz-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Última Conexión</th>
+          <th class="col-actions">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of usersService.filteredUsers(); track user.id) {
+          <tr>
+            <td><strong>{{ user.nombre }}</strong></td>
+            <td class="text-secondary text-xs">{{ user.email }}</td>
+            <td>
+              <span class="badge badge-brand">{{ user.rol }}</span>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'badge-success': user.estado === 'Activo',
+                'badge-warning': user.estado === 'Inactivo'
+              }">
+                <span class="badge-dot"></span>{{ user.estado }}
+              </span>
+            </td>
+            <td class="text-xs text-muted">{{ user.ultimaConexion }}</td>
+            <td class="col-actions">
+              <div class="flex gap-2">
+                <button class="btn btn-outline btn-sm" (click)="openEdit(user)" title="Editar">Editar</button>
+                <button class="btn btn-ghost btn-sm" (click)="usersService.toggleStatus(user.id)" title="Cambiar estado">
+                  {{ user.estado === 'Activo' ? '🔒' : '🔓' }}
+                </button>
+                @if (showDeleteConfirm() === user.id) {
+                  <button class="btn btn-danger btn-sm" (click)="executeDelete(user.id)">¿Confirmar?</button>
+                  <button class="btn btn-ghost btn-sm" (click)="cancelDelete()">✕</button>
+                } @else {
+                  <button class="btn btn-ghost btn-sm" (click)="confirmDelete(user.id)" title="Eliminar">🗑</button>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- MODAL: Crear/Editar Usuario -->
+@if (usersService.showModal()) {
+  <div class="sz-modal-overlay">
+    <div class="sz-modal">
+      <div class="sz-modal-header">
+        <h3 class="sz-modal-header-title">{{ usersService.editingUser() ? 'Editar Usuario' : 'Registrar Nuevo Usuario' }}</h3>
+        <button class="sz-modal-header-close" (click)="usersService.closeModal()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="sz-modal-body">
+        <form #uForm="ngForm" id="userForm">
+          <div class="form-group">
+            <label class="form-label">Nombre Completo *</label>
+            <input class="form-input" type="text" name="nombre" [(ngModel)]="formData.nombre" #nombre="ngModel" required minlength="4" placeholder="Nombre y apellidos" [ngClass]="{'border-danger': nombre.invalid && nombre.touched}">
+            @if (nombre.invalid && nombre.touched) {
+              <p class="text-xs text-danger mt-1">El nombre completo es obligatorio (mín. 4 caracteres).</p>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Correo Institucional *</label>
+            <input class="form-input" type="email" name="email" [(ngModel)]="formData.email" #email="ngModel" required pattern="^[a-zA-Z0-9._%+-]+@safezone\.gob\.pe$" placeholder="usuario@safezone.gob.pe" [ngClass]="{'border-danger': email.invalid && email.touched}">
+            @if (email.invalid && email.touched) {
+              <p class="text-xs text-danger mt-1">Debe ser un correo institucional válido (...@safezone.gob.pe).</p>
+            }
+          </div>
+
+          <div class="sz-grid-2">
+            <div class="form-group">
+              <label class="form-label">Rol Asignado *</label>
+              <select class="form-select" name="rol" [(ngModel)]="formData.rol" #rol="ngModel" required [ngClass]="{'border-danger': rol.invalid && rol.touched}">
+                @for (rol of authService.roles; track rol) {
+                  <option [value]="rol">{{ rol }}</option>
+                }
+              </select>
+              @if (rol.invalid && rol.touched) {
+                <p class="text-xs text-danger mt-1">Seleccione un rol.</p>
+              }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estado *</label>
+              <select class="form-select" name="estado" [(ngModel)]="formData.estado" #estado="ngModel" required [ngClass]="{'border-danger': estado.invalid && estado.touched}">
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="sz-modal-footer">
+        <button class="btn btn-outline" (click)="usersService.closeModal()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveUser()" [disabled]="uForm.invalid">
+          {{ usersService.editingUser() ? 'Guardar Cambios' : 'Crear Usuario' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

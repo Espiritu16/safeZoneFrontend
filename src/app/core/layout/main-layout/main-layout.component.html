@@ -1,0 +1,129 @@
+<app-global-loader />
+<div class="sz-dashboard-layout animate-fade-in">
+  
+  <app-sidebar />
+
+  <!-- Overlay Sidebar móvil -->
+  <div class="sz-sidebar-overlay" [ngClass]="{'is-open': layoutService.isMobileSidebarOpen()}" (click)="layoutService.toggleMobileSidebar()"></div>
+
+  <!-- CONTENEDOR PRINCIPAL DERECHA -->
+  <div class="sz-main-layout-right">
+    
+    <app-topbar />
+
+    <!-- ÁREA DE CONTENIDO DINÁMICA -->
+    <main class="sz-main-content" [ngClass]="{'is-collapsed': layoutService.isSidebarCollapsed()}">
+      
+      <div class="sz-breadcrumbs">
+        <a href="javascript:void(0)">SafeZone</a>
+        <span class="separator">/</span>
+        <span class="active">Portal</span>
+      </div>
+
+      <router-outlet />
+
+    </main>
+
+  </div>
+</div>
+<app-toast-container />
+
+<!-- DRAWER: DETALLE DE EXPEDIENTE DIGITAL -->
+@if (casesService.selectedCase()) {
+  <div class="sz-drawer-overlay" (click)="casesService.closeCaseDrawer()"></div>
+  <div class="sz-drawer">
+    <div class="sz-drawer-header">
+      <h3 class="sz-drawer-header-title">Expediente: {{ casesService.selectedCase()?.codigo }}</h3>
+      <button class="btn btn-outline btn-sm" (click)="casesService.closeCaseDrawer()">Cerrar</button>
+    </div>
+    
+    <div class="sz-drawer-body">
+      
+      <div class="sz-case-detail-tabs">
+        <button class="tab-btn" [ngClass]="{'is-active': casesService.activeCaseTab() === 'detalles'}" (click)="casesService.activeCaseTab.set('detalles')">Detalles</button>
+        <button class="tab-btn" [ngClass]="{'is-active': casesService.activeCaseTab() === 'historial'}" (click)="casesService.activeCaseTab.set('historial')">Seguimiento</button>
+      </div>
+
+      <!-- Tab 1: Detalles -->
+      @if (casesService.activeCaseTab() === 'detalles') {
+        <div class="animate-fade-in flex flex-col gap-4">
+          
+          <div class="p-3 bg-brand-soft rounded-lg border-all">
+            <p class="text-xs text-secondary font-semibold">Víctima Registrada</p>
+            <p class="font-bold text-base mt-1">{{ casesService.selectedCase()?.victim }}</p>
+            <p class="text-xs text-muted mt-1">Clasificación de Riesgo: <strong>{{ casesService.selectedCase()?.riesgo }}</strong></p>
+          </div>
+
+          <div class="sz-expediente-ficha mt-2">
+            <div class="ficha-field">
+              <span class="label">Edad</span>
+              <span class="value">{{ casesService.selectedCase()?.edad }} años</span>
+            </div>
+            <div class="ficha-field">
+              <span class="label">Distrito</span>
+              <span class="value">{{ casesService.selectedCase()?.distrito }}</span>
+            </div>
+            <div class="ficha-field">
+              <span class="label">Tipo Violencia</span>
+              <span class="value">{{ casesService.selectedCase()?.tipo }}</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Profesional Responsable Asignado</label>
+            <input class="form-input" type="text" [value]="casesService.selectedCase()?.asignado" disabled>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Estado del Trámite Judicial</label>
+            <div class="flex gap-2">
+              <span class="badge" [ngClass]="{
+                'badge-warning': casesService.selectedCase()?.estado === 'Evaluación',
+                'badge-info': casesService.selectedCase()?.estado === 'En Proceso',
+                'badge-success': casesService.selectedCase()?.estado === 'Medidas de Protección'
+              }">{{ casesService.selectedCase()?.estado }}</span>
+            </div>
+          </div>
+
+        </div>
+      }
+
+      <!-- Tab 2: Historial (Timeline) -->
+      @if (casesService.activeCaseTab() === 'historial') {
+        <div class="animate-fade-in">
+          <div class="sz-timeline">
+            
+            <div class="sz-timeline-item">
+              <div class="sz-timeline-item-node is-active"></div>
+              <div class="sz-timeline-item-header">
+                <span class="time-title">Evaluación Psicológica Completada</span>
+                <span class="time-stamp">{{ casesService.selectedCase()?.fecha }}</span>
+              </div>
+              <p class="sz-timeline-item-body">
+                Se completó el informe preliminar de estado emocional. Nivel registrado: {{ casesService.selectedCase()?.emocion }}.
+              </p>
+            </div>
+
+            <div class="sz-timeline-item">
+              <div class="sz-timeline-item-node is-success"></div>
+              <div class="sz-timeline-item-header">
+                <span class="time-title">Denuncia Ingresada al Sistema</span>
+                <span class="time-stamp">Hace 5 días</span>
+              </div>
+              <p class="sz-timeline-item-body">
+                Registro preliminar de la denuncia digitalizado en comisaría de Lima Metropolitana.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <div class="sz-drawer-footer">
+      <button class="btn btn-outline" (click)="casesService.closeCaseDrawer()">Cerrar Expediente</button>
+      <button class="btn btn-primary" (click)="toastService.show('Medidas urgentes ratificadas en el Poder Judicial.', 'success')">Ratificar Medidas</button>
+    </div>
+  </div>
+}

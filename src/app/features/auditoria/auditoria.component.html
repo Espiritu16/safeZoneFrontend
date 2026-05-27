@@ -1,0 +1,93 @@
+<div class="animate-slide-up">
+  
+  <div class="sz-page-header">
+    <div class="sz-page-header-info">
+      <h1 class="sz-page-title flex items-center gap-3">
+        Logs y Trazabilidad de Auditoría
+        <span class="badge badge-brand">{{ auditService.logs().length }} registros</span>
+      </h1>
+      <p class="sz-page-description">Historial inmutable de acciones realizadas por el personal institucional.</p>
+    </div>
+    <div class="sz-page-header-actions">
+      <button class="btn btn-outline btn-sm" (click)="exportarCSV()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span>Exportar CSV</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="sz-table-filters mt-6 mb-2">
+    <div class="sz-table-filters-left">
+      <div class="form-group m-0" style="min-width: 280px;">
+        <input class="form-input" type="text" placeholder="Buscar usuario o detalle..."
+               [ngModel]="auditService.searchQuery()" (ngModelChange)="auditService.searchQuery.set($event)">
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" [ngModel]="auditService.actionFilter()" (ngModelChange)="auditService.actionFilter.set($event)">
+          <option value="all">Todas las acciones</option>
+          <option value="Inicio de Sesión">Inicio de Sesión</option>
+          <option value="Cierre de Sesión">Cierre de Sesión</option>
+          <option value="Registro de Denuncia">Registro de Denuncia</option>
+          <option value="Acceso a Expediente">Acceso a Expediente</option>
+          <option value="Carga de Evidencia">Carga de Evidencia</option>
+          <option value="Configuración">Configuración</option>
+          <option value="Mantenimiento">Mantenimiento</option>
+          <option value="Cambio de Estado">Cambio de Estado</option>
+        </select>
+      </div>
+      <div class="form-group m-0">
+        <input type="date" class="form-input" [ngModel]="auditService.dateFilter()" (ngModelChange)="auditService.dateFilter.set($event)">
+      </div>
+    </div>
+    <div class="sz-table-filters-right">
+      <span class="text-xs text-muted font-medium mt-2">Mostrando: {{ auditService.filteredLogs().length }} registros</span>
+    </div>
+  </div>
+
+  <!-- Logs Table -->
+  <div class="sz-table-container mt-2">
+    <table class="sz-table">
+      <thead>
+        <tr>
+          <th>Fecha / Hora</th>
+          <th>Usuario</th>
+          <th>Módulo</th>
+          <th>Acción Realizada</th>
+          <th>Dirección IP</th>
+          <th>Detalles de la Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of auditService.filteredLogs(); track log.id) {
+          <tr>
+            <td class="text-xs text-secondary font-mono">{{ log.timestamp }}</td>
+            <td>
+              <strong>{{ log.user }}</strong>
+              <div class="text-xs text-muted">{{ log.role }}</div>
+            </td>
+            <td>
+              <span class="badge">{{ log.module }}</span>
+            </td>
+            <td>
+              <span class="text-sm font-semibold" [ngClass]="{
+                'text-success': log.action.includes('Inicio de Sesión') || log.action.includes('Registro'),
+                'text-brand': log.action.includes('Acceso'),
+                'text-warning': log.action.includes('Configuración') || log.action.includes('Carga'),
+                'text-danger': log.action.includes('Cierre') || log.action.includes('Eliminación')
+              }">{{ log.action }}</span>
+            </td>
+            <td class="text-xs text-muted font-mono">{{ log.ip }}</td>
+            <td class="text-sm">{{ log.detail }}</td>
+          </tr>
+        }
+        @if (auditService.filteredLogs().length === 0) {
+          <tr>
+            <td colspan="6" class="text-center p-8 text-muted">No se encontraron registros de auditoría para los filtros aplicados.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>

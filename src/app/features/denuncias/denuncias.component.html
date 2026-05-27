@@ -1,0 +1,193 @@
+<div class="animate-slide-up max-width-800" style="margin: 0 auto; width: 100%;">
+  
+  <div class="sz-page-header">
+    <div class="sz-page-header-info">
+      <h1 class="sz-page-title">Ficha de Registro Multi-Step de Incidentes</h1>
+      <p class="sz-page-description">Ingreso confidencial y seguro de denuncias de violencia familiar.</p>
+    </div>
+  </div>
+
+  <!-- Stepper Header -->
+  <div class="card mt-6 p-4">
+    <div class="flex justify-between items-center" style="max-width: 600px; margin: 0 auto; width: 100%;">
+      
+      <div class="flex flex-col items-center gap-1">
+        <div class="btn btn-sm rounded-full" [ngClass]="activeStep() >= 1 ? 'btn-primary' : 'btn-outline'" style="width: 32px; height: 32px; padding: 0;">1</div>
+        <span class="text-xs font-semibold">Identificación</span>
+      </div>
+      
+      <div class="flex-1 border-t mx-2" style="height: 1px;"></div>
+
+      <div class="flex flex-col items-center gap-1">
+        <div class="btn btn-sm rounded-full" [ngClass]="activeStep() >= 2 ? 'btn-primary' : 'btn-outline'" style="width: 32px; height: 32px; padding: 0;">2</div>
+        <span class="text-xs font-semibold">Hechos</span>
+      </div>
+
+      <div class="flex-1 border-t mx-2" style="height: 1px;"></div>
+
+      <div class="flex flex-col items-center gap-1">
+        <div class="btn btn-sm rounded-full" [ngClass]="activeStep() >= 3 ? 'btn-primary' : 'btn-outline'" style="width: 32px; height: 32px; padding: 0;">3</div>
+        <span class="text-xs font-semibold">Evidencias</span>
+      </div>
+
+      <div class="flex-1 border-t mx-2" style="height: 1px;"></div>
+
+      <div class="flex flex-col items-center gap-1">
+        <div class="btn btn-sm rounded-full" [ngClass]="activeStep() >= 4 ? 'btn-primary' : 'btn-outline'" style="width: 32px; height: 32px; padding: 0;">4</div>
+        <span class="text-xs font-semibold">Validación</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Stepper Body -->
+  <div class="card mt-4">
+    <div class="card-body">
+      
+      <!-- PASO 1: Identificación de la Víctima -->
+      @if (activeStep() === 1) {
+        <div class="animate-fade-in">
+          <h3 class="mb-4">1. Identificación de la Víctima</h3>
+          
+          <div class="form-group mb-4">
+            <label class="form-checkbox">
+              <input type="checkbox" [(ngModel)]="denunciaForm.anonimo">
+              <span class="font-semibold text-primary">Registrar bajo Alias Anónimo (Protección extrema)</span>
+            </label>
+            <p class="form-help mt-1">Si se selecciona, el DNI y nombre real se ocultarán automáticamente bajo un código seguro.</p>
+          </div>
+
+          @if (!denunciaForm.anonimo) {
+            <div class="sz-grid-2">
+              <div class="form-group">
+                <label class="form-label">DNI de la Víctima</label>
+                <input class="form-input" type="text" [(ngModel)]="denunciaForm.dni" placeholder="8 dígitos numéricos" maxlength="8">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nombres Completos</label>
+                <input class="form-input" type="text" [(ngModel)]="denunciaForm.nombre" placeholder="Nombres y apellidos">
+              </div>
+            </div>
+          } @else {
+            <div class="p-3 bg-info-bg border-all rounded-md mb-4 text-info text-xs">
+              <strong>Modo Anónimo Activado:</strong> Los datos personales reales serán encriptados en base de datos segura. La víctima será visible en la plataforma como <strong>Alias: Lima-{{ Math.floor(Math.random() * 900 + 100) }}</strong>.
+            </div>
+          }
+
+          <div class="sz-grid-3">
+            <div class="form-group">
+              <label class="form-label">Edad</label>
+              <input class="form-input" type="number" [(ngModel)]="denunciaForm.edad" placeholder="Años">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Distrito de Residencia</label>
+              <select class="form-select" [(ngModel)]="denunciaForm.distrito">
+                <option value="Lima Cercado">Lima Cercado</option>
+                <option value="Comas">Comas</option>
+                <option value="Villa El Salvador">Villa El Salvador</option>
+                <option value="San Juan de Lurigancho">San Juan de Lurigancho</option>
+                <option value="San Martín de Porres">San Martín de Porres</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teléfono de Contacto Seguro</label>
+              <input class="form-input" type="text" [(ngModel)]="denunciaForm.telefono" placeholder="Número seguro">
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- PASO 2: Hechos del Incidente -->
+      @if (activeStep() === 2) {
+        <div class="animate-fade-in">
+          <h3 class="mb-4">2. Detalle de los Hechos</h3>
+          
+          <div class="sz-grid-2">
+            <div class="form-group">
+              <label class="form-label">Tipo Principal de Violencia</label>
+              <select class="form-select" [(ngModel)]="denunciaForm.tipoViolencia">
+                <option value="Física">Física</option>
+                <option value="Psicológica">Psicológica</option>
+                <option value="Económica">Económica / Patrimonial</option>
+                <option value="Física y Psicológica">Física y Psicológica Combinada</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Vínculo con el Presunto Agresor</label>
+              <select class="form-select" [(ngModel)]="denunciaForm.relacionAgresor">
+                <option value="Cónyuge">Cónyuge / Conyugue</option>
+                <option value="Ex-cónyuge">Ex-pareja / Ex-cónyuge</option>
+                <option value="Padre/Madre">Padre / Madre</option>
+                <option value="Hermano/a">Hermano / Hermana</option>
+                <option value="Otro">Otro familiar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Detalle Narrativo de los Hechos</label>
+            <textarea class="form-textarea" [(ngModel)]="denunciaForm.detalleHechos" placeholder="Describa el suceso, fechas, amenazas o frecuencia de agresiones de forma detallada..."></textarea>
+          </div>
+        </div>
+      }
+
+      <!-- PASO 3: Carga de Evidencias -->
+      @if (activeStep() === 3) {
+        <div class="animate-fade-in">
+          <h3 class="mb-4">3. Evidencias Digitales Complementarias</h3>
+          
+          <div class="form-upload" (click)="fileInput.click()">
+            <div class="form-upload-icon">📁</div>
+            <p class="form-upload-title">Arrastre archivos aquí o haga clic para examinar</p>
+            <p class="form-upload-description">Formatos seguros permitidos: JPG, PNG, PDF, MP3 (Audios de amenazas), MP4. Tamaño máx. 25MB.</p>
+            <input #fileInput type="file" style="display: none;" (change)="simulateFileUpload($event)">
+          </div>
+
+          <div class="mt-4">
+            <p class="text-xs font-semibold text-secondary mb-2">Archivos listos para registrar:</p>
+            <div class="border-all rounded-md p-3 flex justify-between items-center bg-brand-soft">
+              <span class="text-xs font-medium">acta_de_incidente_preliminar.pdf (1.2 MB)</span>
+              <span class="text-xs text-success font-semibold">Listo</span>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- PASO 4: Confirmación Final -->
+      @if (activeStep() === 4) {
+        <div class="animate-fade-in">
+          <h3 class="mb-4 text-center text-success">✓ Todo Listo para el Registro Seguro</h3>
+          <p class="text-center text-secondary mb-6">Por favor, revise la información ingresada antes de enviar el caso al sistema judicial.</p>
+          
+          <div class="p-4 bg-brand-soft border-all rounded-lg text-sm">
+            <div class="mb-2"><strong>Tipo de Caso:</strong> Violencia {{ denunciaForm.tipoViolencia }}</div>
+            <div class="mb-2"><strong>Víctima:</strong> {{ denunciaForm.anonimo ? 'Alias Protegido' : (denunciaForm.nombre || 'Ana María L.') }}</div>
+            <div class="mb-2"><strong>Distrito:</strong> {{ denunciaForm.distrito }}</div>
+            <div class="mb-2"><strong>Relación con Agresor:</strong> {{ denunciaForm.relacionAgresor }}</div>
+            <div class="mb-2"><strong>Detalles:</strong> {{ denunciaForm.detalleHechos || 'Se reporta violencia reiterada con amenazas físicas de agresión...' }}</div>
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="form-checkbox">
+              <input type="checkbox" [(ngModel)]="denunciaForm.medidasInmediatas" checked>
+              <span>Solicitar Medidas de Protección Judicial Urgentes de forma automática.</span>
+            </label>
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <!-- Footer del Formulario Stepper -->
+    <div class="card-footer flex justify-between">
+      <button class="btn btn-outline" [disabled]="activeStep() === 1" (click)="prevStep()">Atrás</button>
+      
+      @if (activeStep() < 4) {
+        <button class="btn btn-primary" (click)="nextStep()">Siguiente</button>
+      } @else {
+        <button class="btn btn-success" (click)="submitDenuncia()">Registrar Caso Seguro</button>
+      }
+    </div>
+  </div>
+
+</div>

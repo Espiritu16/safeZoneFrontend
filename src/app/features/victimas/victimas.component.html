@@ -1,0 +1,274 @@
+<div class="animate-slide-up">
+  
+  <div class="sz-page-header">
+    <div class="sz-page-header-info">
+      <h1 class="sz-page-title">Directorio de Víctimas</h1>
+      <p class="sz-page-description">Expedientes consolidados e historial integral de atención.</p>
+    </div>
+    <div class="sz-page-header-actions">
+      <button class="btn btn-primary btn-sm" (click)="openCreate()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        <span>Registrar Víctima</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="sz-table-filters mt-6 mb-2">
+    <div class="form-group m-0" style="min-width: 300px;">
+      <input class="form-input" type="text" placeholder="Buscar por DNI, Nombres, Código, Alias..."
+             [ngModel]="victimsService.searchQuery()" (ngModelChange)="victimsService.searchQuery.set($event)">
+    </div>
+    <span class="text-xs text-muted font-medium mt-2">Mostrando: {{ victimsService.filteredVictims().length }} expedientes</span>
+  </div>
+
+  <div class="sz-split-layout mt-4">
+    
+    <!-- Izquierda: Listado -->
+    <div class="flex flex-col gap-3" style="max-height: calc(100vh - 240px); overflow-y: auto; padding-right: 8px;">
+      @for (v of victimsService.filteredVictims(); track v.id) {
+        <div class="card card-interactive p-4" [ngClass]="{'border-brand-light bg-brand-soft': victimsService.selectedVictim()?.id === v.id}" (click)="victimsService.selectVictim(v)">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-bold text-sm flex items-center gap-2">
+                {{ v.anonimo ? v.alias : (v.nombre + ' ' + v.apellidos) }}
+                @if (v.anonimo) { <span title="Identidad Protegida">🔒</span> }
+              </p>
+              <p class="text-xs text-muted mt-1">DNI: {{ v.anonimo ? 'Protegido' : v.dni }}</p>
+            </div>
+            <span class="badge badge-brand">{{ v.codigo }}</span>
+          </div>
+        </div>
+      }
+      @if (victimsService.filteredVictims().length === 0) {
+        <div class="p-4 text-center text-muted text-sm border-all rounded-md">
+          No se encontraron resultados
+        </div>
+      }
+    </div>
+
+    <!-- Derecha: Ficha en detalle -->
+    <div class="flex flex-col gap-4">
+      @if (victimsService.selectedVictim(); as selected) {
+        <div class="sz-victima-profile-card">
+          <div class="profile-avatar">
+            {{ selected.anonimo ? '🔒' : selected.nombre.charAt(0) }}
+          </div>
+          <div class="profile-details" style="flex: 1;">
+            <div class="flex justify-between items-start">
+              <div>
+                <h2 class="name text-lg font-bold">
+                  {{ selected.anonimo ? 'Identidad Protegida' : (selected.nombre + ' ' + selected.apellidos) }}
+                  @if (selected.anonimo) {
+                    <span class="text-brand text-sm ml-2">Alias: {{ selected.alias }}</span>
+                  }
+                </h2>
+                <div class="meta-row mt-1 text-sm text-secondary">
+                  <span><strong>Código:</strong> {{ selected.codigo }}</span>
+                  <span><strong>DNI:</strong> {{ selected.dni }}</span>
+                  <span><strong>Edad:</strong> {{ selected.edad }} años</span>
+                </div>
+              </div>
+              <button class="btn btn-outline btn-sm" (click)="openEdit(selected)">Editar Ficha</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card flex-1">
+          <div class="sz-case-detail-tabs border-b mb-4">
+            <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'perfil'}" (click)="activeTab.set('perfil')">Perfil Completo</button>
+            <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'denuncias'}" (click)="activeTab.set('denuncias')">Denuncias</button>
+            <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'seguimientos'}" (click)="activeTab.set('seguimientos')">Seguimientos</button>
+            <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'citas'}" (click)="activeTab.set('citas')">Citas</button>
+          </div>
+
+          <div class="p-4 pt-0 overflow-y-auto" style="max-height: 400px;">
+            
+            @if (activeTab() === 'perfil') {
+              <div class="animate-fade-in sz-grid-2">
+                <div class="form-group mb-2">
+                  <label class="form-label text-xs text-muted">Distrito y Dirección</label>
+                  <p class="text-sm">{{ selected.distrito }} — {{ selected.direccion }}</p>
+                </div>
+                <div class="form-group mb-2">
+                  <label class="form-label text-xs text-muted">Teléfono Seguro</label>
+                  <p class="text-sm">{{ selected.telefono || 'No registrado' }}</p>
+                </div>
+                <div class="form-group mb-2">
+                  <label class="form-label text-xs text-muted">Estado Civil / Ocupación</label>
+                  <p class="text-sm">{{ selected.estadoCivil }} — {{ selected.ocupacion || 'No registrado' }}</p>
+                </div>
+                <div class="form-group mb-2">
+                  <label class="form-label text-xs text-muted">Contacto de Emergencia</label>
+                  <p class="text-sm">{{ selected.contactoEmergencia?.nombre || 'Ninguno' }} <span class="text-muted">{{ selected.contactoEmergencia?.telefono ? '(' + selected.contactoEmergencia.telefono + ')' : '' }}</span></p>
+                </div>
+              </div>
+            }
+
+            @if (activeTab() === 'denuncias') {
+              <div class="animate-fade-in text-center p-8 text-muted">
+                <p>Las denuncias vinculadas a este expediente se cargarán aquí desde el servicio de Denuncias.</p>
+                <button class="btn btn-outline btn-sm mt-4">Vincular Nueva Denuncia</button>
+              </div>
+            }
+
+            @if (activeTab() === 'seguimientos') {
+              <div class="animate-fade-in sz-timeline">
+                <div class="sz-timeline-item">
+                  <div class="sz-timeline-item-node is-success"></div>
+                  <div class="sz-timeline-item-header">
+                    <span class="time-title">Registro en el Sistema</span>
+                    <span class="time-stamp">{{ selected.fechaRegistro }}</span>
+                  </div>
+                  <p class="sz-timeline-item-body">Apertura del expediente único de víctima.</p>
+                </div>
+              </div>
+            }
+
+            @if (activeTab() === 'citas') {
+              <div class="animate-fade-in text-center p-8 text-muted">
+                <p>Las citas médicas y legales se mostrarán aquí conectadas al calendario general.</p>
+              </div>
+            }
+          </div>
+        </div>
+
+      } @else {
+        <div class="card text-center p-8 flex items-center justify-center h-full text-secondary">
+          <p>Seleccione una víctima del listado para ver su expediente.</p>
+        </div>
+      }
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL: Crear/Editar Víctima -->
+@if (victimsService.showModal()) {
+  <div class="sz-modal-overlay">
+    <div class="sz-modal" style="max-width: 600px;">
+      <div class="sz-modal-header">
+        <h3 class="sz-modal-header-title">{{ victimsService.editingVictim() ? 'Editar Expediente' : 'Registrar Nueva Víctima' }}</h3>
+        <button class="sz-modal-header-close" (click)="victimsService.closeModal()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      
+      <div class="sz-modal-body" style="max-height: 65vh; overflow-y: auto;">
+        
+        <form #vForm="ngForm" id="victimForm">
+          <div class="form-group p-3 bg-brand-soft border-brand-light border rounded-md mb-4 flex items-center gap-3">
+            <input type="checkbox" id="anonimoCheck" name="anonimo" [(ngModel)]="formData.anonimo" class="w-4 h-4 text-brand">
+            <label for="anonimoCheck" class="font-bold text-brand m-0">Protección de Identidad (Anonimato Legal)</label>
+          </div>
+
+          @if (!formData.anonimo) {
+            <div class="sz-grid-2">
+              <div class="form-group">
+                <label class="form-label">Nombres *</label>
+                <input class="form-input" type="text" name="nombre" [(ngModel)]="formData.nombre" #nombre="ngModel" required minlength="2" [ngClass]="{'border-danger': nombre.invalid && nombre.touched}">
+                @if (nombre.invalid && nombre.touched) {
+                  <p class="text-xs text-danger mt-1">El nombre es obligatorio (mín. 2 caracteres).</p>
+                }
+              </div>
+              <div class="form-group">
+                <label class="form-label">Apellidos *</label>
+                <input class="form-input" type="text" name="apellidos" [(ngModel)]="formData.apellidos" #apellidos="ngModel" required minlength="2" [ngClass]="{'border-danger': apellidos.invalid && apellidos.touched}">
+                @if (apellidos.invalid && apellidos.touched) {
+                  <p class="text-xs text-danger mt-1">El apellido es obligatorio.</p>
+                }
+              </div>
+            </div>
+            <div class="sz-grid-2">
+              <div class="form-group">
+                <label class="form-label">DNI *</label>
+                <input class="form-input" type="text" name="dni" [(ngModel)]="formData.dni" #dni="ngModel" required pattern="^[0-9]{8}$" maxlength="8" [ngClass]="{'border-danger': dni.invalid && dni.touched}">
+                @if (dni.invalid && dni.touched) {
+                  <p class="text-xs text-danger mt-1">El DNI debe tener exactamente 8 dígitos.</p>
+                }
+              </div>
+              <div class="form-group">
+                <label class="form-label">Dirección Exacta</label>
+                <input class="form-input" type="text" name="direccion" [(ngModel)]="formData.direccion" #direccion="ngModel" [ngClass]="{'border-danger': direccion.invalid && direccion.touched}">
+              </div>
+            </div>
+          } @else {
+            <div class="p-3 bg-warning-soft border-warning border rounded-md mb-4 text-sm text-warning-dark">
+              <strong>Atención:</strong> Los datos personales no se guardarán. Se generará un alias seguro vinculado al distrito de residencia de la víctima.
+            </div>
+          }
+
+          <div class="sz-grid-2">
+            <div class="form-group">
+              <label class="form-label">Distrito *</label>
+              <select class="form-select" name="distrito" [(ngModel)]="formData.distrito" #distrito="ngModel" required [ngClass]="{'border-danger': distrito.invalid && distrito.touched}">
+                <option value="Lima">Lima Centro</option>
+                <option value="San Juan de Lurigancho">San Juan de Lurigancho</option>
+                <option value="Villa El Salvador">Villa El Salvador</option>
+                <option value="Comas">Comas</option>
+                <option value="San Martín de Porres">San Martín de Porres</option>
+              </select>
+              @if (distrito.invalid && distrito.touched) {
+                <p class="text-xs text-danger mt-1">Seleccione un distrito válido.</p>
+              }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Edad *</label>
+              <input class="form-input" type="number" name="edad" [(ngModel)]="formData.edad" #edad="ngModel" required min="1" max="120" [ngClass]="{'border-danger': edad.invalid && edad.touched}">
+              @if (edad.invalid && edad.touched) {
+                <p class="text-xs text-danger mt-1">La edad es obligatoria (1-120).</p>
+              }
+            </div>
+          </div>
+
+          <div class="sz-grid-2">
+            <div class="form-group">
+              <label class="form-label">Estado Civil</label>
+              <select class="form-select" name="estadoCivil" [(ngModel)]="formData.estadoCivil">
+                <option value="Soltera">Soltera</option>
+                <option value="Casada">Casada</option>
+                <option value="Conviviente">Conviviente</option>
+                <option value="Divorciada">Divorciada</option>
+                <option value="Viuda">Viuda</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ocupación</label>
+              <input class="form-input" type="text" name="ocupacion" [(ngModel)]="formData.ocupacion">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Teléfono Seguro (Contacto Confidencial)</label>
+            <input class="form-input" type="text" name="telefono" [(ngModel)]="formData.telefono" #telefono="ngModel" pattern="^[0-9]{9}$" maxlength="9" [ngClass]="{'border-danger': telefono.invalid && telefono.touched}">
+            @if (telefono.invalid && telefono.touched) {
+              <p class="text-xs text-danger mt-1">El teléfono debe tener 9 dígitos numéricos.</p>
+            }
+          </div>
+
+          <h4 class="font-bold text-sm mt-4 mb-2">Contacto de Emergencia Institucional</h4>
+          <div class="sz-grid-2">
+            <div class="form-group">
+              <label class="form-label">Nombre del Contacto</label>
+              <input class="form-input" type="text" name="contactoEmergenciaNombre" [(ngModel)]="formData.contactoEmergenciaNombre">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teléfono Emergencia</label>
+              <input class="form-input" type="text" name="contactoEmergenciaTelefono" [(ngModel)]="formData.contactoEmergenciaTelefono" #telefonoE="ngModel" pattern="^[0-9]{9}$" maxlength="9" [ngClass]="{'border-danger': telefonoE.invalid && telefonoE.touched}">
+              @if (telefonoE.invalid && telefonoE.touched) {
+                <p class="text-xs text-danger mt-1">El teléfono de emergencia debe tener 9 dígitos.</p>
+              }
+            </div>
+          </div>
+        </form>
+
+      </div>
+      
+      <div class="sz-modal-footer">
+        <button class="btn btn-outline" (click)="victimsService.closeModal()">Cancelar</button>
+        <button class="btn btn-primary" (click)="saveVictim()" [disabled]="vForm.invalid">
+          {{ victimsService.editingVictim() ? 'Guardar Cambios' : 'Registrar Víctima' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
