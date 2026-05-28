@@ -5,7 +5,9 @@
 
 .sz-header {
   height: 70px;
-  @include mixins.glass(0.8, 12px);
+  background-color: rgba(colors.$color-white, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid colors.$color-border-subtle;
   position: sticky;
   top: 0;
@@ -13,9 +15,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 32px;
   margin-left: 260px;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.2s ease, padding 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
 
   @include bp.mobile {
     margin-left: 0;
@@ -23,7 +26,7 @@
   }
 
   &.is-collapsed {
-    margin-left: 70px;
+    margin-left: 80px;
   }
 
   // Hamburger móvil
@@ -32,11 +35,13 @@
     color: colors.$color-text-primary;
     padding: 8px;
     margin-right: 8px;
-    border-radius: vars.$radius-md;
-    transition: vars.$transition-fast;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
 
     &:hover {
       background-color: colors.$color-bg-main;
+      color: colors.$color-brand-light;
     }
 
     @include bp.mobile {
@@ -47,7 +52,7 @@
   // Búsqueda global
   &-search {
     position: relative;
-    max-width: 320px;
+    max-width: 280px;
     width: 100%;
 
     @include bp.mobile {
@@ -61,22 +66,31 @@
       transform: translateY(-50%);
       color: colors.$color-text-muted;
       pointer-events: none;
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
+      transition: color 0.2s ease;
     }
 
     &-input {
       width: 100%;
       padding: 8px 12px 8px 36px;
       border: 1px solid colors.$color-border-subtle;
-      border-radius: vars.$radius-md;
+      border-radius: 10px;
       font-size: 0.8125rem;
-      background-color: rgba(colors.$color-bg-main, 0.5);
-      transition: vars.$transition-fast;
+      background-color: rgba(colors.$color-bg-main, 0.6);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      color: colors.$color-text-primary;
+      font-family: 'Inter', sans-serif;
 
       &:focus {
-        @include mixins.focus-ring;
+        border-color: colors.$color-brand-light;
         background-color: colors.$color-white;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.12);
+        outline: none;
+
+        + svg {
+          color: colors.$color-brand-light;
+        }
       }
 
       &::placeholder {
@@ -89,10 +103,10 @@
   &-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
 
     @include bp.mobile {
-      gap: 8px;
+      gap: 12px;
       width: 100%;
       justify-content: flex-end;
     }
@@ -106,14 +120,22 @@
     background-color: colors.$color-white;
     border: 1px solid colors.$color-border-subtle;
     padding: 6px 12px;
-    border-radius: vars.$radius-md;
-    box-shadow: vars.$shadow-sm;
+    border-radius: 10px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: rgba(colors.$color-brand-light, 0.5);
+      box-shadow: var(--shadow-md);
+    }
 
     label {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: colors.$color-text-secondary;
       white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
 
       @include bp.mobile {
         display: none;
@@ -129,6 +151,7 @@
       cursor: pointer;
       outline: none;
       padding-right: 4px;
+      font-family: 'Outfit', sans-serif;
     }
   }
 
@@ -139,18 +162,23 @@
     &-trigger {
       color: colors.$color-text-secondary;
       padding: 8px;
-      border-radius: vars.$radius-full;
+      border-radius: 10px;
       position: relative;
-      transition: vars.$transition-fast;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
         background-color: colors.$color-bg-main;
         color: colors.$color-text-primary;
+        transform: translateY(-1px);
       }
 
       svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         stroke-width: 2;
       }
 
@@ -163,6 +191,7 @@
         background-color: colors.$color-danger;
         border-radius: vars.$radius-full;
         border: 2px solid colors.$color-white;
+        box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
       }
     }
   }
@@ -171,11 +200,25 @@
   &-profile {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     cursor: pointer;
+    padding: 4px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(colors.$color-bg-main, 0.8);
+      
+      .sz-header-profile-avatar {
+        border-color: colors.$color-brand-light;
+      }
+    }
 
     &-info {
       text-align: right;
+      display: flex;
+      flex-direction: column;
+      
       @include bp.mobile {
         display: none;
       }
@@ -188,15 +231,16 @@
     }
 
     &-role {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: colors.$color-text-muted;
+      margin-top: 1px;
     }
 
     &-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: vars.$radius-full;
-      background-color: colors.$color-brand-soft;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, colors.$color-brand-soft, colors.$color-white);
       color: colors.$color-brand-medium;
       display: flex;
       align-items: center;
@@ -204,6 +248,9 @@
       font-weight: 600;
       font-size: 0.8125rem;
       border: 1px solid colors.$color-border-subtle;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+      font-family: 'Outfit', sans-serif;
     }
   }
 }

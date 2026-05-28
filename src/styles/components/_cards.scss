@@ -6,13 +6,14 @@
 .card {
   background-color: colors.$color-white;
   border: 1px solid colors.$color-border-subtle;
-  border-radius: vars.$radius-lg;
-  box-shadow: vars.$shadow-sm;
+  border-radius: vars.$radius-lg; // now 16px
+  box-shadow: vars.$shadow-md; // Evolved Soft UI shadow
   padding: 24px;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &-header {
     display: flex;
@@ -21,9 +22,11 @@
     margin-bottom: 16px;
 
     &-title {
-      font-size: 0.9375rem;
+      font-size: 0.95rem;
       font-weight: 600;
       color: colors.$color-text-primary;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -0.01em;
     }
 
     &-subtitle {
@@ -44,26 +47,31 @@
     color: colors.$color-text-secondary;
   }
 
-  // Tarjeta interactiva (hover)
+  // Tarjeta interactiva (hover premium)
   &-interactive {
     cursor: pointer;
-    transition: vars.$transition-normal;
 
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: vars.$shadow-md;
-      border-color: color.adjust(colors.$color-border-subtle, $lightness: -5%);
+      transform: translateY(-3px);
+      box-shadow: vars.$shadow-lg;
+      border-color: rgba(colors.$color-brand-light, 0.3);
+    }
+
+    &:active {
+      transform: translateY(-1px);
+      box-shadow: vars.$shadow-sm;
     }
   }
 
   // Tarjeta de KPI/Métrica
   &-kpi {
-    padding: 20px;
+    padding: 22px;
+    background: linear-gradient(135deg, colors.$color-white 70%, rgba(colors.$color-brand-soft, 0.2) 100%);
     
     .kpi-title {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       color: colors.$color-text-secondary;
       font-weight: 600;
     }
@@ -76,10 +84,11 @@
     }
 
     .kpi-value {
-      font-size: 1.875rem;
+      font-size: 2rem;
       font-weight: 700;
       color: colors.$color-text-primary;
       letter-spacing: -0.03em;
+      font-family: 'Outfit', sans-serif;
     }
 
     .kpi-trend {
@@ -88,32 +97,35 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      padding: 2px 6px;
-      border-radius: vars.$radius-sm;
+      padding: 2px 8px;
+      border-radius: 6px;
 
       &.trend-up {
         color: colors.$color-success;
-        background-color: rgba(colors.$color-success, 0.1);
+        background-color: rgba(colors.$color-success, 0.08);
+        border: 1px solid rgba(colors.$color-success, 0.15);
       }
 
       &.trend-down {
         color: colors.$color-danger;
-        background-color: rgba(colors.$color-danger, 0.1);
+        background-color: rgba(colors.$color-danger, 0.08);
+        border: 1px solid rgba(colors.$color-danger, 0.15);
       }
 
       &.trend-neutral {
-        color: colors.$color-text-muted;
-        background-color: rgba(colors.$color-text-muted, 0.1);
+        color: colors.$color-text-secondary;
+        background-color: rgba(colors.$color-text-secondary, 0.08);
+        border: 1px solid rgba(colors.$color-text-secondary, 0.15);
       }
     }
 
     .kpi-description {
-      margin-top: 8px;
+      margin-top: 10px;
       font-size: 0.75rem;
       color: colors.$color-text-muted;
     }
 
-    // Variaciones
+    // Variaciones (Linear + Stripe indicator)
     &::before {
       content: '';
       position: absolute;
@@ -122,11 +134,24 @@
       width: 4px;
       height: 100%;
       background-color: transparent;
+      transition: all 0.2s ease;
     }
 
-    &-brand::before { background-color: colors.$color-brand-light; }
-    &-success::before { background-color: colors.$color-success; }
-    &-warning::before { background-color: colors.$color-warning; }
-    &-danger::before { background-color: colors.$color-danger; }
+    &-brand {
+      background: linear-gradient(135deg, colors.$color-white 70%, rgba(colors.$color-brand-soft, 0.3) 100%);
+      &::before { background-color: colors.$color-brand-light; }
+    }
+    &-success {
+      background: linear-gradient(135deg, colors.$color-white 70%, rgba(colors.$color-success-bg, 0.3) 100%);
+      &::before { background-color: colors.$color-success; }
+    }
+    &-warning {
+      background: linear-gradient(135deg, colors.$color-white 70%, rgba(colors.$color-warning-bg, 0.3) 100%);
+      &::before { background-color: colors.$color-warning; }
+    }
+    &-danger {
+      background: linear-gradient(135deg, colors.$color-white 70%, rgba(colors.$color-danger-bg, 0.3) 100%);
+      &::before { background-color: colors.$color-danger; }
+    }
   }
 }

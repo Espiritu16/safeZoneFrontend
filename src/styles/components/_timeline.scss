@@ -9,14 +9,14 @@
   flex-direction: column;
   gap: 24px;
 
-  // Línea vertical principal
+  // Línea vertical principal ultra fina
   &::before {
     content: '';
     position: absolute;
-    top: 6px;
+    top: 8px;
     left: 8px;
     width: 2px;
-    height: calc(100% - 12px);
+    height: calc(100% - 16px);
     background-color: colors.$color-border-subtle;
   }
 
@@ -24,13 +24,13 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 
-    // Nodo (Punto) de la línea de tiempo
+    // Nodo (Punto) de la línea de tiempo refinado
     &-node {
       position: absolute;
       left: -28px;
-      top: 4px;
+      top: 2px;
       width: 18px;
       height: 18px;
       border-radius: vars.$radius-full;
@@ -40,11 +40,13 @@
       align-items: center;
       justify-content: center;
       z-index: 2;
-      transition: vars.$transition-fast;
+      transition: vars.$transition-normal;
 
       &.is-active {
         border-color: colors.$color-brand-light;
         background-color: colors.$color-brand-soft;
+        box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.15);
+        
         &::after {
           content: '';
           width: 8px;
@@ -57,6 +59,8 @@
       &.is-success {
         border-color: colors.$color-success;
         background-color: colors.$color-success-bg;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        
         &::after {
           content: '';
           width: 8px;
@@ -69,6 +73,8 @@
       &.is-danger {
         border-color: colors.$color-danger;
         background-color: colors.$color-danger-bg;
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+        
         &::after {
           content: '';
           width: 8px;
@@ -76,6 +82,12 @@
           border-radius: vars.$radius-full;
           background-color: colors.$color-danger;
         }
+      }
+    }
+
+    &:hover {
+      .sz-timeline-item-node {
+        transform: scale(1.1);
       }
     }
 
@@ -89,6 +101,7 @@
         font-size: 0.875rem;
         font-weight: 600;
         color: colors.$color-text-primary;
+        font-family: 'Outfit', sans-serif;
       }
 
       .time-stamp {
@@ -101,7 +114,7 @@
     &-body {
       font-size: 0.8125rem;
       color: colors.$color-text-secondary;
-      line-height: 1.4;
+      line-height: 1.5;
     }
 
     &-meta {

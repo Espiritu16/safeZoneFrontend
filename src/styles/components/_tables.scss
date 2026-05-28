@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../abstracts/variables' as vars;
 @use '../abstracts/colors' as colors;
 @use '../abstracts/mixins' as mixins;
@@ -9,8 +10,10 @@
   border: 1px solid colors.$color-border-subtle;
   border-radius: vars.$radius-lg;
   background-color: colors.$color-white;
-  box-shadow: vars.$shadow-sm;
+  box-shadow: vars.$shadow-md;
   @include mixins.custom-scrollbar;
+  position: relative;
+  transition: vars.$transition-normal;
 }
 
 .sz-table {
@@ -20,35 +23,62 @@
   font-size: 0.8125rem;
 
   thead {
-    background-color: colors.$color-bg-main;
-    border-bottom: 1px solid colors.$color-border-subtle;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: colors.$color-white;
     
     th {
-      padding: 12px 16px;
+      padding: 14px 16px;
       font-weight: 600;
       color: colors.$color-text-secondary;
       text-transform: uppercase;
       font-size: 0.6875rem;
       letter-spacing: 0.05em;
       user-select: none;
+      border-bottom: 1px solid colors.$color-border-subtle;
+      background-color: colors.$color-white;
+      
+      &:first-child {
+        border-top-left-radius: vars.$radius-lg;
+      }
+      &:last-child {
+        border-top-right-radius: vars.$radius-lg;
+      }
     }
   }
 
   tbody {
     tr {
       border-bottom: 1px solid colors.$color-border-subtle;
-      transition: vars.$transition-fast;
+      transition: vars.$transition-normal;
+      position: relative;
 
       &:last-child {
         border-bottom: none;
+        
+        td:first-child {
+          border-bottom-left-radius: vars.$radius-lg;
+        }
+        td:last-child {
+          border-bottom-right-radius: vars.$radius-lg;
+        }
       }
 
       &:hover {
-        background-color: rgba(colors.$color-brand-soft, 0.4);
+        background-color: rgba(colors.$color-brand-light, 0.03);
+        
+        td:first-child {
+          box-shadow: inset 3px 0 0 0 colors.$color-brand-light;
+        }
       }
       
       &.is-selected {
         background-color: colors.$color-brand-soft;
+        
+        td:first-child {
+          box-shadow: inset 3px 0 0 0 colors.$color-brand-medium;
+        }
       }
     }
 
@@ -56,22 +86,63 @@
       padding: 14px 16px;
       color: colors.$color-text-primary;
       vertical-align: middle;
+      transition: vars.$transition-fast;
+    }
+  }
+
+  // Estilo Compacto Premium
+  &.sz-table-compact {
+    thead th {
+      padding: 10px 14px;
+    }
+    tbody td {
+      padding: 10px 14px;
     }
   }
 
   // Estilos de columnas comunes
   .col-actions {
     text-align: right;
-    width: 80px;
+    width: 100px;
+    
+    .btn {
+      padding: 6px 10px;
+    }
   }
 
   .col-avatar {
-    width: 50px;
+    width: 60px;
   }
 
   .col-status {
-    width: 120px;
+    width: 130px;
   }
+}
+
+// Shimmer keyframes for skeleton loader
+@keyframes sz-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// Skeleton loading cell representation
+.sz-skeleton-bar {
+  display: inline-block;
+  height: 12px;
+  border-radius: vars.$radius-xs;
+  background: linear-gradient(90deg, colors.$color-bg-main 25%, color.adjust(colors.$color-bg-main, $lightness: -6%) 50%, colors.$color-bg-main 75%);
+  background-size: 200% 100%;
+  animation: sz-shimmer 1.5s infinite linear;
+  width: 100%;
+
+  &.w-30 { width: 30%; }
+  &.w-50 { width: 50%; }
+  &.w-70 { width: 70%; }
+  &.w-80 { width: 80%; }
 }
 
 // Contenedores de filtros de tabla
@@ -80,8 +151,13 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
+  padding: 16px;
+  background-color: colors.$color-white;
+  border: 1px solid colors.$color-border-subtle;
+  border-radius: vars.$radius-md;
+  box-shadow: vars.$shadow-sm;
 
   &-left {
     display: flex;
@@ -108,6 +184,8 @@
   background-color: colors.$color-white;
   font-size: 0.75rem;
   color: colors.$color-text-secondary;
+  border-bottom-left-radius: vars.$radius-lg;
+  border-bottom-right-radius: vars.$radius-lg;
 
   &-info {
     font-weight: 500;

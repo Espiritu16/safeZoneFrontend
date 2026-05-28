@@ -8,20 +8,36 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.8125rem;
   padding: 8px 16px;
   border-radius: vars.$radius-md;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: vars.$transition-fast;
+  transition: vars.$transition-normal;
   user-select: none;
   white-space: nowrap;
+  box-shadow: vars.$shadow-sm;
 
   svg {
     width: 16px;
     height: 16px;
     stroke-width: 2.2;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: vars.$shadow-md;
+    
+    svg {
+      transform: scale(1.05);
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0) scale(0.97);
+    box-shadow: vars.$shadow-sm;
   }
 
   // Tamaños
@@ -48,7 +64,6 @@
     background-color: colors.$color-brand-medium;
     color: colors.$color-white;
     border-color: colors.$color-brand-medium;
-    box-shadow: vars.$shadow-sm;
 
     &:hover:not(:disabled) {
       background-color: colors.$color-brand-dark;
@@ -64,9 +79,10 @@
     background-color: colors.$color-brand-soft;
     color: colors.$color-brand-medium;
     border-color: colors.$color-brand-soft;
+    box-shadow: none;
 
     &:hover:not(:disabled) {
-      background-color: color.adjust(colors.$color-brand-soft, $lightness: -3%);
+      background-color: color.adjust(colors.$color-brand-soft, $lightness: -4%);
       color: colors.$color-brand-dark;
     }
 
@@ -79,12 +95,11 @@
     background-color: colors.$color-white;
     color: colors.$color-text-secondary;
     border-color: colors.$color-border-subtle;
-    box-shadow: vars.$shadow-sm;
 
     &:hover:not(:disabled) {
       background-color: colors.$color-bg-main;
       color: colors.$color-text-primary;
-      border-color: color.adjust(colors.$color-border-subtle, $lightness: -10%);
+      border-color: color.adjust(colors.$color-border-subtle, $lightness: -12%);
     }
 
     &:focus {
@@ -95,14 +110,21 @@
   &-ghost {
     background-color: transparent;
     color: colors.$color-text-secondary;
+    box-shadow: none;
 
     &:hover:not(:disabled) {
       background-color: rgba(colors.$color-brand-medium, 0.04);
       color: colors.$color-text-primary;
+      transform: none;
+      box-shadow: none;
     }
 
     &:focus {
       @include mixins.focus-ring;
+    }
+    
+    &:active:not(:disabled) {
+      transform: scale(0.98);
     }
   }
 
@@ -110,11 +132,10 @@
     background-color: colors.$color-danger;
     color: colors.$color-white;
     border-color: colors.$color-danger;
-    box-shadow: vars.$shadow-sm;
 
     &:hover:not(:disabled) {
-      background-color: color.adjust(colors.$color-danger, $lightness: -5%);
-      border-color: color.adjust(colors.$color-danger, $lightness: -5%);
+      background-color: color.adjust(colors.$color-danger, $lightness: -6%);
+      border-color: color.adjust(colors.$color-danger, $lightness: -6%);
     }
 
     &:focus {
@@ -125,7 +146,9 @@
 
   // Estados
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none !important;
   }
 }

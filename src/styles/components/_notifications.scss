@@ -13,6 +13,7 @@
   gap: 12px;
   font-size: 0.8125rem;
   line-height: 1.4;
+  transition: vars.$transition-normal;
 
   svg {
     width: 18px;
@@ -24,35 +25,36 @@
   &-title {
     font-weight: 700;
     margin-bottom: 2px;
+    font-family: 'Outfit', sans-serif;
   }
 
   &-desc {
     color: inherit;
   }
 
-  // Variantes
+  // Variantes estilo Vercel / Linear (fondo ultra suave y borde fino)
   &-success {
-    background-color: colors.$color-success-bg;
-    color: color.adjust(colors.$color-success, $lightness: -10%);
-    border-color: rgba(colors.$color-success, 0.2);
+    background-color: rgba(16, 185, 129, 0.06);
+    color: color.adjust(colors.$color-success, $lightness: -8%);
+    border-color: rgba(16, 185, 129, 0.15);
   }
 
   &-warning {
-    background-color: colors.$color-warning-bg;
-    color: color.adjust(colors.$color-warning, $lightness: -20%);
-    border-color: rgba(colors.$color-warning, 0.2);
+    background-color: rgba(245, 158, 11, 0.06);
+    color: color.adjust(colors.$color-warning, $lightness: -15%);
+    border-color: rgba(245, 158, 11, 0.15);
   }
 
   &-danger {
-    background-color: colors.$color-danger-bg;
-    color: color.adjust(colors.$color-danger, $lightness: -15%);
-    border-color: rgba(colors.$color-danger, 0.2);
+    background-color: rgba(239, 68, 68, 0.06);
+    color: color.adjust(colors.$color-danger, $lightness: -10%);
+    border-color: rgba(239, 68, 68, 0.15);
   }
 
   &-info {
-    background-color: colors.$color-info-bg;
-    color: color.adjust(colors.$color-info, $lightness: -15%);
-    border-color: rgba(colors.$color-info, 0.2);
+    background-color: rgba(59, 130, 246, 0.06);
+    color: color.adjust(colors.$color-info, $lightness: -10%);
+    border-color: rgba(59, 130, 246, 0.15);
   }
 }
 
@@ -81,7 +83,7 @@
   align-items: center;
   gap: 12px;
   font-size: 0.8125rem;
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: sz-toast-slide-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   &-icon {
     width: 20px;
@@ -93,15 +95,15 @@
     flex-shrink: 0;
 
     &.is-success {
-      background-color: colors.$color-success-bg;
+      background-color: rgba(16, 185, 129, 0.1);
       color: colors.$color-success;
     }
     &.is-error {
-      background-color: colors.$color-danger-bg;
+      background-color: rgba(239, 68, 68, 0.1);
       color: colors.$color-danger;
     }
     &.is-warning {
-      background-color: colors.$color-warning-bg;
+      background-color: rgba(245, 158, 11, 0.1);
       color: colors.$color-warning;
     }
   }
@@ -109,19 +111,39 @@
   &-content {
     flex: 1;
     color: colors.$color-text-primary;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   &-close {
     color: colors.$color-text-muted;
     cursor: pointer;
     transition: vars.$transition-fast;
-    padding: 2px;
+    padding: 4px;
     border-radius: vars.$radius-xs;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover {
       color: colors.$color-text-primary;
       background-color: colors.$color-bg-main;
     }
+    
+    &:active {
+      transform: scale(0.92);
+    }
+  }
+}
+
+@keyframes sz-toast-slide-in {
+  from {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
   }
 }

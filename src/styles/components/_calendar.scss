@@ -8,7 +8,7 @@
   background-color: colors.$color-white;
   border: 1px solid colors.$color-border-subtle;
   border-radius: vars.$radius-lg;
-  box-shadow: vars.$shadow-sm;
+  box-shadow: vars.$shadow-md;
   overflow: hidden;
 }
 
@@ -27,6 +27,7 @@
     font-size: 1rem;
     font-weight: 700;
     color: colors.$color-text-primary;
+    font-family: 'Outfit', sans-serif;
   }
 
   &-nav {
@@ -49,6 +50,9 @@
       border-radius: vars.$radius-sm;
       color: colors.$color-text-secondary;
       transition: vars.$transition-fast;
+      border: none;
+      background: transparent;
+      cursor: pointer;
 
       &:hover {
         color: colors.$color-text-primary;
@@ -57,6 +61,7 @@
       &.is-active {
         background-color: colors.$color-brand-medium;
         color: colors.$color-white;
+        box-shadow: vars.$shadow-sm;
       }
     }
   }
@@ -70,27 +75,34 @@
 
   .grid-header-day {
     text-align: center;
-    padding: 10px;
+    padding: 12px 10px;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     color: colors.$color-text-secondary;
     background-color: colors.$color-bg-main;
     border-bottom: 1px solid colors.$color-border-subtle;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
   }
 
   .grid-cell-day {
-    min-height: 100px;
+    min-height: 105px;
     border-right: 1px solid colors.$color-border-subtle;
     border-bottom: 1px solid colors.$color-border-subtle;
-    padding: 6px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
     position: relative;
     background-color: colors.$color-white;
+    transition: background-color 0.2s ease;
 
     &:nth-child(7n) {
       border-right: none;
+    }
+
+    &:hover:not(.other-month) {
+      background-color: rgba(colors.$color-brand-light, 0.02);
     }
 
     &.other-month {
@@ -101,59 +113,63 @@
     }
 
     &.is-today {
-      background-color: rgba(colors.$color-brand-soft, 0.3);
+      background-color: rgba(74, 144, 226, 0.04);
+      
       .day-number {
         background-color: colors.$color-brand-medium;
         color: colors.$color-white;
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         border-radius: vars.$radius-full;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 600;
+        font-weight: 700;
+        box-shadow: vars.$shadow-sm;
       }
     }
 
     .day-number {
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 600;
       color: colors.$color-text-secondary;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
   }
 }
 
-// Eventos de cita en las celdas
+// Eventos de cita en las celdas estilo Vercel (borde fino, fondo traslúcido)
 .sz-calendar-event {
-  font-size: 0.7rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   padding: 3px 6px;
   border-radius: vars.$radius-xs;
   @include mixins.truncate(1);
   cursor: pointer;
   transition: vars.$transition-fast;
+  border: 1px solid transparent;
 
   &:hover {
-    filter: brightness(0.95);
+    transform: translateY(-0.5px);
+    filter: brightness(0.98);
   }
 
   &-legal {
-    background-color: rgba(colors.$color-brand-light, 0.12);
+    background-color: rgba(74, 144, 226, 0.07);
     color: colors.$color-brand-medium;
-    border-left: 2px solid colors.$color-brand-light;
+    border-color: rgba(74, 144, 226, 0.2);
   }
 
   &-psychology {
-    background-color: rgba(colors.$color-success, 0.12);
-    color: color.adjust(colors.$color-success, $lightness: -10%);
-    border-left: 2px solid colors.$color-success;
+    background-color: rgba(16, 185, 129, 0.07);
+    color: color.adjust(colors.$color-success, $lightness: -8%);
+    border-color: rgba(16, 185, 129, 0.2);
   }
  
   &-social {
-    background-color: rgba(colors.$color-warning, 0.12);
+    background-color: rgba(245, 158, 11, 0.07);
     color: color.adjust(colors.$color-warning, $lightness: -15%);
-    border-left: 2px solid colors.$color-warning;
+    border-color: rgba(245, 158, 11, 0.2);
   }
 }
 
@@ -168,6 +184,7 @@
     font-size: 0.875rem;
     font-weight: 700;
     color: colors.$color-text-primary;
+    font-family: 'Outfit', sans-serif;
   }
 
   &-list {
@@ -180,15 +197,17 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 12px;
+    padding: 14px;
     background-color: colors.$color-bg-main;
     border: 1px solid colors.$color-border-subtle;
     border-radius: vars.$radius-md;
-    transition: vars.$transition-fast;
+    transition: vars.$transition-normal;
 
     &:hover {
       border-color: colors.$color-brand-light;
       background-color: colors.$color-white;
+      transform: translateY(-1px);
+      box-shadow: vars.$shadow-sm;
     }
 
     .item-time {
@@ -216,7 +235,7 @@
       flex: 1;
       
       .type {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -226,6 +245,7 @@
         font-size: 0.875rem;
         font-weight: 600;
         color: colors.$color-text-primary;
+        font-family: 'Outfit', sans-serif;
       }
       .attendee {
         font-size: 0.75rem;
