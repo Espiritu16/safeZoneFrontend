@@ -78,6 +78,10 @@ import { filter } from 'rxjs/operators';
             </ul>
 
             <div class="nav-actions">
+              <a routerLink="/login" class="btn btn-ghost" (click)="closeMenu()">
+                <span class="icon icon--sm" aria-hidden="true">login</span>
+                <span>Iniciar Sesión</span>
+              </a>
               <a routerLink="/public/denuncias/consultar" class="btn btn-ghost" (click)="closeMenu()">
                 <span class="icon icon--sm" aria-hidden="true">search</span>
                 <span>Mi caso</span>

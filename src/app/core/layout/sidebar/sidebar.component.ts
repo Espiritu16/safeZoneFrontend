@@ -4,20 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { LayoutService } from '../../../core/services/layout.service';
 import { AuditService } from '../../../core/services/audit.service';
-
-/** Mapa de visibilidad de módulos por rol */
-const ROLE_ACCESS: Record<string, string[]> = {
-  'dashboard':    ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'denuncias':    ['Administrador', 'Recepcionista'],
-  'casos':        ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'victimas':     ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'citas':        ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'evidencias':   ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'reportes':     ['Administrador', 'Psicólogo', 'Defensor Legal'],
-  'auditoria':    ['Administrador'],
-  'usuarios':     ['Administrador'],
-  'configuracion':['Administrador'],
-};
+import { SecurityConfigService } from '../../../core/services/security-config.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -30,11 +17,17 @@ export class SidebarComponent {
   protected readonly authService = inject(AuthService);
   protected readonly layoutService = inject(LayoutService);
   protected readonly auditService = inject(AuditService);
+  private readonly configService = inject(SecurityConfigService);
 
   /** Verifica si el rol actual tiene acceso al módulo indicado */
   hasAccess(module: string): boolean {
-    const allowed = ROLE_ACCESS[module];
-    return allowed ? allowed.includes(this.authService.currentRole()) : false;
+    const role = this.authService.currentRole();
+    let moduleKey = module.charAt(0).toUpperCase() + module.slice(1);
+    if (moduleKey === 'Configuracion') moduleKey = 'Configuración';
+    if (moduleKey === 'Auditoria') moduleKey = 'Auditoría';
+    if (moduleKey === 'Victimas') moduleKey = 'Víctimas';
+    
+    return this.configService.hasPermission(role, moduleKey);
   }
 
   logout() {

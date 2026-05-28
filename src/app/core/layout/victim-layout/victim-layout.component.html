@@ -1,0 +1,40 @@
+<app-global-loader />
+
+<div class="sz-victim-layout">
+  <!-- HEADER PORTAL VÍCTIMA -->
+  <header class="sz-portal-header">
+    <div class="header-left">
+      <div class="brand-logo">
+        <span class="logo-icon">🛡️</span>
+        <span class="logo-text">SafeZone</span>
+      </div>
+      <span class="badge badge-accent ml-3">Portal de Atención</span>
+    </div>
+
+    <div class="header-right">
+      <div class="user-info">
+        <span class="user-avatar">👤</span>
+        <span class="user-name">Víctima Protegida</span>
+      </div>
+
+      <button class="btn btn-outline btn-sm btn-logout" (click)="authService.logout()">
+        Cerrar Sesión 🚪
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="sz-portal-main">
+    <div class="sz-portal-container">
+      <router-outlet />
+    </div>
+  </main>
+
+  <!-- FOOTER PORTAL VÍCTIMA -->
+  <footer class="sz-portal-footer">
+    <p>© 2026 SafeZone. Sistema de Ayuda y Denuncias de Violencia Familiar. Todos los derechos reservados.</p>
+    <p class="footer-law">Este sistema cumple estrictamente con la <strong>Ley N.° 30364</strong> de prevención, sanción y erradicación de la violencia.</p>
+  </footer>
+</div>
+
+<app-toast-container />

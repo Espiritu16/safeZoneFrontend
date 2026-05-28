@@ -20,7 +20,7 @@ export const routes: Routes = [
       import('./features/auth/login/login.component').then((m) => m.LoginComponent),
   },
 
-  // Rutas protegidas (requieren autenticación)
+  // Rutas protegidas para personal (requieren autenticación + layout con sidebar)
   {
     path: '',
     canActivate: [authGuard],
@@ -29,9 +29,10 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
+        canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-        data: { roles: [] }, // Accesible para todos los roles
+        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'denuncias',
@@ -59,7 +60,7 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/citas/citas.component').then((m) => m.CitasComponent),
-        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Víctima'] },
+        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'evidencias',
@@ -80,24 +81,47 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/auditoria/auditoria.component').then((m) => m.AuditoriaComponent),
-        data: { roles: ['Administrador', 'Soporte Técnico'] },
+        data: { roles: ['Administrador'] },
       },
       {
         path: 'usuarios',
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/usuarios/usuarios.component').then((m) => m.UsuariosComponent),
-        data: { roles: ['Administrador', 'Soporte Técnico'] },
+        data: { roles: ['Administrador'] },
       },
       {
         path: 'configuracion',
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/configuracion/configuracion.component').then((m) => m.ConfiguracionComponent),
-        data: { roles: ['Administrador', 'Soporte Técnico'] },
+        data: { roles: ['Administrador'] },
       },
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     ],
   },
+
+  // Rutas protegidas para Víctimas (layout limpio sin sidebar)
+  {
+    path: 'portal',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Víctima'] },
+    loadComponent: () =>
+      import('./core/layout/victim-layout/victim-layout.component').then((m) => m.VictimLayoutComponent),
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      },
+      {
+        path: 'mis-citas',
+        loadComponent: () =>
+          import('./features/citas/citas.component').then((m) => m.CitasComponent),
+      },
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+    ]
+  },
+
   { path: '**', redirectTo: 'public' },
 ];
