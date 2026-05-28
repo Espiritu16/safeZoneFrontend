@@ -130,37 +130,34 @@
       </div>
       <div class="sz-modal-body">
         <form #uForm="ngForm" id="userForm">
-          <div class="form-group">
+          <div class="form-group" [class.has-error]="errors.nombre">
             <label class="form-label">Nombre Completo *</label>
-            <input class="form-input" type="text" name="nombre" [(ngModel)]="formData.nombre" #nombre="ngModel" required minlength="4" placeholder="Nombre y apellidos" [ngClass]="{'border-danger': nombre.invalid && nombre.touched}">
-            @if (nombre.invalid && nombre.touched) {
-              <p class="text-xs text-danger mt-1">El nombre completo es obligatorio (mín. 4 caracteres).</p>
+            <input class="form-input" type="text" name="nombre" [(ngModel)]="formData.nombre" (input)="clearError('nombre')" required placeholder="Nombre y apellidos">
+            @if (errors.nombre) {
+              <span class="form-error" style="display: block;">{{ errors.nombre }}</span>
             }
           </div>
 
-          <div class="form-group">
+          <div class="form-group" [class.has-error]="errors.email">
             <label class="form-label">Correo Institucional *</label>
-            <input class="form-input" type="email" name="email" [(ngModel)]="formData.email" #email="ngModel" required pattern="^[a-zA-Z0-9._%+-]+@safezone\.gob\.pe$" placeholder="usuario@safezone.gob.pe" [ngClass]="{'border-danger': email.invalid && email.touched}">
-            @if (email.invalid && email.touched) {
-              <p class="text-xs text-danger mt-1">Debe ser un correo institucional válido (...@safezone.gob.pe).</p>
+            <input class="form-input" type="email" name="email" [(ngModel)]="formData.email" (input)="clearError('email')" required placeholder="usuario@safezone.gob.pe">
+            @if (errors.email) {
+              <span class="form-error" style="display: block;">{{ errors.email }}</span>
             }
           </div>
 
           <div class="sz-grid-2">
             <div class="form-group">
               <label class="form-label">Rol Asignado *</label>
-              <select class="form-select" name="rol" [(ngModel)]="formData.rol" #rol="ngModel" required [ngClass]="{'border-danger': rol.invalid && rol.touched}">
+              <select class="form-select" name="rol" [(ngModel)]="formData.rol" required>
                 @for (rol of authService.roles; track rol) {
                   <option [value]="rol">{{ rol }}</option>
                 }
               </select>
-              @if (rol.invalid && rol.touched) {
-                <p class="text-xs text-danger mt-1">Seleccione un rol.</p>
-              }
             </div>
             <div class="form-group">
               <label class="form-label">Estado *</label>
-              <select class="form-select" name="estado" [(ngModel)]="formData.estado" #estado="ngModel" required [ngClass]="{'border-danger': estado.invalid && estado.touched}">
+              <select class="form-select" name="estado" [(ngModel)]="formData.estado" required>
                 <option value="Activo">Activo</option>
                 <option value="Inactivo">Inactivo</option>
               </select>
@@ -170,7 +167,7 @@
       </div>
       <div class="sz-modal-footer">
         <button class="btn btn-outline" (click)="usersService.closeModal()">Cancelar</button>
-        <button class="btn btn-primary" (click)="saveUser()" [disabled]="uForm.invalid">
+        <button class="btn btn-primary" (click)="saveUser()">
           {{ usersService.editingUser() ? 'Guardar Cambios' : 'Crear Usuario' }}
         </button>
       </div>

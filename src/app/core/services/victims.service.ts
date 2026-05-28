@@ -1,5 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { ToastService } from './toast.service';
+import { AuditService } from './audit.service';
+import { encryptData, decryptData } from '../../shared/utils/crypto.utils';
 
 export interface Victim {
   id: string;
@@ -49,6 +51,7 @@ const DEFAULT_VICTIMS: Victim[] = [
 })
 export class VictimsService {
   private readonly toastService = inject(ToastService);
+  private readonly auditService = inject(AuditService);
   
   public readonly victims = signal<Victim[]>(this.loadFromStorage());
   public readonly searchQuery = signal<string>('');
@@ -70,14 +73,15 @@ export class VictimsService {
   private loadFromStorage(): Victim[] {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : DEFAULT_VICTIMS;
+      const decrypted = decryptData(stored);
+      return decrypted ? decrypted : DEFAULT_VICTIMS;
     } catch {
       return DEFAULT_VICTIMS;
     }
   }
 
   private saveToStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.victims()));
+    localStorage.setItem(STORAGE_KEY, encryptData(this.victims()));
   }
 
   private getNextCounter(): number {
@@ -125,12 +129,18 @@ export class VictimsService {
 
     this.victims.update(list => [newVictim, ...list]);
     this.saveToStorage();
+    this.auditService.logAction('Registro de Víctima', `Registró víctima con código ${codigo}${victim.anonimo ? ' (Anónima)' : ''}`, 'Víctimas');
     this.toastService.show(`Víctima registrada exitosamente${victim.anonimo ? ` (Alias: ${alias})` : ''}.`, 'success');
   }
 
   update(id: string, data: Partial<Victim>) {
     this.victims.update(list => list.map(v => v.id === id ? { ...v, ...data } : v));
     this.saveToStorage();
+    
+    const updatedVictim = this.victims().find(v => v.id === id);
+    if (updatedVictim) {
+      this.auditService.logAction('Edición de Expediente', `Actualizó expediente de víctima con código ${updatedVictim.codigo}`, 'Víctimas');
+    }
     
     if (this.selectedVictim()?.id === id) {
       this.selectedVictim.set({ ...this.selectedVictim()!, ...data });
@@ -155,5 +165,7 @@ export class VictimsService {
 
   selectVictim(victim: Victim) {
     this.selectedVictim.set(victim);
+    const detail = victim.anonimo ? `Consultó ficha de víctima protegida con Alias: ${victim.alias}` : `Consultó ficha de víctima: ${victim.nombre} ${victim.apellidos}`;
+    this.auditService.logAction('Acceso a Expediente', detail, 'Víctimas');
   }
 }

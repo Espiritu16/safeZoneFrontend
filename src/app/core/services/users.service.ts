@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { ToastService } from './toast.service';
+import { encryptData, decryptData } from '../../shared/utils/crypto.utils';
 
 export interface User {
   id: string;
@@ -52,14 +53,15 @@ export class UsersService {
   private loadFromStorage(): User[] {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : DEFAULT_USERS;
+      const decrypted = decryptData(stored);
+      return decrypted ? decrypted : DEFAULT_USERS;
     } catch {
       return DEFAULT_USERS;
     }
   }
 
   private saveToStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.users()));
+    localStorage.setItem(STORAGE_KEY, encryptData(this.users()));
   }
 
   add(user: Omit<User, 'id'>) {
