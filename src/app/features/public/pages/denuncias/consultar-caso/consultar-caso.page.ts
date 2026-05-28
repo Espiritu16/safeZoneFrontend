@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { 
+  isValidTrackingCode, 
+  trimAndCollapse 
+} from '../../../../../shared/utils/validation.utils';
 
 @Component({
   selector: 'app-public-consultar-caso',
@@ -17,10 +21,11 @@ import { FormsModule } from '@angular/forms';
         <div class="container">
           <div class="search-box">
             <h2>Ingresa tu código de seguimiento</h2>
-            <div class="search-form">
+            <div class="search-form" [class.has-error]="errors.codigoSeguimiento">
               <input
                 type="text"
                 [(ngModel)]="codigoSeguimiento"
+                (input)="clearError()"
                 placeholder="Ej: PD-ABC12345"
                 class="search-input"
               >
@@ -28,6 +33,9 @@ import { FormsModule } from '@angular/forms';
                 Buscar
               </button>
             </div>
+            @if (errors.codigoSeguimiento) {
+              <span class="form-error" style="margin-top: -10px; margin-bottom: 15px; text-align: left; display: block;">{{ errors.codigoSeguimiento }}</span>
+            }
             <p class="info-text">
               El código de seguimiento fue generado cuando enviaste tu denuncia.
             </p>
@@ -105,7 +113,6 @@ import { FormsModule } from '@angular/forms';
     </div>
   `,
   styles: [`
-
     .consultar-caso-container {
       width: 100%;
     }
@@ -225,6 +232,17 @@ import { FormsModule } from '@angular/forms';
       font-size: var(--text-sm);
       margin: 0;
       font-family: var(--font-sans);
+    }
+
+    .form-error {
+      color: #dc2626;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: block;
+    }
+
+    .has-error input {
+      border-color: #dc2626 !important;
     }
 
     .no-result {
@@ -482,6 +500,14 @@ export class PublicConsultarCasoPage {
   casoBuscado = false;
   casoEncontrado = false;
 
+  errors = {
+    codigoSeguimiento: ''
+  };
+
+  clearError() {
+    this.errors.codigoSeguimiento = '';
+  }
+
   estadoLabel: { [key: string]: string } = {
     registrado: 'Registrado',
     evaluacion: 'En Evaluación',
@@ -530,9 +556,27 @@ export class PublicConsultarCasoPage {
   };
 
   buscarCaso() {
+    this.codigoSeguimiento = trimAndCollapse(this.codigoSeguimiento).toUpperCase();
+
+    if (!this.codigoSeguimiento) {
+      this.errors.codigoSeguimiento = 'El código de seguimiento es obligatorio.';
+      this.casoBuscado = false;
+      this.casoEncontrado = false;
+      return;
+    }
+
+    if (!isValidTrackingCode(this.codigoSeguimiento)) {
+      this.errors.codigoSeguimiento = 'Formato inválido. Debe tener la estructura: XX-XXXXXX (ej: PD-ABC12345).';
+      this.casoBuscado = false;
+      this.casoEncontrado = false;
+      return;
+    }
+
+    this.errors.codigoSeguimiento = '';
+    
     // Simular búsqueda
     this.casoBuscado = true;
-    // En una aplicación real, aquí haríamos una llamada a la API
-    this.casoEncontrado = this.codigoSeguimiento.startsWith('PD-');
+    this.casoEncontrado = true;
+    this.caso.codigo = this.codigoSeguimiento;
   }
 }

@@ -59,13 +59,19 @@
 
           @if (!denunciaForm.anonimo) {
             <div class="sz-grid-2">
-              <div class="form-group">
+              <div class="form-group" [class.has-error]="errors.dni">
                 <label class="form-label">DNI de la Víctima</label>
-                <input class="form-input" type="text" [(ngModel)]="denunciaForm.dni" placeholder="8 dígitos numéricos" maxlength="8">
+                <input class="form-input" type="text" inputmode="numeric" [ngModel]="denunciaForm.dni" (input)="onDniInput($event)" (keydown)="onNumericKeydown($event)" placeholder="8 dígitos numéricos" maxlength="8">
+                @if (errors.dni) {
+                  <span class="form-error" style="display: block;">{{ errors.dni }}</span>
+                }
               </div>
-              <div class="form-group">
+              <div class="form-group" [class.has-error]="errors.nombre">
                 <label class="form-label">Nombres Completos</label>
-                <input class="form-input" type="text" [(ngModel)]="denunciaForm.nombre" placeholder="Nombres y apellidos">
+                <input class="form-input" type="text" [(ngModel)]="denunciaForm.nombre" (input)="clearError('nombre')" placeholder="Nombres y apellidos" maxlength="120">
+                @if (errors.nombre) {
+                  <span class="form-error" style="display: block;">{{ errors.nombre }}</span>
+                }
               </div>
             </div>
           } @else {
@@ -75,9 +81,12 @@
           }
 
           <div class="sz-grid-3">
-            <div class="form-group">
+            <div class="form-group" [class.has-error]="errors.edad">
               <label class="form-label">Edad</label>
-              <input class="form-input" type="number" [(ngModel)]="denunciaForm.edad" placeholder="Años">
+              <input class="form-input" type="text" inputmode="numeric" [ngModel]="denunciaForm.edad" (input)="onEdadInput($event)" (keydown)="onNumericKeydown($event)" placeholder="Años" maxlength="3">
+              @if (errors.edad) {
+                <span class="form-error" style="display: block;">{{ errors.edad }}</span>
+              }
             </div>
             <div class="form-group">
               <label class="form-label">Distrito de Residencia</label>
@@ -89,9 +98,12 @@
                 <option value="San Martín de Porres">San Martín de Porres</option>
               </select>
             </div>
-            <div class="form-group">
+            <div class="form-group" [class.has-error]="errors.telefono">
               <label class="form-label">Teléfono de Contacto Seguro</label>
-              <input class="form-input" type="text" [(ngModel)]="denunciaForm.telefono" placeholder="Número seguro">
+              <input class="form-input" type="text" inputmode="numeric" [ngModel]="denunciaForm.telefono" (input)="onTelefonoInput($event)" (keydown)="onNumericKeydown($event)" placeholder="Número seguro" maxlength="9">
+              @if (errors.telefono) {
+                <span class="form-error" style="display: block;">{{ errors.telefono }}</span>
+              }
             </div>
           </div>
         </div>
@@ -124,9 +136,12 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" [class.has-error]="errors.detalleHechos">
             <label class="form-label">Detalle Narrativo de los Hechos</label>
-            <textarea class="form-textarea" [(ngModel)]="denunciaForm.detalleHechos" placeholder="Describa el suceso, fechas, amenazas o frecuencia de agresiones de forma detallada..."></textarea>
+            <textarea class="form-textarea" [(ngModel)]="denunciaForm.detalleHechos" (input)="clearError('detalleHechos')" placeholder="Describa el suceso, fechas, amenazas o frecuencia de agresiones de forma detallada (mínimo 20 caracteres)..." maxlength="2000"></textarea>
+            @if (errors.detalleHechos) {
+              <span class="form-error" style="display: block;">{{ errors.detalleHechos }}</span>
+            }
           </div>
         </div>
       }
