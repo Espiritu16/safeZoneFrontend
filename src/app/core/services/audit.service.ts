@@ -1,5 +1,6 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, Injector } from '@angular/core';
 import { AuthService } from './auth.service';
+import { encryptData, decryptData } from '../../shared/utils/crypto.utils';
 
 export interface AuditLog {
   id: string;
@@ -20,14 +21,14 @@ const DEFAULT_LOGS: AuditLog[] = [
   { id: 'l2', timestamp: '2026-05-22 08:15:00', user: 'Admin SafeZone', role: 'Administrador', action: 'Inicio de Sesión', ip: '192.168.1.110', detail: 'Autenticación exitosa.', module: 'Auth' },
   { id: 'l3', timestamp: '2026-05-21 16:45:20', user: 'Recepción Lima Centro', role: 'Recepcionista', action: 'Registro de Denuncia', ip: '10.0.5.22', detail: 'Registró denuncia Caso #082-2026.', module: 'Denuncias' },
   { id: 'l4', timestamp: '2026-05-21 14:20:10', user: 'Dra. Sofía Medina', role: 'Psicólogo', action: 'Acceso a Expediente', ip: '10.0.5.33', detail: 'Consultó expediente de víctima SZ-V-001.', module: 'Víctimas' },
-  { id: 'l5', timestamp: '2026-05-21 10:10:05', user: 'Soporte TI', role: 'Soporte Técnico', action: 'Mantenimiento', ip: '192.168.1.50', detail: 'Backup de base de datos completado.', module: 'Sistema' },
+  { id: 'l5', timestamp: '2026-05-21 10:10:05', user: 'Admin SafeZone', role: 'Administrador', action: 'Mantenimiento', ip: '192.168.1.50', detail: 'Backup de base de datos completado.', module: 'Sistema' },
 ];
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuditService {
-  private readonly authService = inject(AuthService);
+  private readonly injector = inject(Injector);
 
   public readonly logs = signal<AuditLog[]>(this.loadFromStorage());
   
@@ -49,14 +50,15 @@ export class AuditService {
   private loadFromStorage(): AuditLog[] {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : DEFAULT_LOGS;
+      const decrypted = decryptData(stored);
+      return decrypted ? decrypted : DEFAULT_LOGS;
     } catch {
       return DEFAULT_LOGS;
     }
   }
 
   private saveToStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.logs()));
+    localStorage.setItem(STORAGE_KEY, encryptData(this.logs()));
   }
 
   private getMockIp(): string {
@@ -72,13 +74,14 @@ export class AuditService {
    * Registra una acción dinámicamente usando el usuario autenticado actual.
    */
   logAction(action: string, detail: string, module: string) {
-    const role = this.authService.currentRole();
+    const authService = this.injector.get(AuthService);
+    const role = authService.currentRole();
     // Simular el nombre del usuario basado en el rol activo para la demo
     const user = role === 'Administrador' ? 'Admin SafeZone' :
                  role === 'Recepcionista' ? 'Recepción Lima Centro' :
                  role === 'Psicólogo' ? 'Dra. Sofía Medina' :
                  role === 'Defensor Legal' ? 'Abog. María Torres' :
-                 role === 'Víctima' ? 'Ana María López' : 'Soporte TI';
+                 role === 'Víctima' ? 'Ana María López' : 'Desconocido';
 
     const newLog: AuditLog = {
       id: 'l' + Date.now(),

@@ -34,64 +34,120 @@
     </div>
   </div>
 
-  <!-- Formulario de Entrada (Derecha) -->
-  <div class="sz-login-form-panel">
-    <div class="form-container">
-      <!-- Logo en Mobile/Tablet -->
-      <div class="mobile-logo">
-        <div class="logo-icon">SZ</div>
-        <span class="logo-text">SafeZone</span>
+      <!-- Formulario de Entrada (Derecha) -->
+      <div class="sz-login-form-panel">
+        <div class="form-container">
+          <div class="form-header">
+        @if (remainingLockTime() > 0) {
+          <h1 class="title text-danger">Acceso Bloqueado</h1>
+          <p class="subtitle">Demasiados intentos fallidos de inicio de sesión</p>
+        } @else if (recoveryMode()) {
+          <h1 class="title">Restablecer Contraseña</h1>
+          <p class="subtitle">Recupere el acceso a su cuenta institucional</p>
+        } @else {
+          <h1 class="title">Iniciar Sesión</h1>
+          <p class="subtitle">Acceso seguro con credenciales institucionales o de víctima</p>
+        }
       </div>
 
-      <div class="form-header">
-        <h1 class="title">Iniciar Sesión</h1>
-        <p class="subtitle">Acceso seguro con credenciales institucionales</p>
-      </div>
-
-      <form (ngSubmit)="login()">
-        <div class="form-group">
-          <label class="form-label" for="username">Correo electrónico o DNI</label>
-          <input class="form-input" type="text" id="username" name="username" [(ngModel)]="username" placeholder="ej. recepcion@safezone.pe" required>
+      <!-- BANNER DE BLOQUEO -->
+      @if (remainingLockTime() > 0) {
+        <div class="p-4 mb-4 rounded-lg bg-red-soft border-all border-danger flex flex-col items-center justify-center text-center">
+          <span class="text-3xl mb-2">🔒</span>
+          <p class="font-bold text-danger text-base">Sistema temporalmente bloqueado</p>
+          <p class="text-sm mt-1">Por razones de seguridad, espere <strong>{{ remainingLockTime() }} segundos</strong> antes de intentar de nuevo.</p>
         </div>
+      }
 
-        <div class="form-group">
-          <label class="form-label" for="password">Contraseña</label>
-          <input class="form-input" type="password" id="password" name="password" [(ngModel)]="password" placeholder="••••••••••••" required>
+      <!-- FORMULARIO DE RECUPERACIÓN / RESET -->
+      @if (recoveryMode() && remainingLockTime() === 0) {
+        @if (!resetMode()) {
+          <!-- Paso 1: Ingresar Correo -->
+          <form (ngSubmit)="sendRecoveryCode()">
+            <div class="form-group">
+              <label class="form-label" for="recoveryEmail">Correo electrónico registrado</label>
+              <input class="form-input" type="email" id="recoveryEmail" name="recoveryEmail" [(ngModel)]="recoveryEmail" placeholder="ej. recepcion@safezone.pe" required>
+            </div>
+            <button class="btn btn-primary w-full mt-4 py-3" type="submit">
+              Enviar Código de Recuperación ✉️
+            </button>
+            <button class="btn btn-outline w-full mt-2 py-3" type="button" (click)="recoveryMode.set(false)">
+              Cancelar y Volver
+            </button>
+          </form>
+        } @else {
+          <!-- Paso 2: Ingresar Código y Nueva Contraseña -->
+          <form (ngSubmit)="resetPassword()">
+            <div class="p-3 mb-3 bg-brand-soft rounded border-all text-xs">
+              Código enviado a: <strong>{{ recoveryEmail }}</strong>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="recoveryCode">Código de Verificación</label>
+              <input class="form-input" type="text" id="recoveryCode" name="recoveryCode" [(ngModel)]="recoveryCode" placeholder="Ingrese el código" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="newPassword">Nueva Contraseña</label>
+              <input class="form-input" type="password" id="newPassword" name="newPassword" [(ngModel)]="newPassword" placeholder="Mínimo 8 caracteres" required>
+            </div>
+            <button class="btn btn-primary w-full mt-4 py-3" type="submit">
+              Restablecer Contraseña 🔑
+            </button>
+            <button class="btn btn-outline w-full mt-2 py-3" type="button" (click)="resetMode.set(false)">
+              Atrás
+            </button>
+          </form>
+        }
+      }
+
+      <!-- FORMULARIO DE INICIO DE SESIÓN -->
+      @if (!recoveryMode() && remainingLockTime() === 0) {
+        <form (ngSubmit)="login()">
+          <div class="form-group">
+            <label class="form-label" for="username">Correo electrónico o DNI</label>
+            <input class="form-input" type="text" id="username" name="username" [(ngModel)]="username" placeholder="ej. recepcion@safezone.pe" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Contraseña</label>
+            <input class="form-input" type="password" id="password" name="password" [(ngModel)]="password" placeholder="••••••••••••" required>
+            <p class="text-xs text-muted mt-1">Escriba "wrong" como contraseña para simular un intento fallido y probar el bloqueo.</p>
+          </div>
+
+          <div class="form-options">
+            <label class="form-checkbox">
+              <input type="checkbox" checked>
+              <span>Recordar sesión</span>
+            </label>
+            <a href="javascript:void(0)" class="forgot-link" (click)="recoveryMode.set(true)">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <button class="btn btn-primary w-full mt-4 flex justify-center items-center gap-2 py-3" type="submit" [disabled]="isLoggingIn">
+            @if (isLoggingIn) {
+              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Autenticando...</span>
+            } @else {
+              <span>Ingresar al Portal</span>
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            }
+          </button>
+        </form>
+
+        <!-- Panel de Pruebas -->
+        <div class="mt-8 p-4 bg-brand-soft border border-brand-light rounded-md text-sm text-secondary">
+          <p class="font-bold text-brand mb-2">Haz clic para autocompletar credenciales de prueba:</p>
+          <div class="flex flex-wrap gap-2">
+            <button class="badge badge-brand pointer-events-auto py-1 px-2 text-xs font-semibold cursor-pointer border-none" (click)="selectTestCredentials('recep')">🔑 Recepcionista</button>
+            <button class="badge badge-success pointer-events-auto py-1 px-2 text-xs font-semibold cursor-pointer border-none" (click)="selectTestCredentials('psic')">🧠 Psicólogo</button>
+            <button class="badge badge-info pointer-events-auto py-1 px-2 text-xs font-semibold cursor-pointer border-none" (click)="selectTestCredentials('legal')">⚖️ Defensor Legal</button>
+            <button class="badge badge-warning pointer-events-auto py-1 px-2 text-xs font-semibold cursor-pointer border-none" (click)="selectTestCredentials('admin')">🛡️ Administrador</button>
+            <button class="badge badge-accent pointer-events-auto py-1 px-2 text-xs font-semibold cursor-pointer border-none" (click)="selectTestCredentials('victima')">👤 Víctima</button>
+          </div>
+          <p class="text-xs text-muted mt-2">Cualquier contraseña es válida (salvo "wrong" que simula fallas de acceso).</p>
         </div>
-
-        <div class="form-options">
-          <label class="form-checkbox">
-            <input type="checkbox" checked>
-            <span>Recordar sesión</span>
-          </label>
-          <a href="javascript:void(0)" class="forgot-link" (click)="showToast('Contacto con TI requerido para restablecer contraseña.', 'warning')">¿Olvidaste tu contraseña?</a>
-        </div>
-
-        <button class="btn btn-primary w-full mt-4 flex justify-center items-center gap-2 py-3" type="submit" [disabled]="isLoggingIn">
-          @if (isLoggingIn) {
-            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span>Autenticando...</span>
-          } @else {
-            <span>Ingresar al Portal</span>
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-          }
-        </button>
-      </form>
-
-      <!-- Panel de Pruebas -->
-      <div class="mt-8 p-4 bg-brand-soft border border-brand-light rounded-md text-sm text-secondary">
-        <p class="font-bold text-brand mb-2">Credenciales de prueba disponibles:</p>
-        <ul class="list-disc pl-5 space-y-1">
-          <li><strong>recepcion</strong>&#64;safezone.pe (Recepcionista)</li>
-          <li><strong>psicologia</strong>&#64;safezone.pe (Psicólogo)</li>
-          <li><strong>legal</strong>&#64;safezone.pe (Defensor Legal)</li>
-          <li><strong>admin</strong>&#64;safezone.pe (Administrador)</li>
-        </ul>
-        <p class="text-xs text-muted mt-2">La contraseña puede ser cualquiera para esta demostración.</p>
-      </div>
+      }
 
     </div>
   </div>
