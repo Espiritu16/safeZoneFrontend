@@ -17,14 +17,20 @@
         </div>
         <div class="card-body">
           <div class="sz-grid-2">
-            <div class="form-group">
-              <label class="form-label">Expiración de Sesión (Minutos)</label>
-              <input type="number" class="form-input" [(ngModel)]="formData.sessionTimeout" min="5" max="120">
+            <div class="form-group" [class.has-error]="errors.sessionTimeout">
+              <label class="form-label">Expiración de Sesión (Minutos) *</label>
+              <input type="text" inputmode="numeric" class="form-input" [ngModel]="formData.sessionTimeout" (input)="onSessionTimeoutInput($event)" (keydown)="onNumericKeydown($event)" maxlength="3">
+              @if (errors.sessionTimeout) {
+                <span class="form-error" style="display: block;">{{ errors.sessionTimeout }}</span>
+              }
               <span class="text-xs text-muted">Tiempo de inactividad antes de cierre forzado.</span>
             </div>
-            <div class="form-group">
-              <label class="form-label">Intentos Fallidos Permitidos</label>
-              <input type="number" class="form-input" [(ngModel)]="formData.maxLoginAttempts" min="1" max="10">
+            <div class="form-group" [class.has-error]="errors.maxLoginAttempts">
+              <label class="form-label">Intentos Fallidos Permitidos *</label>
+              <input type="text" inputmode="numeric" class="form-input" [ngModel]="formData.maxLoginAttempts" (input)="onMaxLoginAttemptsInput($event)" (keydown)="onNumericKeydown($event)" maxlength="2">
+              @if (errors.maxLoginAttempts) {
+                <span class="form-error" style="display: block;">{{ errors.maxLoginAttempts }}</span>
+              }
               <span class="text-xs text-muted">Bloqueo de IP al superar este límite.</span>
             </div>
           </div>
@@ -38,14 +44,57 @@
                 <option value="Alta">Alta (Símbolos obligatorios y min. 12 carácteres)</option>
               </select>
             </div>
-            <div class="form-group flex flex-col justify-center">
-              <label class="form-label flex items-center gap-2 m-0 cursor-pointer">
-                <input type="checkbox" [(ngModel)]="formData.require2FA" class="w-4 h-4 text-brand">
-                <span>Forzar Autenticación 2FA para roles altos</span>
-              </label>
-              <span class="text-xs text-muted mt-1">Aplica a Administradores y Soporte Técnico.</span>
+            <div class="form-group" [class.has-error]="errors.minPasswordLength">
+              <label class="form-label">Longitud Mínima de Contraseña *</label>
+              <input type="text" inputmode="numeric" class="form-input" [ngModel]="formData.minPasswordLength" (input)="onMinPasswordLengthInput($event)" (keydown)="onNumericKeydown($event)" maxlength="2">
+              @if (errors.minPasswordLength) {
+                <span class="form-error" style="display: block;">{{ errors.minPasswordLength }}</span>
+              }
+              <span class="text-xs text-muted">Mínimo de caracteres exigidos en contraseña.</span>
             </div>
           </div>
+          <div class="form-group flex flex-col justify-center mt-4">
+            <label class="form-label flex items-center gap-2 m-0 cursor-pointer">
+              <input type="checkbox" [(ngModel)]="formData.require2FA" class="w-4 h-4 text-brand">
+              <span>Forzar Autenticación 2FA para roles altos</span>
+            </label>
+            <span class="text-xs text-muted mt-1">Aplica a Administradores y Especialistas.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MATRIZ DE PERMISOS DINÁMICA -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-header-title">Matriz de Permisos Funcionales por Rol</h3>
+        </div>
+        <div class="card-body overflow-x-auto">
+          <table class="sz-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr class="bg-brand-soft">
+                <th class="p-3 text-left font-bold text-xs text-muted" style="border-bottom: 2px solid var(--border-color, #e2e8f0); min-width: 180px;">Módulo / Operación</th>
+                @for (role of roles; track role) {
+                  <th class="p-3 text-center font-bold text-xs text-muted" style="border-bottom: 2px solid var(--border-color, #e2e8f0);">{{ role }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (mod of modules; track mod) {
+                <tr style="border-bottom: 1px solid var(--border-color, #e2e8f0);">
+                  <td class="p-3 text-sm font-semibold text-secondary">{{ mod }}</td>
+                  @for (role of roles; track role) {
+                    <td class="p-3 text-center">
+                      <input type="checkbox" 
+                             [checked]="permissionsLocalMatrix[role]?.[mod]" 
+                             (change)="togglePermission(role, mod)"
+                             [disabled]="role === 'Administrador' && (mod === 'Configuración' || mod === 'Dashboard')"
+                             class="w-4 h-4 text-brand cursor-pointer">
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -54,9 +103,12 @@
           <h3 class="card-header-title">Retención de Auditoría</h3>
         </div>
         <div class="card-body">
-          <div class="form-group">
-            <label class="form-label">Días de almacenamiento activo de Logs</label>
-            <input type="number" class="form-input w-1/3" [(ngModel)]="formData.auditRetention" min="30" max="365">
+          <div class="form-group" [class.has-error]="errors.auditRetention">
+            <label class="form-label">Días de almacenamiento activo de Logs *</label>
+            <input type="text" inputmode="numeric" class="form-input w-1/3" [ngModel]="formData.auditRetention" (input)="onAuditRetentionInput($event)" (keydown)="onNumericKeydown($event)" maxlength="3">
+            @if (errors.auditRetention) {
+              <span class="form-error" style="display: block;">{{ errors.auditRetention }}</span>
+            }
             <p class="text-xs text-muted mt-1">Los registros más antiguos a {{ formData.auditRetention }} días serán movidos a Cold Storage (AWS Glacier) automáticamente.</p>
           </div>
         </div>
@@ -76,7 +128,7 @@
         </div>
         <div class="card-body">
           <p class="text-sm mb-4">
-            Al activar el modo de mantenimiento, se cerrará la sesión de todos los usuarios excepto Soporte Técnico y Administrador, y se mostrará una pantalla de "Sistema en Mantenimiento".
+            Al activar el modo de mantenimiento, se cerrará la sesión de todos los usuarios excepto el Administrador, y se mostrará una pantalla de "Sistema en Mantenimiento".
           </p>
           <div class="flex items-center gap-4">
             <span class="font-bold" [ngClass]="configService.config().maintenanceMode ? 'text-danger' : 'text-success'">

@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { 
+  onlyLetters, 
+  isValidEmail, 
+  trimAndCollapse 
+} from '../../../../shared/utils/validation.utils';
 
 @Component({
   selector: 'app-public-contacto',
@@ -19,54 +24,69 @@ import { FormsModule } from '@angular/forms';
             <div class="contact-form">
               <h2>Envíanos un mensaje</h2>
               <form (ngSubmit)="onSubmit()" #contactForm="ngForm">
-                <div class="form-group">
-                  <label for="nombre">Nombre:</label>
+                <div class="form-group" [class.has-error]="errors.nombre">
+                  <label for="nombre">Nombre: *</label>
                   <input
                     type="text"
                     id="nombre"
                     name="nombre"
                     [(ngModel)]="formData.nombre"
+                    (input)="clearError('nombre')"
                     placeholder="Tu nombre completo"
                     required
                   >
+                  @if (errors.nombre) {
+                    <span class="form-error">{{ errors.nombre }}</span>
+                  }
                 </div>
 
-                <div class="form-group">
-                  <label for="email">Email:</label>
+                <div class="form-group" [class.has-error]="errors.email">
+                  <label for="email">Email: *</label>
                   <input
                     type="email"
                     id="email"
                     name="email"
                     [(ngModel)]="formData.email"
+                    (input)="clearError('email')"
                     placeholder="tu@email.com"
                     required
                   >
+                  @if (errors.email) {
+                    <span class="form-error">{{ errors.email }}</span>
+                  }
                 </div>
 
-                <div class="form-group">
-                  <label for="asunto">Asunto:</label>
-                  <select id="asunto" name="asunto" [(ngModel)]="formData.asunto" required>
+                <div class="form-group" [class.has-error]="errors.asunto">
+                  <label for="asunto">Asunto: *</label>
+                  <select id="asunto" name="asunto" [(ngModel)]="formData.asunto" (change)="clearError('asunto')" required>
                     <option value="">Seleccionar asunto...</option>
                     <option value="consulta">Consulta General</option>
                     <option value="emergencia">Emergencia/Ayuda Inmediata</option>
                     <option value="feedback">Feedback/Sugerencias</option>
                     <option value="tecnico">Problema Técnico</option>
                   </select>
+                  @if (errors.asunto) {
+                    <span class="form-error">{{ errors.asunto }}</span>
+                  }
                 </div>
 
-                <div class="form-group">
-                  <label for="mensaje">Mensaje:</label>
+                <div class="form-group" [class.has-error]="errors.mensaje">
+                  <label for="mensaje">Mensaje: *</label>
                   <textarea
                     id="mensaje"
                     name="mensaje"
                     [(ngModel)]="formData.mensaje"
+                    (input)="clearError('mensaje')"
                     placeholder="Cuéntanos cómo podemos ayudarte..."
                     rows="5"
                     required
                   ></textarea>
+                  @if (errors.mensaje) {
+                    <span class="form-error">{{ errors.mensaje }}</span>
+                  }
                 </div>
 
-                <button type="submit" class="btn btn-primary" [disabled]="!contactForm.valid">
+                <button type="submit" class="btn btn-primary">
                   Enviar Mensaje
                 </button>
               </form>
@@ -135,7 +155,6 @@ import { FormsModule } from '@angular/forms';
     </div>
   `,
   styles: [`
-
     .contacto-container {
       width: 100%;
     }
@@ -223,6 +242,19 @@ import { FormsModule } from '@angular/forms';
       outline: none;
       border-color: var(--color-primary);
       box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    }
+
+    .form-error {
+      color: #dc2626;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: block;
+    }
+
+    .has-error input,
+    .has-error select,
+    .has-error textarea {
+      border-color: #dc2626 !important;
     }
 
     .btn {
@@ -330,21 +362,21 @@ import { FormsModule } from '@angular/forms';
       color: var(--color-destructive);
     }
 
-    .info-block ul {
+    .info-block.emergency ul {
       list-style: none;
       padding: 0;
       margin: var(--space-4) 0 0 0;
       font-family: var(--font-sans);
     }
 
-    .info-block li {
+    .info-block.emergency li {
       padding: var(--space-2) 0;
       color: var(--color-foreground);
       padding-left: var(--space-6);
       position: relative;
     }
 
-    .info-block li::before {
+    .info-block.emergency li::before {
       content: '▸';
       position: absolute;
       left: 0;
@@ -418,9 +450,75 @@ export class PublicContactoPage {
     mensaje: ''
   };
 
+  errors = {
+    nombre: '',
+    email: '',
+    asunto: '',
+    mensaje: ''
+  };
+
   mensajeEnviado = false;
 
+  clearError(field: keyof typeof this.errors) {
+    this.errors[field] = '';
+  }
+
   onSubmit() {
+    let hasError = false;
+
+    // Sanitizar
+    this.formData.nombre = trimAndCollapse(this.formData.nombre);
+    this.formData.email = trimAndCollapse(this.formData.email);
+    this.formData.mensaje = trimAndCollapse(this.formData.mensaje);
+
+    // Validar nombre
+    if (!this.formData.nombre) {
+      this.errors.nombre = 'El nombre es obligatorio.';
+      hasError = true;
+    } else if (!onlyLetters(this.formData.nombre)) {
+      this.errors.nombre = 'Solo se permiten letras, espacios, apóstrofe y guion.';
+      hasError = true;
+    } else if (this.formData.nombre.length < 2 || this.formData.nombre.length > 120) {
+      this.errors.nombre = 'El nombre debe tener entre 2 y 120 caracteres.';
+      hasError = true;
+    } else {
+      this.errors.nombre = '';
+    }
+
+    // Validar email
+    if (!this.formData.email) {
+      this.errors.email = 'El correo electrónico es obligatorio.';
+      hasError = true;
+    } else if (!isValidEmail(this.formData.email)) {
+      this.errors.email = 'Debe ingresar un correo electrónico válido.';
+      hasError = true;
+    } else {
+      this.errors.email = '';
+    }
+
+    // Validar asunto
+    if (!this.formData.asunto) {
+      this.errors.asunto = 'Debe seleccionar un asunto.';
+      hasError = true;
+    } else {
+      this.errors.asunto = '';
+    }
+
+    // Validar mensaje
+    if (!this.formData.mensaje) {
+      this.errors.mensaje = 'El mensaje es obligatorio.';
+      hasError = true;
+    } else if (this.formData.mensaje.length < 10 || this.formData.mensaje.length > 1000) {
+      this.errors.mensaje = 'El mensaje debe tener entre 10 y 1000 caracteres.';
+      hasError = true;
+    } else {
+      this.errors.mensaje = '';
+    }
+
+    if (hasError) {
+      return;
+    }
+
     // Simular envío
     console.log('Formulario enviado:', this.formData);
     this.mensajeEnviado = true;

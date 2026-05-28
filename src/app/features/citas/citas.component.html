@@ -6,7 +6,7 @@
       <p class="sz-page-description">Programación de asesorías legales, test psicológicos y contención emocional.</p>
     </div>
     <div class="sz-page-header-actions">
-      <button class="btn btn-primary btn-sm" (click)="appointmentsService.showAppointmentModal.set(true)">Programar Nueva Cita</button>
+      <button class="btn btn-primary btn-sm" (click)="openModal()">Programar Nueva Cita</button>
     </div>
   </div>
 
@@ -141,13 +141,17 @@
       </div>
       <div class="sz-modal-body">
         
-        <div class="form-group">
-          <label class="form-label">Caso Vinculado</label>
-          <select class="form-select" [(ngModel)]="appointmentsService.nuevaCita.casoId">
+        <div class="form-group" [class.has-error]="errors.casoId">
+          <label class="form-label">Caso Vinculado *</label>
+          <select class="form-select" [(ngModel)]="appointmentsService.nuevaCita.casoId" (change)="clearError('casoId')">
+            <option value="">-- Seleccionar Caso --</option>
             @for (c of casesService.casos(); track c.id) {
               <option [value]="c.codigo">{{ c.codigo }} - {{ c.victim }}</option>
             }
           </select>
+          @if (errors.casoId) {
+            <span class="form-error" style="display: block;">{{ errors.casoId }}</span>
+          }
         </div>
 
         <div class="form-group">
@@ -160,25 +164,34 @@
         </div>
 
         <div class="sz-grid-2">
-          <div class="form-group">
-            <label class="form-label">Fecha</label>
-            <input class="form-input" type="date" [(ngModel)]="appointmentsService.nuevaCita.fecha">
+          <div class="form-group" [class.has-error]="errors.fecha">
+            <label class="form-label">Fecha *</label>
+            <input class="form-input" type="date" [(ngModel)]="appointmentsService.nuevaCita.fecha" (change)="clearError('fecha')">
+            @if (errors.fecha) {
+              <span class="form-error" style="display: block;">{{ errors.fecha }}</span>
+            }
           </div>
-          <div class="form-group">
-            <label class="form-label">Hora</label>
-            <input class="form-input" type="time" [(ngModel)]="appointmentsService.nuevaCita.hora">
+          <div class="form-group" [class.has-error]="errors.hora">
+            <label class="form-label">Hora *</label>
+            <input class="form-input" type="time" [(ngModel)]="appointmentsService.nuevaCita.hora" (change)="clearError('hora')">
+            @if (errors.hora) {
+              <span class="form-error" style="display: block;">{{ errors.hora }}</span>
+            }
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" [class.has-error]="errors.notas">
           <label class="form-label">Notas Adicionales</label>
-          <textarea class="form-textarea" [(ngModel)]="appointmentsService.nuevaCita.notas" placeholder="Motivo o requerimiento específico de la cita..."></textarea>
+          <textarea class="form-textarea" [(ngModel)]="appointmentsService.nuevaCita.notas" (input)="clearError('notas')" placeholder="Motivo o requerimiento específico de la cita..."></textarea>
+          @if (errors.notas) {
+            <span class="form-error" style="display: block;">{{ errors.notas }}</span>
+          }
         </div>
 
       </div>
       <div class="sz-modal-footer">
         <button class="btn btn-outline" (click)="appointmentsService.showAppointmentModal.set(false)">Cancelar</button>
-        <button class="btn btn-primary" (click)="appointmentsService.saveCita()">Agendar Cita</button>
+        <button class="btn btn-primary" (click)="agendarCita()">Agendar Cita</button>
       </div>
     </div>
   </div>
