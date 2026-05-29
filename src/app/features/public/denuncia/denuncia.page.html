@@ -68,12 +68,17 @@
       }
 
       <div class="col-span-12" [class.lg:col-span-8]="!submitted">
+        @if (validationMessage) {
+          <div class="mb-md rounded-lg border border-error bg-error-container px-md py-sm text-on-error-container font-body-sm">
+            {{ validationMessage }}
+          </div>
+        }
         @if (!submitted && currentStep === 1) {
           <section class="form-container situation-section space-y-lg">
             <h2 class="font-headline-md text-headline-md text-on-surface">Seleccione el tipo de situación</h2>
             <div class="type-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-sm">
               <label class="relative group cursor-pointer">
-                <input class="peer sr-only" name="situation_type" type="radio" value="FISICA">
+                <input class="peer sr-only" name="situation_type" type="radio" value="FISICA" [(ngModel)]="formData.situationType">
                 <div class="type-option-card h-full min-h-40 p-md bg-white border border-outline-variant rounded-xl group-hover:border-primary transition-all peer-checked:border-primary peer-checked:bg-primary-container/10">
                   <span class="material-symbols-outlined text-primary mb-xs block text-lg">back_hand</span>
                   <p class="font-bold text-primary text-sm">Violencia Física</p>
@@ -81,7 +86,7 @@
                 </div>
               </label>
               <label class="relative group cursor-pointer">
-                <input class="peer sr-only" name="situation_type" type="radio" value="PSICOLOGICA">
+                <input class="peer sr-only" name="situation_type" type="radio" value="PSICOLOGICA" [(ngModel)]="formData.situationType">
                 <div class="type-option-card h-full min-h-40 p-md bg-white border border-outline-variant rounded-xl group-hover:border-primary transition-all peer-checked:border-primary peer-checked:bg-primary-container/10">
                   <span class="material-symbols-outlined text-primary mb-xs block text-lg">psychology</span>
                   <p class="font-bold text-primary text-sm">Violencia Psicológica</p>
@@ -89,7 +94,7 @@
                 </div>
               </label>
               <label class="relative group cursor-pointer">
-                <input class="peer sr-only" name="situation_type" type="radio" value="SEXUAL">
+                <input class="peer sr-only" name="situation_type" type="radio" value="SEXUAL" [(ngModel)]="formData.situationType">
                 <div class="type-option-card h-full min-h-40 p-md bg-white border border-outline-variant rounded-xl group-hover:border-primary transition-all peer-checked:border-primary peer-checked:bg-primary-container/10">
                   <span class="material-symbols-outlined text-primary mb-xs block text-lg">shield_person</span>
                   <p class="font-bold text-primary text-sm">Violencia Sexual</p>
@@ -97,7 +102,7 @@
                 </div>
               </label>
               <label class="relative group cursor-pointer">
-                <input class="peer sr-only" name="situation_type" type="radio" value="ECONOMICA">
+                <input class="peer sr-only" name="situation_type" type="radio" value="ECONOMICA" [(ngModel)]="formData.situationType">
                 <div class="type-option-card h-full min-h-40 p-md bg-white border border-outline-variant rounded-xl group-hover:border-primary transition-all peer-checked:border-primary peer-checked:bg-primary-container/10">
                   <span class="material-symbols-outlined text-primary mb-xs block text-lg">account_balance_wallet</span>
                   <p class="font-bold text-primary text-sm">Violencia Económica</p>
@@ -105,7 +110,7 @@
                 </div>
               </label>
               <label class="relative group cursor-pointer">
-                <input class="peer sr-only" name="situation_type" type="radio" value="PATRIMONIAL">
+                <input class="peer sr-only" name="situation_type" type="radio" value="PATRIMONIAL" [(ngModel)]="formData.situationType">
                 <div class="type-option-card h-full min-h-40 p-md bg-white border border-outline-variant rounded-xl group-hover:border-primary transition-all peer-checked:border-primary peer-checked:bg-primary-container/10">
                   <span class="material-symbols-outlined text-primary mb-xs block text-lg">home_work</span>
                   <p class="font-bold text-primary text-sm">Violencia Patrimonial</p>
@@ -113,7 +118,7 @@
                 </div>
               </label>
               <label class="relative group cursor-pointer">
-                <input class="peer sr-only" name="situation_type" type="radio" value="DIGITAL">
+                <input class="peer sr-only" name="situation_type" type="radio" value="DIGITAL" [(ngModel)]="formData.situationType">
                 <div class="type-option-card h-full min-h-40 p-md bg-white border border-outline-variant rounded-xl group-hover:border-primary transition-all peer-checked:border-primary peer-checked:bg-primary-container/10">
                   <span class="material-symbols-outlined text-primary mb-xs block text-lg">phonelink_lock</span>
                   <p class="font-bold text-primary text-sm">Violencia Digital</p>
@@ -121,7 +126,7 @@
                 </div>
               </label>
               <label class="relative group cursor-pointer">
-                <input class="peer sr-only" name="situation_type" type="radio" value="OTRA">
+                <input class="peer sr-only" name="situation_type" type="radio" value="OTRA" [(ngModel)]="formData.situationType">
                 <div class="type-option-card h-full min-h-40 p-md bg-white border border-outline-variant rounded-xl group-hover:border-primary transition-all peer-checked:border-primary peer-checked:bg-primary-container/10">
                   <span class="material-symbols-outlined text-primary mb-xs block text-lg">more_horiz</span>
                   <p class="font-bold text-primary text-sm">Otra forma de violencia</p>
@@ -141,27 +146,27 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
               <div class="flex flex-col gap-xs">
                 <label class="font-label-md text-on-surface-variant">Fecha del incidente</label>
-                <input class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" type="date">
+                <input class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" type="date" name="incidentDate" [(ngModel)]="formData.incidentDate" required>
               </div>
               <div class="flex flex-col gap-xs">
                 <label class="font-label-md text-on-surface-variant">Ubicación (Ciudad/Sector)</label>
-                <input class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="Ej. Lima, Comas" type="text">
+                <input class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" appTrimOnBlur placeholder="Ej. Lima, Comas" type="text" name="location" [(ngModel)]="formData.location" required maxlength="120">
               </div>
               <div class="md:col-span-2 flex flex-col gap-xs">
                 <label class="font-label-md text-on-surface-variant">Descripción detallada</label>
-                <textarea class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none" placeholder="Describa lo sucedido con la mayor claridad posible..." rows="5"></textarea>
+                <textarea class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none" appTrimOnBlur placeholder="Describa lo sucedido con la mayor claridad posible..." rows="5" name="description" [(ngModel)]="formData.description" required minlength="20" maxlength="2000"></textarea>
               </div>
               <div class="md:col-span-2 flex flex-col gap-xs">
                 <label class="font-label-md text-on-surface-variant">Nivel de riesgo percibido</label>
                 <div class="flex flex-col md:flex-row items-center gap-md mt-xs">
                   <label class="flex-1 w-full text-center py-sm border border-outline-variant rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors">
-                    <input class="sr-only" name="risk" type="radio" value="low"> <span class="text-body-sm">Bajo</span>
+                    <input class="sr-only" name="risk" type="radio" value="low" [(ngModel)]="formData.risk"> <span class="text-body-sm">Bajo</span>
                   </label>
                   <label class="flex-1 w-full text-center py-sm border border-outline-variant rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors">
-                    <input class="sr-only" name="risk" type="radio" value="medium"> <span class="text-body-sm">Medio</span>
+                    <input class="sr-only" name="risk" type="radio" value="medium" [(ngModel)]="formData.risk"> <span class="text-body-sm">Medio</span>
                   </label>
                   <label class="flex-1 w-full text-center py-sm border border-outline-variant rounded-lg cursor-pointer hover:bg-surface-container-low transition-colors">
-                    <input class="sr-only" name="risk" type="radio" value="high"> <span class="text-body-sm">Alto</span>
+                    <input class="sr-only" name="risk" type="radio" value="high" [(ngModel)]="formData.risk"> <span class="text-body-sm">Alto</span>
                   </label>
                 </div>
               </div>
@@ -180,11 +185,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
               <div class="flex flex-col gap-xs">
                 <label class="font-label-md text-on-surface-variant">Nombre o Alias</label>
-                <input class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="Su identificación preferida" type="text">
+                <input class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" appLettersOnly appTrimOnBlur placeholder="Su identificación preferida" type="text" name="contactName" [(ngModel)]="formData.contactName" minlength="2" maxlength="120" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñÜü' -]+$">
               </div>
               <div class="flex flex-col gap-xs">
                 <label class="font-label-md text-on-surface-variant">Canal Seguro</label>
-                <select class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                <select class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" name="channel" [(ngModel)]="formData.channel">
                   <option>WhatsApp (Encriptado)</option>
                   <option>Llamada Telefónica</option>
                   <option>Correo Electrónico Seguro</option>
@@ -193,11 +198,11 @@
               </div>
               <div class="flex flex-col gap-xs">
                 <label class="font-label-md text-on-surface-variant">Dato de contacto (Tel/Email)</label>
-                <input class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" type="text">
+                <input class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" appTrimOnBlur type="text" name="contactValue" [(ngModel)]="formData.contactValue" [attr.inputmode]="formData.channel === 'Correo Electrónico Seguro' ? 'email' : 'numeric'" maxlength="254">
               </div>
               <div class="flex flex-col gap-xs">
                 <label class="font-label-md text-on-surface-variant">Horario preferente para contacto</label>
-                <select class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                <select class="border border-outline-variant rounded-lg p-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" name="preferredTime" [(ngModel)]="formData.preferredTime">
                   <option>Cualquier momento</option>
                   <option>Mañana (8:00 - 12:00)</option>
                   <option>Tarde (12:00 - 18:00)</option>
@@ -241,7 +246,7 @@
               </div>
             </div>
             <div class="flex items-center gap-sm">
-              <input class="rounded border-outline-variant text-primary focus:ring-primary" id="terms" type="checkbox">
+              <input class="rounded border-outline-variant text-primary focus:ring-primary" id="terms" type="checkbox" name="acceptedTerms" [(ngModel)]="formData.acceptedTerms">
               <label class="text-body-sm text-on-surface-variant" for="terms">Confirmo que la información proporcionada es verídica y acepto el tratamiento de datos para fines de asistencia.</label>
             </div>
             <div class="flex justify-between pt-md">

@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { AppointmentsService } from '../../../core/services/appointments.service';
 import { CasesService } from '../../../core/services/cases.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { TrimOnBlurDirective } from '../../../shared/directives/trim-on-blur.directive';
 
 @Component({
   selector: 'app-citas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TrimOnBlurDirective],
   templateUrl: './citas.component.html',
   styleUrl: './citas.component.scss'
 })

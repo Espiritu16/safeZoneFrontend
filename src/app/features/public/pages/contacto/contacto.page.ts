@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { LettersOnlyDirective } from '../../../../shared/directives/letters-only.directive';
+import { TrimOnBlurDirective } from '../../../../shared/directives/trim-on-blur.directive';
+import { normalizeText, sanitizeLettersOnly } from '../../../../shared/utils/input-sanitizers.util';
+import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../../../../shared/utils/validation-rules';
 
 @Component({
   selector: 'app-public-contacto',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LettersOnlyDirective, TrimOnBlurDirective],
   template: `
     <div class="contacto-container">
       <section class="header-section">
@@ -19,15 +23,23 @@ import { FormsModule } from '@angular/forms';
             <div class="contact-form">
               <h2>Envíanos un mensaje</h2>
               <form (ngSubmit)="onSubmit()" #contactForm="ngForm">
+                <div *ngIf="validationMessage" class="success-message" style="background: var(--color-warning-lighter); color: var(--color-warning-dark);">
+                  {{ validationMessage }}
+                </div>
                 <div class="form-group">
                   <label for="nombre">Nombre:</label>
                   <input
                     type="text"
                     id="nombre"
                     name="nombre"
+                    appLettersOnly
+                    appTrimOnBlur
                     [(ngModel)]="formData.nombre"
                     placeholder="Tu nombre completo"
                     required
+                    minlength="2"
+                    maxlength="120"
+                    pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñÜü' -]+$"
                   >
                 </div>
 
@@ -37,9 +49,11 @@ import { FormsModule } from '@angular/forms';
                     type="email"
                     id="email"
                     name="email"
+                    appTrimOnBlur
                     [(ngModel)]="formData.email"
                     placeholder="tu@email.com"
                     required
+                    maxlength="254"
                   >
                 </div>
 
@@ -59,10 +73,13 @@ import { FormsModule } from '@angular/forms';
                   <textarea
                     id="mensaje"
                     name="mensaje"
+                    appTrimOnBlur
                     [(ngModel)]="formData.mensaje"
                     placeholder="Cuéntanos cómo podemos ayudarte..."
                     rows="5"
                     required
+                    minlength="10"
+                    maxlength="1000"
                   ></textarea>
                 </div>
 
@@ -419,10 +436,42 @@ export class PublicContactoPage {
   };
 
   mensajeEnviado = false;
+  validationMessage = '';
 
   onSubmit() {
     // Simular envío
-    console.log('Formulario enviado:', this.formData);
+    this.formData = {
+      ...this.formData,
+      nombre: sanitizeLettersOnly(this.formData.nombre).trim(),
+      email: this.formData.email.trim().toLowerCase(),
+      mensaje: normalizeText(this.formData.mensaje),
+    };
+
+    if (
+      this.formData.nombre.length < VALIDATION_LIMITS.NAME_MIN ||
+      this.formData.nombre.length > VALIDATION_LIMITS.NAME_MAX ||
+      !VALIDATION_PATTERNS.PERSON_NAME.test(this.formData.nombre)
+    ) {
+      this.validationMessage = 'El nombre debe tener entre 2 y 120 caracteres y solo letras.';
+      return;
+    }
+    if (!isValidBasicEmail(this.formData.email)) {
+      this.validationMessage = 'Ingrese un email válido.';
+      return;
+    }
+    if (!this.formData.asunto) {
+      this.validationMessage = 'Seleccione un asunto.';
+      return;
+    }
+    if (
+      this.formData.mensaje.length < VALIDATION_LIMITS.MESSAGE_MIN ||
+      this.formData.mensaje.length > VALIDATION_LIMITS.MESSAGE_MAX
+    ) {
+      this.validationMessage = 'El mensaje debe tener entre 10 y 1000 caracteres.';
+      return;
+    }
+
+    this.validationMessage = '';
     this.mensajeEnviado = true;
 
     // Limpiar formulario después de 3 segundos
