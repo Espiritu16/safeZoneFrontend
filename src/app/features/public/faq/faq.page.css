@@ -1,0 +1,47 @@
+:host {
+  display: block;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.accordion-button {
+  background: transparent;
+  border: 0;
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.accordion-item.active .accordion-content {
+  max-height: 500px;
+}
+
+.accordion-item.active .icon-rotate {
+  transform: rotate(180deg);
+}
+
+.faq-cta-pattern {
+  background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+@media (min-width: 768px) {
+  .faq-main {
+    padding-top: 4rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .faq-main {
+    padding-top: 7rem;
+  }
+
+  .faq-sidebar {
+    position: static;
+  }
+}
