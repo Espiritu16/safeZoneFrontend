@@ -1,0 +1,10 @@
+.angular
+.git
+.pnpm-store
+dist
+node_modules
+npm-debug.log
+pnpm-debug.log
+pnpm-error.log
+Dockerfile
+README.md
