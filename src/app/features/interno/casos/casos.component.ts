@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CasesService } from '../../core/services/cases.service';
+import { CasesService } from '../../../core/services/cases.service';
 
 @Component({
   selector: 'app-casos',

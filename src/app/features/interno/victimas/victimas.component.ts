@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VictimsService, Victim } from '../../core/services/victims.service';
-import { ToastService } from '../../core/services/toast.service';
+import { VictimsService, Victim } from '../../../core/services/victims.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-victimas',
