@@ -105,3 +105,11 @@
     height: auto;
   }
 }
+
+.public-login-trigger {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.05em;
+}

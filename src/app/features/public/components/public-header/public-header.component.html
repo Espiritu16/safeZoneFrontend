@@ -40,8 +40,10 @@
     <a class="font-label-md text-label-md text-on-surface-variant border border-outline-variant hover:bg-surface-container-high transition-colors px-4 py-2 rounded-lg no-underline" routerLink="/mis-casos">
       Consultar Caso
     </a>
-    <a class="font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors px-4 py-2 rounded-lg no-underline" routerLink="/login">
+    <button class="public-login-trigger font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors px-4 py-2 rounded-lg" type="button" (click)="openLoginModal()">
       Iniciar Sesión
-    </a>
+    </button>
   </div>
 </header>
+
+<app-login-modal [open]="isLoginModalOpen" (closed)="closeLoginModal()"></app-login-modal>
