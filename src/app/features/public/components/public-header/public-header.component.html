@@ -1,49 +1,70 @@
-<header class="public-header flex justify-between items-center gap-md px-margin-desktop w-full min-h-16 z-50 bg-surface/90 backdrop-blur-md fixed top-0 border-b border-outline-variant">
-  <div class="flex items-center gap-lg min-w-0">
-    <a class="font-headline-sm text-headline-sm font-bold text-primary no-underline" routerLink="/inicio">
-      SafeZone
-    </a>
+<header class="public-header">
+  <a class="public-brand" routerLink="/inicio" (click)="closeMenu()">SafeZone</a>
 
-    <nav class="public-nav flex gap-sm items-center h-full" aria-label="Navegación principal">
-      <a
-        class="public-nav-link"
-        routerLink="/inicio"
-        routerLinkActive="is-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        Inicio
-      </a>
-      <a
-        class="public-nav-link"
-        routerLink="/informacion"
-        routerLinkActive="is-active"
-      >
-        Información
-      </a>
-      <a
-        class="public-nav-link"
-        routerLink="/nosotros"
-        routerLinkActive="is-active"
-      >
-        Nosotros
-      </a>
-      <a class="public-nav-link" routerLink="/faq" routerLinkActive="is-active">FAQ</a>
-      <a class="public-nav-link" routerLink="/contacto" routerLinkActive="is-active">Contacto</a>
-      <a class="public-nav-link" routerLink="/politicas" routerLinkActive="is-active">Políticas</a>
-    </nav>
+  <nav class="public-nav" aria-label="Navegación principal">
+    <a class="public-nav-link" routerLink="/inicio" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+    <a class="public-nav-link" routerLink="/informacion" routerLinkActive="is-active">Información</a>
+    <a class="public-nav-link" routerLink="/nosotros" routerLinkActive="is-active">Nosotros</a>
+    <a class="public-nav-link" routerLink="/faq" routerLinkActive="is-active">FAQ</a>
+    <a class="public-nav-link" routerLink="/contacto" routerLinkActive="is-active">Contacto</a>
+    <a class="public-nav-link" routerLink="/politicas" routerLinkActive="is-active">Políticas</a>
+  </nav>
+
+  <div class="public-actions">
+    @if (authService.isLoggedIn()) {
+      <a class="public-action-secondary" routerLink="/dashboard">Mi Panel</a>
+      <button class="public-login-trigger" type="button" (click)="logout()">Cerrar Sesión</button>
+    } @else {
+      <a class="public-action-primary" routerLink="/denuncia">Nueva Denuncia</a>
+      <a class="public-action-secondary" routerLink="/mis-casos">Consultar Caso</a>
+      <button class="public-login-trigger" type="button" (click)="openLoginModal()">Iniciar Sesión</button>
+    }
   </div>
 
-  <div class="public-actions flex items-center gap-sm">
-    <a class="bg-primary-container text-white px-md py-2.5 rounded-lg font-label-md text-label-md hover:bg-primary transition-all active:scale-95 shadow-sm no-underline" routerLink="/denuncia">
-      Nueva Denuncia
-    </a>
-    <a class="font-label-md text-label-md text-on-surface-variant border border-outline-variant hover:bg-surface-container-high transition-colors px-4 py-2 rounded-lg no-underline" routerLink="/mis-casos">
-      Consultar Caso
-    </a>
-    <button class="public-login-trigger font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors px-4 py-2 rounded-lg" type="button" (click)="openLoginModal()">
-      Iniciar Sesión
-    </button>
-  </div>
+  <button
+    class="public-menu-toggle"
+    type="button"
+    [attr.aria-expanded]="isMenuOpen"
+    aria-controls="public-mobile-menu"
+    aria-label="Abrir navegación"
+    (click)="toggleMenu()"
+  >
+    <span class="material-symbols-outlined">{{ isMenuOpen ? 'close' : 'menu' }}</span>
+  </button>
 </header>
+
+@if (isMenuOpen) {
+  <div class="public-menu-backdrop" (click)="closeMenu()" aria-hidden="true"></div>
+  <aside id="public-mobile-menu" class="public-mobile-menu" aria-label="Menú público">
+    <div class="mobile-menu-head">
+      <span>Menú Público</span>
+      @if (authService.isLoggedIn()) {
+        <small>Sesión activa</small>
+      } @else {
+        <small>Acceso ciudadano</small>
+      }
+    </div>
+
+    <nav class="mobile-nav" aria-label="Navegación móvil">
+      <a routerLink="/inicio" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Inicio</a>
+      <a routerLink="/informacion" routerLinkActive="is-active" (click)="closeMenu()">Información</a>
+      <a routerLink="/nosotros" routerLinkActive="is-active" (click)="closeMenu()">Nosotros</a>
+      <a routerLink="/faq" routerLinkActive="is-active" (click)="closeMenu()">FAQ</a>
+      <a routerLink="/contacto" routerLinkActive="is-active" (click)="closeMenu()">Contacto</a>
+      <a routerLink="/politicas" routerLinkActive="is-active" (click)="closeMenu()">Políticas</a>
+    </nav>
+
+    <div class="mobile-actions">
+      @if (authService.isLoggedIn()) {
+        <a class="public-action-primary" routerLink="/dashboard" (click)="closeMenu()">Ir al Panel</a>
+        <button class="public-action-secondary" type="button" (click)="logout()">Cerrar Sesión</button>
+      } @else {
+        <a class="public-action-primary" routerLink="/denuncia" (click)="closeMenu()">Nueva Denuncia</a>
+        <a class="public-action-secondary" routerLink="/mis-casos" (click)="closeMenu()">Consultar Caso</a>
+        <button class="public-action-secondary" type="button" (click)="openLoginModal()">Iniciar Sesión</button>
+      }
+    </div>
+  </aside>
+}
 
 <app-login-modal [open]="isLoginModalOpen" (closed)="closeLoginModal()"></app-login-modal>
