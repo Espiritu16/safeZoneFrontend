@@ -1,0 +1,79 @@
+:host {
+  display: block;
+}
+
+.material-symbols-outlined {
+  display: inline-block;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  line-height: 1;
+}
+
+.security-accent {
+  color: #16a34a;
+}
+
+.bg-security-accent {
+  background-color: rgba(22, 163, 74, 0.1);
+}
+
+.bg-politicas-secondary {
+  background-color: #006e2d;
+}
+
+.border-politicas-secondary {
+  border-color: #006e2d;
+}
+
+.shield-gradient {
+  background: radial-gradient(circle at center, #006e2d, transparent 62%);
+}
+
+.usage-card {
+  color: #ffffff;
+}
+
+.shield-panel,
+.shield-panel h2,
+.shield-panel p,
+.shield-panel span {
+  color: #ffffff;
+}
+
+.shield-panel p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.proceed-card,
+.proceed-card h3,
+.proceed-card p {
+  color: #ffffff;
+}
+
+.proceed-card p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.proceed-card .bg-white {
+  color: #00288e;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .politicas-main {
+    padding-top: 4rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .politicas-main {
+    padding-top: 7rem;
+  }
+
+  .floating-card {
+    left: 1rem;
+    right: 1rem;
+  }
+}
