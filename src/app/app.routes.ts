@@ -20,6 +20,21 @@ export const routes: Routes = [
       import('./features/public/nosotros/nosotros.page').then((m) => m.NosotrosPage),
   },
   {
+    path: 'faq',
+    loadComponent: () =>
+      import('./features/public/faq/faq.page').then((m) => m.FaqPage),
+  },
+  {
+    path: 'contacto',
+    loadComponent: () =>
+      import('./features/public/contacto/contacto.page').then((m) => m.ContactoPage),
+  },
+  {
+    path: 'politicas',
+    loadComponent: () =>
+      import('./features/public/politicas/politicas.page').then((m) => m.PoliticasPage),
+  },
+  {
     path: 'denuncia',
     loadComponent: () =>
       import('./features/public/denuncia/denuncia.page').then((m) => m.DenunciaPage),
