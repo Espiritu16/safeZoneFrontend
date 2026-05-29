@@ -9,6 +9,10 @@
       aria-labelledby="login-modal-title"
       (click)="$event.stopPropagation()"
     >
+      <button class="login-modal-close" type="button" aria-label="Cerrar modal" (click)="close()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
       <header class="login-modal-header">
         <div class="login-modal-icon" aria-hidden="true">
           <span class="material-symbols-outlined">security</span>

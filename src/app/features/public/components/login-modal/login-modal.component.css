@@ -40,6 +40,35 @@
   backdrop-filter: blur(24px) saturate(180%);
 }
 
+.login-modal-close {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(196, 197, 213, 0.72);
+  border-radius: 999px;
+  color: #757684;
+  cursor: pointer;
+  display: inline-flex;
+  height: 32px;
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+  width: 32px;
+  z-index: 2;
+}
+
+.login-modal-close:hover {
+  background: #ffffff;
+  border-color: #00288e;
+  color: #00288e;
+}
+
+.login-modal-close .material-symbols-outlined {
+  font-size: 18px;
+}
+
 .login-modal-header {
   border-bottom: 1px solid rgba(196, 197, 213, 0.28);
   padding: 48px 48px 24px;
