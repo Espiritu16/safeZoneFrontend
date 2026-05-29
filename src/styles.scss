@@ -41,3 +41,109 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body .inicio-main > section,
+body .informacion-main > section,
+body .faq-main > section,
+body .faq-main > div,
+body .contacto-main > section,
+body .politicas-main > section,
+body .public-denuncia-main > section,
+body .public-denuncia-main > div,
+body .case-tracker-main > section,
+body .case-tracker-main > div,
+body .nosotros-page main > section {
+  animation: publicFadeInUp 520ms ease-out both;
+}
+
+@keyframes publicFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .inicio-main > section,
+  body .informacion-main > section,
+  body .faq-main > section,
+  body .faq-main > div,
+  body .contacto-main > section,
+  body .politicas-main > section,
+  body .public-denuncia-main > section,
+  body .public-denuncia-main > div,
+  body .case-tracker-main > section,
+  body .case-tracker-main > div,
+  body .nosotros-page main > section {
+    animation: none !important;
+  }
+}
+
+/* Responsive public layout: the header is part of normal document flow on
+   mobile/tablet, so public pages should not add another large top offset. */
+@media (max-width: 1023px) {
+  body .informacion-main.informacion-main,
+  body .faq-main.faq-main,
+  body .politicas-main.politicas-main,
+  body .contacto-main.contacto-main,
+  body .nosotros-page.nosotros-page main {
+    padding-top: 4rem !important;
+  }
+
+  body .case-tracker-main.case-tracker-main,
+  body .public-denuncia-main.public-denuncia-main {
+    padding-top: 4.5rem !important;
+  }
+
+  body .inicio-main.inicio-main {
+    padding-top: 0 !important;
+  }
+
+  body .inicio-main.inicio-main .hero-section.hero-section {
+    padding-top: 4.25rem !important;
+  }
+
+  body .informacion-main.informacion-main > section:first-child,
+  body .faq-main.faq-main > section:first-child,
+  body .politicas-main.politicas-main > section:first-child,
+  body .contacto-main.contacto-main > section:first-child,
+  body .case-tracker-main.case-tracker-main > section:first-child,
+  body .nosotros-page.nosotros-page main > section:first-child {
+    padding-top: 2rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  body .inicio-main.inicio-main .hero-section.hero-section {
+    padding-top: 4.75rem !important;
+  }
+
+  body .informacion-main.informacion-main > section:first-child,
+  body .faq-main.faq-main > section:first-child,
+  body .politicas-main.politicas-main > section:first-child,
+  body .contacto-main.contacto-main > section:first-child,
+  body .case-tracker-main.case-tracker-main > section:first-child,
+  body .nosotros-page.nosotros-page main > section:first-child {
+    padding-top: 1.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body .inicio-main.inicio-main .hero-section.hero-section {
+    padding-top: 4.75rem !important;
+  }
+
+  body .informacion-main.informacion-main > section:first-child,
+  body .faq-main.faq-main > section:first-child,
+  body .politicas-main.politicas-main > section:first-child,
+  body .contacto-main.contacto-main > section:first-child,
+  body .case-tracker-main.case-tracker-main > section:first-child,
+  body .nosotros-page.nosotros-page main > section:first-child {
+    padding-top: 1.25rem !important;
+  }
+}

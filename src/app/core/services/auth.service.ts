@@ -56,7 +56,7 @@ export class AuthService {
     this.isLoggedInSignal.set(false);
     localStorage.removeItem('safezone_auth');
     this.toastService.show('Sesión cerrada correctamente.', 'warning');
-    void this.router.navigateByUrl('/login');
+    void this.router.navigateByUrl('/inicio');
   }
 
   changeRole(role: string) {

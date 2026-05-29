@@ -57,4 +57,29 @@ summary::-webkit-details-marker {
   .informacion-main {
     padding-top: 7rem;
   }
+
+  .informacion-main > section:first-child {
+    text-align: center;
+  }
+
+  .informacion-main > section:first-child > div:first-child {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .informacion-main > section:first-child h1,
+  .informacion-main > section:first-child p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .informacion-main > section:first-child .flex.flex-wrap {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .informacion-main > section:first-child .flex.flex-wrap a {
+    justify-content: center;
+  }
 }

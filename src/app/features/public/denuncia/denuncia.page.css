@@ -139,3 +139,139 @@
     font-size: 0.8rem;
   }
 }
+
+.public-denuncia-main,
+.denuncia-layout,
+.support-sidebar,
+.form-container,
+.sidebar-card,
+.type-grid,
+.type-option-card {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .public-denuncia-main {
+    padding: 5rem 1.5rem 2.5rem !important;
+    width: 100%;
+  }
+
+  .denuncia-layout {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .denuncia-layout > *,
+  .support-sidebar,
+  .form-container {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .support-sidebar {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .sidebar-card,
+  .form-container {
+    padding: 1.25rem;
+  }
+
+  .progress-card nav,
+  .progress-card nav > div:not(.w-px) {
+    width: 100%;
+  }
+
+  .progress-card nav > div:not(.w-px) span:last-child,
+  .support-card p,
+  .emergency-card p {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .type-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .type-option-card {
+    min-height: 9rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .public-denuncia-main {
+    padding: 4.75rem 1rem 2rem !important;
+  }
+
+  .public-denuncia-main > section:first-child {
+    margin-bottom: 1.5rem;
+  }
+
+  .public-denuncia-main > section:first-child h1,
+  .form-container h2 {
+    overflow-wrap: anywhere;
+  }
+
+  .sidebar-card,
+  .form-container {
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+
+  .progress-card h3 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    margin-bottom: 0.875rem;
+  }
+
+  .progress-card nav {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .progress-card nav > .w-px {
+    height: 0.55rem;
+  }
+
+  .progress-card nav > div:not(.w-px) {
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .support-card {
+    gap: 0.875rem;
+  }
+
+  .support-card .flex,
+  .emergency-card .flex {
+    gap: 0.75rem;
+  }
+
+  .type-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .type-option-card {
+    min-height: auto;
+    padding: 1rem;
+  }
+
+  .form-container .flex.justify-end,
+  .form-container .flex.justify-between,
+  .form-container .flex.justify-center {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .form-container button,
+  .form-container a {
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+}
