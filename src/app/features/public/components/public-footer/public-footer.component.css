@@ -8,3 +8,34 @@
     padding-right: 16px;
   }
 }
+
+@media (max-width: 767px) {
+  footer {
+    text-align: center;
+  }
+
+  footer > div:first-child {
+    justify-items: center;
+    gap: 2rem;
+  }
+
+  footer > div:first-child > div {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    max-width: 320px;
+    width: 100%;
+  }
+
+  footer ul {
+    align-items: center;
+  }
+
+  footer > div:last-child {
+    text-align: center;
+  }
+
+  footer > div:last-child > div {
+    justify-content: center;
+  }
+}

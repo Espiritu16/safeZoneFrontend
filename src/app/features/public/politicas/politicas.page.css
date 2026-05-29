@@ -72,6 +72,53 @@ summary::-webkit-details-marker {
     padding-top: 7rem;
   }
 
+  .politicas-main > section:first-child {
+    text-align: center;
+  }
+
+  .politicas-main > section:first-child > div:first-child {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .politicas-main > section:first-child h1,
+  .politicas-main > section:first-child p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .politicas-main > section:first-child h1 {
+    font-size: clamp(2.4rem, 10vw, 3.15rem);
+    line-height: 1.08;
+  }
+
+  .politicas-main > section:first-child .flex.flex-wrap {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .politicas-main > section:first-child .flex.flex-wrap a {
+    justify-content: center;
+    max-width: 20rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .politicas-main > section:nth-of-type(3) {
+    text-align: center;
+  }
+
+  .politicas-main > section:nth-of-type(3) article.flex {
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .politicas-main > section:nth-of-type(3) article.flex .material-symbols-outlined {
+    margin-top: 0;
+  }
+
   .floating-card {
     left: 1rem;
     right: 1rem;

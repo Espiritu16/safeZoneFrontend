@@ -35,4 +35,36 @@
   .contacto-main {
     padding-top: 7rem;
   }
+
+  .contacto-main > section:first-child {
+    text-align: center;
+  }
+
+  .contacto-main > section:first-child .grid > div:first-child {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contacto-main > section:first-child h1,
+  .contacto-main > section:first-child p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .contacto-main > section:first-child h1 {
+    font-size: clamp(2.5rem, 11vw, 3.25rem);
+    line-height: 1.05;
+  }
+
+  .contacto-main > section:first-child .flex.flex-wrap {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .contacto-main > section:first-child .flex.flex-wrap a {
+    justify-content: center;
+    max-width: 20rem;
+    width: 100%;
+  }
 }
