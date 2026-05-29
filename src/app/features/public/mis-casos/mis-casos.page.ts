@@ -12,14 +12,18 @@ import { PublicHeaderComponent } from '../components/public-header/public-header
 export class MisCasosPage {
   @ViewChild('caseResults') caseResults?: ElementRef<HTMLElement>;
 
+  hasConsulted = false;
+
   consultarCaso() {
+    this.hasConsulted = true;
+
     const results = this.caseResults?.nativeElement;
     if (!results) return;
 
     requestAnimationFrame(() => {
-      const header = document.querySelector('app-public-header') as HTMLElement | null;
+      const header = document.querySelector('header.public-header') as HTMLElement | null;
       const headerHeight = header?.getBoundingClientRect().height ?? 80;
-      const safeTopGap = 28;
+      const safeTopGap = 16;
       const resultsRect = results.getBoundingClientRect();
       const targetTop = window.scrollY + resultsRect.top - headerHeight - safeTopGap;
 
