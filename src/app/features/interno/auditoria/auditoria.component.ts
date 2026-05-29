@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuditService } from '../../core/services/audit.service';
+import { AuditService } from '../../../core/services/audit.service';
 
 @Component({
   selector: 'app-auditoria',

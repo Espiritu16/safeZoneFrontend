@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AppointmentsService } from '../../core/services/appointments.service';
-import { CasesService } from '../../core/services/cases.service';
-import { ToastService } from '../../core/services/toast.service';
+import { AppointmentsService } from '../../../core/services/appointments.service';
+import { CasesService } from '../../../core/services/cases.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-citas',

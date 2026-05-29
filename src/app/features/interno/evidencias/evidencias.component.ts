@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EvidenceService } from '../../core/services/evidence.service';
-import { ToastService } from '../../core/services/toast.service';
+import { EvidenceService } from '../../../core/services/evidence.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-evidencias',

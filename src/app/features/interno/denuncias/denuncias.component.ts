@@ -2,9 +2,9 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CasesService } from '../../core/services/cases.service';
-import { ToastService } from '../../core/services/toast.service';
-import { EvidenceService } from '../../core/services/evidence.service';
+import { CasesService } from '../../../core/services/cases.service';
+import { ToastService } from '../../../core/services/toast.service';
+import { EvidenceService } from '../../../core/services/evidence.service';
 
 @Component({
   selector: 'app-denuncias',
