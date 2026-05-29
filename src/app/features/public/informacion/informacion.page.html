@@ -1,0 +1,277 @@
+<div class="min-h-screen bg-background text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed flex flex-col">
+  <app-public-header />
+
+  <main class="informacion-main flex-grow max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop w-full pt-16">
+    <section class="py-xl flex flex-col md:flex-row items-center gap-xl">
+      <div class="flex-1 space-y-md">
+        <div class="inline-flex items-center gap-xs bg-secondary-container/20 text-secondary px-3 py-1 rounded-full border border-secondary/20">
+          <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+          <span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">Plataforma Institucional Certificada</span>
+        </div>
+
+        <h1 class="font-headline-lg text-headline-lg text-primary max-w-2xl">Información sobre SafeZone</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+          Nuestra misión es proporcionar un canal de comunicación seguro, anónimo y profesional para garantizar la integridad de todos los miembros de nuestra comunidad institucional.
+        </p>
+
+        <div class="flex flex-wrap gap-sm pt-sm">
+          <a routerLink="/denuncia" class="bg-primary text-on-primary px-lg py-sm rounded-lg font-label-md text-label-md hover:brightness-110 transition-all flex items-center gap-xs no-underline">
+            Iniciar Denuncia
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
+          <a href="#recursos" class="bg-surface-container border border-outline-variant text-primary px-lg py-sm rounded-lg font-label-md text-label-md hover:bg-surface-container-high transition-all no-underline">
+            Ver Guía de Usuario
+          </a>
+        </div>
+      </div>
+
+      <div class="flex-1 w-full">
+        <div class="relative rounded-xl overflow-hidden trust-shadow aspect-video bg-surface-container-highest">
+          <img
+            alt="Entorno profesional de SafeZone"
+            class="w-full h-full object-cover mix-blend-multiply opacity-90"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNXOdaA5oL7clezez2SZibdkucF86XegcVFrycEiFXUsTTfZM44A1BUPVpKAKjZkPSmCHTVP7INZEzEak-J12VjiiORamwHz35eLPMwMRo-i4CIKENFpDHXuZOfmNgbbun9wz8gIkjyEPsMN7ETR9NcR2BLmiGD2gIRiWkEFgA-jfCqvMOUXrOahHc-XljBQKUaioM66FkecvT2VdfLmihKkqovPyFCLhH3KNrBQDtMHm4YqHOt1wurLjD-t5d3B7BnC2fK927dqo"
+          />
+          <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-xl">
+      <div class="text-center mb-xl">
+        <h2 class="font-headline-md text-headline-md text-on-surface">¿Qué es SafeZone?</h2>
+        <div class="w-24 h-1 bg-secondary mx-auto mt-sm rounded-full"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+        <article class="info-card p-lg bg-surface border border-outline-variant rounded-xl trust-shadow hover:-translate-y-1 transition-transform">
+          <span class="material-symbols-outlined text-secondary text-4xl mb-md block" style="font-variation-settings: 'FILL' 1;">security</span>
+          <h3 class="font-headline-sm text-headline-sm mb-xs text-on-surface">Protocolos de Seguridad</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Encriptación de nivel bancario para asegurar que tu identidad y datos permanezcan inaccesibles para terceros.</p>
+        </article>
+
+        <article class="info-card p-lg bg-surface border border-outline-variant rounded-xl trust-shadow hover:-translate-y-1 transition-transform">
+          <span class="material-symbols-outlined text-secondary text-4xl mb-md block" style="font-variation-settings: 'FILL' 1;">person_off</span>
+          <h3 class="font-headline-sm text-headline-sm mb-xs text-on-surface">Anonimato Garantizado</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Puedes elegir permanecer totalmente anónimo. El sistema elimina metadatos de archivos adjuntos automáticamente.</p>
+        </article>
+
+        <article class="info-card p-lg bg-surface border border-outline-variant rounded-xl trust-shadow hover:-translate-y-1 transition-transform">
+          <span class="material-symbols-outlined text-secondary text-4xl mb-md block" style="font-variation-settings: 'FILL' 1;">clinical_notes</span>
+          <h3 class="font-headline-sm text-headline-sm mb-xs text-on-surface">Seguimiento Ético</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Cada reporte es revisado por un comité de ética independiente bajo estrictos estándares de confidencialidad.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="py-xl bg-surface-container-low -mx-margin-mobile md:-mx-margin-desktop px-margin-mobile md:px-margin-desktop">
+      <div class="max-w-max-width mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-xl gap-md">
+          <div class="space-y-xs">
+            <h2 class="font-headline-md text-headline-md text-on-surface">Situaciones reportables</h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">Identifica los comportamientos que no cumplen con nuestro código de ética.</p>
+          </div>
+          <button class="text-primary font-bold font-label-md text-label-md flex items-center gap-xs hover:underline" type="button">
+            Descargar Código de Ética (PDF)
+            <span class="material-symbols-outlined">download</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
+          <article class="group bg-surface p-md rounded-xl border border-outline-variant hover:border-primary transition-colors">
+            <div class="w-12 h-12 rounded-lg bg-primary-fixed/30 flex items-center justify-center mb-md group-hover:bg-primary transition-colors">
+              <span class="material-symbols-outlined text-primary group-hover:text-on-primary">gavel</span>
+            </div>
+            <h4 class="font-headline-sm text-[1.25rem] mb-xs text-on-surface">Conflictos de Interés</h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Decisiones influenciadas por intereses personales o familiares.</p>
+          </article>
+
+          <article class="group bg-surface p-md rounded-xl border border-outline-variant hover:border-primary transition-colors">
+            <div class="w-12 h-12 rounded-lg bg-primary-fixed/30 flex items-center justify-center mb-md group-hover:bg-primary transition-colors">
+              <span class="material-symbols-outlined text-primary group-hover:text-on-primary">account_balance_wallet</span>
+            </div>
+            <h4 class="font-headline-sm text-[1.25rem] mb-xs text-on-surface">Uso Indebido</h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Apropiación de recursos o malversación de activos institucionales.</p>
+          </article>
+
+          <article class="group bg-surface p-md rounded-xl border border-outline-variant hover:border-primary transition-colors">
+            <div class="w-12 h-12 rounded-lg bg-primary-fixed/30 flex items-center justify-center mb-md group-hover:bg-primary transition-colors">
+              <span class="material-symbols-outlined text-primary group-hover:text-on-primary">psychology_alt</span>
+            </div>
+            <h4 class="font-headline-sm text-[1.25rem] mb-xs text-on-surface">Acoso o Hostigamiento</h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Cualquier tipo de maltrato físico, verbal o psicológico.</p>
+          </article>
+
+          <article class="group bg-surface p-md rounded-xl border border-outline-variant hover:border-primary transition-colors">
+            <div class="w-12 h-12 rounded-lg bg-primary-fixed/30 flex items-center justify-center mb-md group-hover:bg-primary transition-colors">
+              <span class="material-symbols-outlined text-primary group-hover:text-on-primary">lock_reset</span>
+            </div>
+            <h4 class="font-headline-sm text-[1.25rem] mb-xs text-on-surface">Brecha de Datos</h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Manejo inadecuado de información confidencial o sensible.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-xl">
+      <h2 class="font-headline-md text-headline-md text-center mb-xl text-on-surface">Nuestro Proceso de Atención</h2>
+      <div class="relative">
+        <div class="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-outline-variant"></div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-xl">
+          <article class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
+            <div class="w-16 h-16 rounded-full bg-primary text-on-primary flex items-center justify-center mb-md border-4 border-surface shadow-md">
+              <span class="material-symbols-outlined text-3xl">edit_document</span>
+            </div>
+            <h5 class="font-headline-sm text-[1.125rem] mb-xs text-on-surface">1. Registro</h5>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Completa el formulario de denuncia detallando los hechos.</p>
+          </article>
+
+          <article class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
+            <div class="w-16 h-16 rounded-full bg-primary text-on-primary flex items-center justify-center mb-md border-4 border-surface shadow-md">
+              <span class="material-symbols-outlined text-3xl">fact_check</span>
+            </div>
+            <h5 class="font-headline-sm text-[1.125rem] mb-xs text-on-surface">2. Validación</h5>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">El comité técnico verifica la relevancia y veracidad del caso.</p>
+          </article>
+
+          <article class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
+            <div class="w-16 h-16 rounded-full bg-primary text-on-primary flex items-center justify-center mb-md border-4 border-surface shadow-md">
+              <span class="material-symbols-outlined text-3xl">search_insights</span>
+            </div>
+            <h5 class="font-headline-sm text-[1.125rem] mb-xs text-on-surface">3. Investigación</h5>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Se realiza un análisis profundo protegiendo todas las partes.</p>
+          </article>
+
+          <article class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
+            <div class="w-16 h-16 rounded-full bg-primary text-on-primary flex items-center justify-center mb-md border-4 border-surface shadow-md">
+              <span class="material-symbols-outlined text-3xl">task_alt</span>
+            </div>
+            <h5 class="font-headline-sm text-[1.125rem] mb-xs text-on-surface">4. Resolución</h5>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Se emite una decisión y se aplican las medidas necesarias.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="privacy-section py-xl -mx-margin-mobile md:-mx-margin-desktop px-margin-mobile md:px-margin-desktop bg-primary text-on-primary overflow-hidden relative">
+      <div class="absolute right-[-10%] top-[-20%] w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl"></div>
+      <div class="max-w-max-width mx-auto flex flex-col md:flex-row items-center gap-xl relative z-10">
+        <div class="flex-1 space-y-md">
+          <h2 class="font-headline-md text-headline-md text-white">Tu privacidad es nuestra prioridad absoluta</h2>
+          <p class="font-body-lg text-body-lg opacity-90 text-white">
+            Implementamos el estándar internacional ISO 27001 de seguridad de la información. No rastreamos direcciones IP, no guardamos cookies persistentes y todos tus documentos son destruidos digitalmente tras finalizar el caso.
+          </p>
+
+          <ul class="space-y-sm p-0 m-0 list-none">
+            <li class="flex items-center gap-xs">
+              <span class="material-symbols-outlined text-info-secondary-container">check_circle</span>
+              <span class="font-body-md text-body-md">Encriptación AES-256 de punto a punto.</span>
+            </li>
+            <li class="flex items-center gap-xs">
+              <span class="material-symbols-outlined text-info-secondary-container">check_circle</span>
+              <span class="font-body-md text-body-md">Servidores locales bajo jurisdicción protegida.</span>
+            </li>
+            <li class="flex items-center gap-xs">
+              <span class="material-symbols-outlined text-info-secondary-container">check_circle</span>
+              <span class="font-body-md text-body-md">Acceso restringido solo a investigadores asignados.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="flex-1 flex justify-center">
+          <div class="w-64 h-64 border-8 border-secondary-container/20 rounded-full flex items-center justify-center">
+            <div class="w-48 h-48 bg-info-secondary-container text-on-secondary-container rounded-full flex flex-col items-center justify-center text-center p-md shadow-2xl">
+              <span class="material-symbols-outlined text-5xl mb-xs" style="font-variation-settings: 'FILL' 1;">privacy_tip</span>
+              <span class="font-label-sm text-label-sm font-bold uppercase">100% Confidencial</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="recursos" class="py-xl grid grid-cols-1 md:grid-cols-2 gap-xl">
+      <div>
+        <h3 class="font-headline-sm text-headline-sm mb-lg flex items-center gap-sm text-on-surface">
+          <span class="material-symbols-outlined text-primary">auto_stories</span>
+          Recursos de ayuda
+        </h3>
+
+        <div class="space-y-md">
+          <a class="block p-md border border-outline-variant rounded-xl hover:bg-surface-container-low transition-all no-underline" href="#">
+            <div class="flex justify-between items-center gap-md">
+              <div>
+                <p class="font-headline-sm text-[1.125rem] text-primary">Guía de Denuncia Segura</p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Aprende a redactar tu reporte de forma efectiva.</p>
+              </div>
+              <span class="material-symbols-outlined text-on-surface">open_in_new</span>
+            </div>
+          </a>
+
+          <a class="block p-md border border-outline-variant rounded-xl hover:bg-surface-container-low transition-all no-underline" href="#">
+            <div class="flex justify-between items-center gap-md">
+              <div>
+                <p class="font-headline-sm text-[1.125rem] text-primary">Directorio de Contacto</p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Líneas telefónicas de emergencia y apoyo psicológico.</p>
+              </div>
+              <span class="material-symbols-outlined text-on-surface">open_in_new</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-headline-sm text-headline-sm mb-lg flex items-center gap-sm text-on-surface">
+          <span class="material-symbols-outlined text-primary">quiz</span>
+          Preguntas rápidas
+        </h3>
+
+        <div class="space-y-sm">
+          <details class="group border-b border-outline-variant pb-sm cursor-pointer">
+            <summary class="flex justify-between items-center font-body-md text-body-md font-semibold text-on-surface list-none">
+              ¿Cuánto tiempo tarda una resolución?
+              <span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+            </summary>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">El proceso estándar toma entre 15 a 30 días hábiles dependiendo de la complejidad de la investigación.</p>
+          </details>
+
+          <details class="group border-b border-outline-variant pb-sm cursor-pointer">
+            <summary class="flex justify-between items-center font-body-md text-body-md font-semibold text-on-surface list-none">
+              ¿Puedo ser sancionado por denunciar?
+              <span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+            </summary>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">No. Nuestra política de No-Represalias protege estrictamente a cualquier persona que reporte de buena fe.</p>
+          </details>
+
+          <details class="group border-b border-outline-variant pb-sm cursor-pointer">
+            <summary class="flex justify-between items-center font-body-md text-body-md font-semibold text-on-surface list-none">
+              ¿Qué pasa si mi denuncia es anónima?
+              <span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+            </summary>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">Se te asignará un código único de seguimiento. Podrás usarlo para chatear con los investigadores sin revelar quién eres.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-xl">
+      <div class="bg-surface-container-high rounded-3xl p-xl text-center space-y-md border border-outline-variant">
+        <span class="material-symbols-outlined text-secondary text-5xl block" style="font-variation-settings: 'FILL' 1;">add_moderator</span>
+        <h2 class="font-headline-md text-headline-md text-primary">¿Estás listo para proteger tu entorno?</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+          Tu voz es la herramienta más poderosa para mantener nuestra integridad. Inicia una denuncia hoy de forma segura y profesional.
+        </p>
+
+        <div class="flex flex-wrap justify-center gap-md pt-md">
+          <a routerLink="/denuncia" class="bg-primary text-on-primary px-xl py-sm rounded-lg font-label-md text-label-md hover:scale-105 transition-transform no-underline">
+            Crear Denuncia Nueva
+          </a>
+          <a routerLink="/mis-casos" class="bg-surface border border-outline text-on-surface px-xl py-sm rounded-lg font-label-md text-label-md hover:bg-surface-container-lowest transition-all no-underline">
+            Consultar Estado
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <app-public-footer />
+</div>
