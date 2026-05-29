@@ -1,0 +1,29 @@
+<div class="min-h-screen bg-[#F8FAFC] text-on-surface font-body-md">
+  <app-public-header />
+
+  <main class="pt-28 px-margin-desktop max-w-max-width mx-auto pb-xl">
+    <div class="mb-lg">
+      <p class="font-label-sm text-label-sm uppercase tracking-wider text-secondary mb-sm">Portal usuario</p>
+      <h1 class="font-headline-md text-headline-md text-on-surface mb-sm">Área de seguimiento</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant max-w-3xl">
+        Accede a tus denuncias, casos, citas, evidencias, notificaciones y datos de contacto seguro.
+      </p>
+    </div>
+
+    <nav class="flex flex-wrap gap-sm mb-lg" aria-label="Navegación del portal de usuario">
+      <a class="portal-tab" routerLink="/usuario" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Panel</a>
+      <a class="portal-tab" routerLink="/usuario/denuncias" routerLinkActive="is-active">Denuncias</a>
+      <a class="portal-tab" routerLink="/usuario/casos" routerLinkActive="is-active">Casos</a>
+      <a class="portal-tab" routerLink="/usuario/citas" routerLinkActive="is-active">Citas</a>
+      <a class="portal-tab" routerLink="/usuario/evidencias" routerLinkActive="is-active">Evidencias</a>
+      <a class="portal-tab" routerLink="/usuario/notificaciones" routerLinkActive="is-active">Notificaciones</a>
+      <a class="portal-tab" routerLink="/usuario/perfil" routerLinkActive="is-active">Perfil</a>
+    </nav>
+
+    <section class="glass-card rounded-2xl p-xl min-h-[280px]">
+      <router-outlet />
+    </section>
+  </main>
+
+  <app-public-footer />
+</div>
