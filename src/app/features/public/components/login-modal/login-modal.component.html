@@ -1,0 +1,96 @@
+@if (open) {
+  <div class="login-modal-shell" role="presentation" (click)="close()">
+    <div class="login-modal-backdrop" aria-hidden="true"></div>
+
+    <section
+      class="login-modal-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="login-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <button class="login-modal-close" type="button" aria-label="Cerrar modal" (click)="close()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <header class="login-modal-header">
+        <div class="login-modal-icon" aria-hidden="true">
+          <span class="material-symbols-outlined">security</span>
+        </div>
+        <h2 id="login-modal-title">SafeZone</h2>
+        <p class="login-modal-subtitle">Iniciar Sesión</p>
+        <p class="login-modal-copy">Bienvenido de nuevo. Acceda a su panel de seguridad.</p>
+      </header>
+
+      <form class="login-modal-form" (ngSubmit)="login()">
+        <div class="login-trust-row" aria-label="Indicadores de seguridad">
+          <span class="login-trust-chip">
+            <span class="material-symbols-outlined trust-filled">verified_user</span>
+            Conexión Segura
+          </span>
+          <span class="login-trust-chip">
+            <span class="material-symbols-outlined trust-filled">lock</span>
+            Acceso Protegido
+          </span>
+        </div>
+
+        <label class="login-field">
+          <span>Email</span>
+          <span class="login-input-wrap">
+            <span class="material-symbols-outlined login-input-icon">mail</span>
+            <input
+              name="email"
+              type="email"
+              autocomplete="username"
+              placeholder="ejemplo@empresa.com"
+              [(ngModel)]="email"
+            />
+          </span>
+        </label>
+
+        <label class="login-field">
+          <span>Contraseña</span>
+          <span class="login-input-wrap">
+            <span class="material-symbols-outlined login-input-icon">lock</span>
+            <input
+              name="password"
+              [type]="showPassword ? 'text' : 'password'"
+              autocomplete="current-password"
+              placeholder="••••••••"
+              [(ngModel)]="password"
+            />
+            <button
+              class="login-password-toggle"
+              type="button"
+              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              (click)="showPassword = !showPassword"
+            >
+              <span class="material-symbols-outlined">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </span>
+        </label>
+
+        <div class="login-options-row">
+          <label class="login-remember">
+            <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" />
+            <span>Recordarme</span>
+          </label>
+          <a href="/login" (click)="$event.preventDefault()">Recuperar contraseña</a>
+        </div>
+
+        <button class="login-submit" type="submit" [disabled]="isLoggingIn">
+          <span>{{ isLoggingIn ? 'Ingresando...' : 'Ingresar' }}</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </form>
+
+      <footer class="login-modal-footer">
+        <div>
+          <a routerLink="/politicas">Política de Privacidad</a>
+          <a href="/login" (click)="$event.preventDefault()">Seguridad de Acceso</a>
+        </div>
+        <p>© 2024 SafeZone. All rights reserved.</p>
+      </footer>
+    </section>
+  </div>
+}
