@@ -4,10 +4,20 @@ import { PublicFooterComponent } from '../components/public-footer/public-footer
 import { PublicHeaderComponent } from '../components/public-header/public-header.component';
 
 @Component({
-  selector: 'app-inicio',
+  selector: 'app-faq-page',
   standalone: true,
   imports: [RouterLink, PublicHeaderComponent, PublicFooterComponent],
-  templateUrl: './inicio.page.html',
-  styleUrl: './inicio.page.css'
+  templateUrl: './faq.page.html',
+  styleUrl: './faq.page.css'
 })
-export class InicioPage {}
+export class FaqPage {
+  activeItem = 'predenuncia-que-es';
+
+  toggleAccordion(item: string) {
+    this.activeItem = this.activeItem === item ? '' : item;
+  }
+
+  isActive(item: string) {
+    return this.activeItem === item;
+  }
+}

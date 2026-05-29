@@ -1,0 +1,152 @@
+<div class="faq-page min-h-screen bg-[#F8FAFC] font-body-md text-on-surface flex flex-col">
+  <app-public-header />
+
+  <main class="faq-main flex-grow max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop w-full pt-16">
+    <section class="py-xl text-center flex flex-col items-center">
+      <h1 class="font-headline-lg text-headline-lg text-primary mb-sm">Preguntas Frecuentes</h1>
+      <p class="text-on-surface-variant font-body-lg text-body-lg max-w-2xl mb-lg">
+        Encuentra respuestas rápidas sobre nuestros protocolos de seguridad, el seguimiento de tus trámites y cómo protegemos tu información institucional.
+      </p>
+
+      <div class="w-full max-w-3xl relative">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+        <input
+          class="w-full pl-12 pr-4 py-4 rounded-xl border border-outline-variant bg-white focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all outline-none text-body-md shadow-sm"
+          placeholder="¿Cómo puedo realizar una predenuncia?"
+          type="text"
+        />
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter py-lg">
+      <aside class="md:col-span-3">
+        <div class="faq-sidebar sticky top-24 space-y-2">
+          <p class="font-label-sm text-label-sm text-outline uppercase tracking-widest px-4 mb-4">Categorías</p>
+          <a class="flex items-center gap-4 bg-primary-container text-white rounded-lg px-4 py-3 border-l-4 border-primary transition-all shadow-sm no-underline" href="#predenuncias">
+            <span class="material-symbols-outlined">description</span>
+            <span class="font-label-md text-label-md">Predenuncias</span>
+          </a>
+          <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-highest rounded-lg transition-all no-underline" href="#seguimiento">
+            <span class="material-symbols-outlined">analytics</span>
+            <span class="font-label-md text-label-md">Seguimiento</span>
+          </a>
+          <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-highest rounded-lg transition-all no-underline" href="#privacidad">
+            <span class="material-symbols-outlined">lock</span>
+            <span class="font-label-md text-label-md">Privacidad</span>
+          </a>
+          <a class="flex items-center gap-4 text-on-surface-variant px-4 py-3 hover:bg-surface-container-highest rounded-lg transition-all no-underline" href="#contacto">
+            <span class="material-symbols-outlined">support_agent</span>
+            <span class="font-label-md text-label-md">Atención</span>
+          </a>
+        </div>
+      </aside>
+
+      <div class="md:col-span-9 space-y-xl">
+        <section class="scroll-mt-24" id="predenuncias">
+          <div class="flex items-center gap-3 mb-md">
+            <span class="material-symbols-outlined text-secondary">verified_user</span>
+            <h2 class="font-headline-sm text-headline-sm text-primary">Predenuncias</h2>
+          </div>
+
+          <div class="space-y-4">
+            <article class="accordion-item border border-outline-variant rounded-xl bg-white overflow-hidden shadow-sm transition-shadow hover:shadow-md cursor-pointer" [class.active]="isActive('predenuncia-que-es')">
+              <button class="accordion-button flex justify-between items-center p-md w-full text-left" type="button" (click)="toggleAccordion('predenuncia-que-es')">
+                <h3 class="font-headline-sm text-body-lg text-on-surface font-semibold">¿Qué es una predenuncia y para qué sirve?</h3>
+                <span class="material-symbols-outlined icon-rotate transition-transform text-outline">expand_more</span>
+              </button>
+              <div class="accordion-content px-md">
+                <p class="text-on-surface-variant text-body-md border-t border-outline-variant pt-md pb-md">
+                  La predenuncia es un mecanismo digital que permite agilizar el registro inicial de un incidente. Este proceso reduce los tiempos de espera presenciales y genera un folio único de seguimiento institucional verificado.
+                </p>
+              </div>
+            </article>
+
+            <article class="accordion-item border border-outline-variant rounded-xl bg-white overflow-hidden shadow-sm transition-shadow hover:shadow-md cursor-pointer" [class.active]="isActive('predenuncia-requisitos')">
+              <button class="accordion-button flex justify-between items-center p-md w-full text-left" type="button" (click)="toggleAccordion('predenuncia-requisitos')">
+                <h3 class="font-headline-sm text-body-lg text-on-surface font-semibold">¿Cuáles son los requisitos para iniciar el trámite?</h3>
+                <span class="material-symbols-outlined icon-rotate transition-transform text-outline">expand_more</span>
+              </button>
+              <div class="accordion-content px-md">
+                <p class="text-on-surface-variant text-body-md border-t border-outline-variant pt-md pb-md">
+                  Solo requiere una identificación oficial vigente, una cuenta de correo institucional activa y los detalles generales del evento. El sistema lo guiará paso a paso para asegurar que toda la información crítica sea recolectada.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="scroll-mt-24" id="seguimiento">
+          <div class="flex items-center gap-3 mb-md">
+            <span class="material-symbols-outlined text-secondary">security_update_good</span>
+            <h2 class="font-headline-sm text-headline-sm text-primary">Seguimiento</h2>
+          </div>
+
+          <div class="space-y-4">
+            <article class="accordion-item border border-outline-variant rounded-xl bg-white overflow-hidden shadow-sm transition-shadow hover:shadow-md cursor-pointer" [class.active]="isActive('seguimiento-consulta')">
+              <button class="accordion-button flex justify-between items-center p-md w-full text-left" type="button" (click)="toggleAccordion('seguimiento-consulta')">
+                <h3 class="font-headline-sm text-body-lg text-on-surface font-semibold">¿Cómo consulto el estado de mi caso?</h3>
+                <span class="material-symbols-outlined icon-rotate transition-transform text-outline">expand_more</span>
+              </button>
+              <div class="accordion-content px-md">
+                <p class="text-on-surface-variant text-body-md border-t border-outline-variant pt-md pb-md">
+                  Ingrese a la sección de "Consultar Caso" con su folio y contraseña. Recibirá actualizaciones en tiempo real sobre el personal asignado y el progreso administrativo de su solicitud.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="contacto" class="bg-surface-container rounded-xl p-lg flex flex-col md:flex-row items-center gap-lg border border-outline-variant scroll-mt-24">
+          <div class="flex-1">
+            <h3 class="font-headline-sm text-headline-sm text-primary mb-2">¿No encuentras lo que buscas?</h3>
+            <p class="text-on-surface-variant text-body-md">Nuestro equipo de soporte técnico y legal está disponible para asistirte de manera personalizada en cualquier momento.</p>
+          </div>
+          <button class="bg-primary text-white px-8 py-3 rounded-lg font-headline-sm text-body-md font-bold hover:bg-primary-container transition-all shadow-sm" type="button">
+            Contactar soporte
+          </button>
+        </section>
+
+        <section class="scroll-mt-24" id="privacidad">
+          <div class="flex items-center gap-3 mb-md">
+            <span class="material-symbols-outlined text-secondary">encrypted</span>
+            <h2 class="font-headline-sm text-headline-sm text-primary">Privacidad y Seguridad</h2>
+          </div>
+
+          <div class="space-y-4">
+            <article class="accordion-item border border-outline-variant rounded-xl bg-white overflow-hidden shadow-sm transition-shadow hover:shadow-md cursor-pointer" [class.active]="isActive('privacidad-datos')">
+              <button class="accordion-button flex justify-between items-center p-md w-full text-left" type="button" (click)="toggleAccordion('privacidad-datos')">
+                <h3 class="font-headline-sm text-body-lg text-on-surface font-semibold">¿Quién tiene acceso a mis datos?</h3>
+                <span class="material-symbols-outlined icon-rotate transition-transform text-outline">expand_more</span>
+              </button>
+              <div class="accordion-content px-md">
+                <p class="text-on-surface-variant text-body-md border-t border-outline-variant pt-md pb-md">
+                  Sus datos están encriptados de extremo a extremo (AES-256). Solo el personal oficial asignado a su caso y debidamente identificado puede acceder a la información bajo estrictos protocolos de confidencialidad.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <section class="py-xl mb-xl">
+      <div class="bg-primary-container rounded-3xl p-xl text-center text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 faq-cta-pattern"></div>
+        <h2 class="font-headline-lg text-headline-md md:text-headline-lg mb-md relative z-10 text-white">Toma acción ahora mismo</h2>
+        <p class="text-on-primary-container font-body-lg text-body-lg mb-lg max-w-2xl mx-auto relative z-10">
+          Estamos aquí para garantizar que tu proceso sea seguro, transparente y eficiente desde el primer contacto.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-md relative z-10">
+          <a routerLink="/denuncia" class="bg-surface-container-lowest text-primary px-10 py-4 rounded-xl font-headline-sm text-body-lg font-bold hover:bg-white transition-all shadow-lg no-underline">
+            Nueva Denuncia
+          </a>
+          <a routerLink="/mis-casos" class="border-2 border-white text-white px-10 py-4 rounded-xl font-headline-sm text-body-lg font-bold hover:bg-white hover:text-primary transition-all no-underline">
+            Consultar Caso
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <app-public-footer />
+</div>

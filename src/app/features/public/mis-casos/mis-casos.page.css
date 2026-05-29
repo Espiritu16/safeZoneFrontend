@@ -1,1 +1,164 @@
-/* Placeholder para historial de atencion de la victima. */
+:host {
+  display: block;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.bento-card {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.bento-card:not(.trust-card) {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+}
+
+.bento-card:hover {
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+.trust-card {
+  background-color: #00288e;
+  border: none;
+  color: #ffffff;
+}
+
+.trust-card h3,
+.trust-card .material-symbols-outlined {
+  color: #ffffff;
+}
+
+.trust-card p {
+  color: #dde1ff;
+}
+
+.timeline-line {
+  background: repeating-linear-gradient(
+    to bottom,
+    #cbd5e1 0,
+    #cbd5e1 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+.case-image-card {
+  aspect-ratio: 16 / 9;
+}
+
+.case-results.is-consulted {
+  animation: resultsFocus 260ms ease-out;
+}
+
+@media (min-width: 1024px) {
+  .case-tracker-main {
+    padding-top: 6rem;
+  }
+
+  .case-search-hero {
+    margin-bottom: 3rem;
+  }
+
+  .case-tracker-main.is-consulted {
+    padding-top: 5rem;
+  }
+
+  .case-results.is-consulted {
+    gap: 1.25rem;
+  }
+
+  .case-results.is-consulted .bento-card {
+    padding: 1.25rem;
+  }
+
+  .case-results.is-consulted .case-summary-card {
+    min-height: 0;
+  }
+
+  .case-results.is-consulted .case-summary-card > div:first-child {
+    margin-bottom: 1rem;
+  }
+
+  .case-results.is-consulted .case-summary-card h2 {
+    font-size: 26px;
+    line-height: 32px;
+  }
+
+  .case-results.is-consulted .case-summary-card .grid {
+    gap: 1.25rem;
+    padding-top: 1rem;
+  }
+
+  .case-results.is-consulted .case-timeline-card h3 {
+    font-size: 22px;
+    line-height: 28px;
+    margin-bottom: 1.25rem;
+  }
+
+  .case-results.is-consulted .case-timeline-list > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1rem;
+  }
+
+  .case-results.is-consulted .timeline-item {
+    gap: 1.25rem;
+  }
+
+  .case-results.is-consulted .timeline-item .w-10 {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .case-results.is-consulted .timeline-item .pb-md {
+    padding-bottom: 0.5rem;
+  }
+
+  .case-results.is-consulted .timeline-item p {
+    line-height: 18px;
+  }
+
+  .case-results.is-consulted .auditor-note {
+    margin-top: 0.75rem;
+    padding: 0.875rem;
+  }
+
+  .case-results.is-consulted .case-side-panel > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1.25rem;
+  }
+
+  .case-results.is-consulted .trust-card p {
+    margin-bottom: 1.25rem;
+  }
+
+  .case-results.is-consulted .case-image-card {
+    aspect-ratio: 2 / 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .case-tracker-main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .case-search-box {
+    flex-direction: column;
+  }
+
+  .case-search-box button {
+    width: 100%;
+  }
+}
+
+@keyframes resultsFocus {
+  from {
+    opacity: 0.94;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

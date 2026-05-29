@@ -4,16 +4,90 @@ import { roleGuard } from './core/guards/role.guard';
 import { PUBLIC_ROUTES } from './features/public/public.routes';
 
 export const routes: Routes = [
-  // Landing pública por defecto
-  { path: '', pathMatch: 'full', redirectTo: 'public' },
-
-  // Rutas públicas (sin autenticación requerida)
+  { path: '', pathMatch: 'full', redirectTo: 'inicio' },
   {
-    path: 'public',
-    loadChildren: () => Promise.resolve(PUBLIC_ROUTES),
+    path: 'inicio',
+    loadComponent: () =>
+      import('./features/public/inicio/inicio.page').then((m) => m.InicioPage),
   },
-
-  // Login
+  {
+    path: 'informacion',
+    loadComponent: () =>
+      import('./features/public/informacion/informacion.page').then((m) => m.InformacionPage),
+  },
+  {
+    path: 'nosotros',
+    loadComponent: () =>
+      import('./features/public/nosotros/nosotros.page').then((m) => m.NosotrosPage),
+  },
+  {
+    path: 'faq',
+    loadComponent: () =>
+      import('./features/public/faq/faq.page').then((m) => m.FaqPage),
+  },
+  {
+    path: 'contacto',
+    loadComponent: () =>
+      import('./features/public/contacto/contacto.page').then((m) => m.ContactoPage),
+  },
+  {
+    path: 'politicas',
+    loadComponent: () =>
+      import('./features/public/politicas/politicas.page').then((m) => m.PoliticasPage),
+  },
+  {
+    path: 'denuncia',
+    loadComponent: () =>
+      import('./features/public/denuncia/denuncia.page').then((m) => m.DenunciaPage),
+  },
+  {
+    path: 'mis-casos',
+    loadComponent: () =>
+      import('./features/public/mis-casos/mis-casos.page').then((m) => m.MisCasosPage),
+  },
+  {
+    path: 'usuario',
+    loadComponent: () =>
+      import('./features/public/usuario/usuario-layout/usuario-layout.page').then((m) => m.UsuarioLayoutPage),
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./features/public/usuario/usuario-dashboard/usuario-dashboard.page').then((m) => m.UsuarioDashboardPage),
+      },
+      {
+        path: 'denuncias',
+        loadComponent: () =>
+          import('./features/public/usuario/denuncias/denuncias.page').then((m) => m.UsuarioDenunciasPage),
+      },
+      {
+        path: 'casos',
+        loadComponent: () =>
+          import('./features/public/usuario/casos/casos.page').then((m) => m.UsuarioCasosPage),
+      },
+      {
+        path: 'citas',
+        loadComponent: () =>
+          import('./features/public/usuario/citas/citas.page').then((m) => m.UsuarioCitasPage),
+      },
+      {
+        path: 'evidencias',
+        loadComponent: () =>
+          import('./features/public/usuario/evidencias/evidencias.page').then((m) => m.UsuarioEvidenciasPage),
+      },
+      {
+        path: 'notificaciones',
+        loadComponent: () =>
+          import('./features/public/usuario/notificaciones/notificaciones.page').then((m) => m.UsuarioNotificacionesPage),
+      },
+      {
+        path: 'perfil',
+        loadComponent: () =>
+          import('./features/public/usuario/perfil/perfil.page').then((m) => m.UsuarioPerfilPage),
+      },
+    ],
+  },
   {
     path: 'login',
     loadComponent: () =>
@@ -30,74 +104,74 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+          import('./features/interno/dashboard/dashboard.component').then((m) => m.DashboardComponent),
         data: { roles: [] }, // Accesible para todos los roles
       },
       {
         path: 'denuncias',
         canActivate: [roleGuard],
         loadComponent: () =>
-          import('./features/denuncias/denuncias.component').then((m) => m.DenunciasComponent),
-        data: { roles: ['Administrador', 'Recepcionista'] },
+          import('./features/interno/denuncias/denuncias.component').then((m) => m.DenunciasComponent),
+        data: { roles: ['Administrador', 'Recepcionista', 'Víctima'] },
       },
       {
         path: 'casos',
         canActivate: [roleGuard],
         loadComponent: () =>
-          import('./features/casos/casos.component').then((m) => m.CasosComponent),
+          import('./features/interno/casos/casos.component').then((m) => m.CasosComponent),
         data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'victimas',
         canActivate: [roleGuard],
         loadComponent: () =>
-          import('./features/victimas/victimas.component').then((m) => m.VictimasComponent),
+          import('./features/interno/victimas/victimas.component').then((m) => m.VictimasComponent),
         data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'citas',
         canActivate: [roleGuard],
         loadComponent: () =>
-          import('./features/citas/citas.component').then((m) => m.CitasComponent),
+          import('./features/interno/citas/citas.component').then((m) => m.CitasComponent),
         data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Víctima'] },
       },
       {
         path: 'evidencias',
         canActivate: [roleGuard],
         loadComponent: () =>
-          import('./features/evidencias/evidencias.component').then((m) => m.EvidenciasComponent),
+          import('./features/interno/evidencias/evidencias.component').then((m) => m.EvidenciasComponent),
         data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'reportes',
         canActivate: [roleGuard],
         loadComponent: () =>
-          import('./features/reportes/reportes.component').then((m) => m.ReportesComponent),
+          import('./features/interno/reportes/reportes.component').then((m) => m.ReportesComponent),
         data: { roles: ['Administrador', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'auditoria',
         canActivate: [roleGuard],
         loadComponent: () =>
-          import('./features/auditoria/auditoria.component').then((m) => m.AuditoriaComponent),
+          import('./features/interno/auditoria/auditoria.component').then((m) => m.AuditoriaComponent),
         data: { roles: ['Administrador', 'Soporte Técnico'] },
       },
       {
         path: 'usuarios',
         canActivate: [roleGuard],
         loadComponent: () =>
-          import('./features/usuarios/usuarios.component').then((m) => m.UsuariosComponent),
+          import('./features/interno/usuarios/usuarios.component').then((m) => m.UsuariosComponent),
         data: { roles: ['Administrador', 'Soporte Técnico'] },
       },
       {
         path: 'configuracion',
         canActivate: [roleGuard],
         loadComponent: () =>
-          import('./features/configuracion/configuracion.component').then((m) => m.ConfiguracionComponent),
+          import('./features/interno/configuracion/configuracion.component').then((m) => m.ConfiguracionComponent),
         data: { roles: ['Administrador', 'Soporte Técnico'] },
       },
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     ],
   },
-  { path: '**', redirectTo: 'public' },
+  { path: '**', redirectTo: 'inicio' },
 ];

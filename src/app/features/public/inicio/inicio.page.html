@@ -1,1 +1,173 @@
-<!-- Placeholder para pantalla publica de inicio. -->
+<div class="font-body-md text-body-md selection:bg-primary-fixed bg-[#F8FAFC] text-on-surface min-h-screen">
+  <app-public-header />
+
+  <main class="inicio-main pt-16">
+    <section id="inicio" class="inicio-section hero-section relative overflow-hidden pt-24 pb-32 px-margin-desktop max-w-max-width mx-auto">
+      <div class="hero-grid grid grid-cols-1 lg:grid-cols-2 gap-xl items-center">
+        <div class="z-10">
+          <div class="inline-flex items-center gap-2 bg-secondary-container px-3 py-1 rounded-full border border-secondary/20 mb-6">
+            <span class="material-symbols-outlined text-[18px] text-secondary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+            <span class="text-secondary font-label-sm text-label-sm uppercase tracking-wider">Protocolo de Confianza Zero-Knowledge</span>
+          </div>
+
+          <h1 class="font-headline-lg text-headline-lg text-on-surface mb-md">
+            Seguridad Sin <br><span class="text-primary">Concesiones</span>
+          </h1>
+
+          <p class="font-body-lg text-body-lg text-on-surface-variant max-w-[540px] mb-xl">
+            La plataforma líder en gestión de denuncias éticas. Protegemos la integridad corporativa mediante cifrado de extremo a extremo y anonimato garantizado por diseño.
+          </p>
+
+          <div class="flex flex-wrap gap-md">
+            <a routerLink="/login" class="bg-primary-container text-white px-xl py-4 rounded-xl font-label-md text-label-md hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95 no-underline">Comenzar</a>
+            <a href="#seguridad" class="border border-outline-variant text-on-surface px-xl py-4 rounded-xl font-label-md text-label-md hover:bg-white hover:border-primary/50 transition-all flex items-center gap-2 no-underline">
+              Ver Documentación <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-media relative">
+          <div class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-gradient-to-br from-primary-fixed/30 to-transparent rounded-full blur-3xl"></div>
+          <div class="glass-card rounded-[2rem] p-4 shadow-2xl relative overflow-hidden group">
+            <img
+              class="hero-image rounded-[1.5rem] w-full h-[500px] object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUslzzovIJIciRetYLCVDqXGiyT2VM8YZcNm8eO7Jf6BlpkAOvnsLLEp29OW6_aQR_AQ_5jy6REpmT7yBxUwpxDPY9QRRO6MNyyXyuaIy2XwBP0onMZ1gHknrsE5joZOE7t9NOCeLo55e6zVhTlkVAGeictkjQ4M6VRh_1rGSSb4fDZ26TYS3Mx8ZVJjHkeq_qtVhjXKuVF_9A0rYOWyqlYqDoKUFDrGC-Rg6psyKWd_pFEd0AKys_z7VmMcXrbeulbXPmIXq6FC0"
+              alt="Panel moderno de SafeZone en un portátil dentro de una oficina corporativa luminosa"
+            >
+
+            <div class="absolute bottom-10 left-10 right-10 flex gap-md">
+              <div class="flex-1 glass-card p-4 rounded-xl shadow-lg border-white/40">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">lock</span>
+                  <span class="font-label-sm text-label-sm text-on-surface">Cifrado AES-256</span>
+                </div>
+                <div class="h-1 w-full bg-outline-variant rounded-full overflow-hidden">
+                  <div class="h-full bg-secondary w-full"></div>
+                </div>
+              </div>
+
+              <div class="flex-1 glass-card p-4 rounded-xl shadow-lg border-white/40">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">fingerprint</span>
+                  <span class="font-label-sm text-label-sm text-on-surface">Anonimato Total</span>
+                </div>
+                <div class="h-1 w-full bg-outline-variant rounded-full overflow-hidden">
+                  <div class="h-full bg-secondary w-[85%]"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="compliance-strip bg-surface-container-low py-12 px-margin-desktop border-y border-outline-variant/50">
+      <div class="max-w-max-width mx-auto flex flex-col md:flex-row items-center justify-between gap-xl">
+        <span class="font-label-md text-label-md text-on-surface-variant opacity-70 uppercase tracking-widest">Cumplimiento Global</span>
+        <div class="flex flex-wrap justify-center gap-xl items-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary text-3xl">verified</span>
+            <span class="font-headline-sm text-headline-sm text-on-surface font-bold">SOC2</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary text-3xl">security</span>
+            <span class="font-headline-sm text-headline-sm text-on-surface font-bold">GDPR</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary text-3xl">verified_user</span>
+            <span class="font-headline-sm text-headline-sm text-on-surface font-bold">ISO 27001</span>
+          </div>
+          <div class="flex items-center gap-2 border-l border-outline-variant pl-xl hidden lg:flex">
+            <span class="material-symbols-outlined text-secondary text-3xl">workspace_premium</span>
+            <span class="font-headline-sm text-headline-sm text-on-surface font-bold">HIPAA</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="caracteristicas" class="inicio-section process-section py-xl px-margin-desktop max-w-max-width mx-auto">
+      <div class="section-heading text-center mb-24">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">El Camino hacia la Transparencia</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Nuestra metodología rigurosa asegura que cada voz sea escuchada con seguridad y profesionalismo.</p>
+      </div>
+
+      <div class="process-grid relative grid grid-cols-1 md:grid-cols-4 gap-gutter">
+        <div class="absolute top-10 left-0 w-full h-px step-connector hidden md:block z-0"></div>
+
+        <div class="relative z-10 flex flex-col items-center text-center group">
+          <div class="w-20 h-20 rounded-2xl bg-white border border-outline-variant flex items-center justify-center mb-md group-hover:border-primary group-hover:scale-110 transition-all duration-300 shadow-sm">
+            <span class="material-symbols-outlined text-primary text-4xl">edit_note</span>
+          </div>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">1. Pre-denuncia</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Preparación guiada para asegurar que toda la información relevante sea recolectada.</p>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center text-center group">
+          <div class="w-20 h-20 rounded-2xl bg-white border border-outline-variant flex items-center justify-center mb-md group-hover:border-primary group-hover:scale-110 transition-all duration-300 shadow-sm">
+            <span class="material-symbols-outlined text-primary text-4xl">task_alt</span>
+          </div>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">2. Validación</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Nuestro equipo de expertos revisa y categoriza el caso de forma neutral y anónima.</p>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center text-center group">
+          <div class="w-20 h-20 rounded-2xl bg-white border border-outline-variant flex items-center justify-center mb-md group-hover:border-primary group-hover:scale-110 transition-all duration-300 shadow-sm">
+            <span class="material-symbols-outlined text-primary text-4xl">gavel</span>
+          </div>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">3. Formalización</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Presentación oficial ante los comités correspondientes con protección legal integral.</p>
+        </div>
+
+        <div class="relative z-10 flex flex-col items-center text-center group">
+          <div class="w-20 h-20 rounded-2xl bg-white border border-outline-variant flex items-center justify-center mb-md group-hover:border-primary group-hover:scale-110 transition-all duration-300 shadow-sm">
+            <span class="material-symbols-outlined text-primary text-4xl">analytics</span>
+          </div>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">4. Seguimiento</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">Trazabilidad completa en tiempo real hasta la resolución definitiva del caso.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="seguridad" class="inicio-section security-section py-xl bg-surface-container-low/30">
+      <div class="px-margin-desktop max-w-max-width mx-auto">
+        <div class="security-grid grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-md h-auto md:h-[600px]">
+          <div class="security-card identity-card md:col-span-2 md:row-span-1 glass-card rounded-2xl p-xl flex flex-col justify-end group hover:border-primary/30 transition-all overflow-hidden relative">
+            <div class="absolute top-0 right-0 p-xl opacity-10 group-hover:opacity-20 transition-opacity">
+              <span class="material-symbols-outlined text-[120px] text-primary">shield_person</span>
+            </div>
+            <h4 class="font-headline-md text-headline-md text-on-surface mb-xs">Protección de Identidad</h4>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-lg">Nuestra infraestructura técnica garantiza que incluso nosotros no podamos identificar al denunciante sin su consentimiento explícito.</p>
+          </div>
+
+          <div class="security-card primary-security-card md:col-span-1 md:row-span-2 bg-primary-container rounded-2xl p-xl text-white flex flex-col justify-between group">
+            <span class="material-symbols-outlined text-5xl text-on-primary-container">encrypted</span>
+            <div>
+              <h4 class="font-headline-md text-headline-md text-white mb-xs">Cifrado Militar</h4>
+              <p class="font-body-md text-body-md text-on-primary-container mb-md opacity-90">Protocolos AES-256 para todos los archivos y comunicaciones almacenados en nuestra nube segura.</p>
+              <a routerLink="/login" class="bg-white/10 hover:bg-white/20 transition-colors text-white px-md py-2 rounded-lg font-label-md text-label-md border border-white/20 no-underline">Saber más</a>
+            </div>
+          </div>
+
+          <div class="security-card compact-security-card md:col-span-1 md:row-span-1 glass-card rounded-2xl p-xl flex flex-col items-center text-center justify-center group hover:border-secondary/30 transition-all">
+            <div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center mb-md">
+              <span class="material-symbols-outlined text-secondary text-3xl">verified</span>
+            </div>
+            <h4 class="font-headline-sm text-headline-sm text-on-surface mb-xs">Certificación ISO</h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Cumplimos con los estándares más altos de seguridad de la información.</p>
+          </div>
+
+          <div class="security-card compact-security-card md:col-span-1 md:row-span-1 glass-card rounded-2xl p-xl flex flex-col items-center text-center justify-center group hover:border-primary/30 transition-all">
+            <div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mb-md">
+              <span class="material-symbols-outlined text-primary text-3xl">public</span>
+            </div>
+            <h4 class="font-headline-sm text-headline-sm text-on-surface mb-xs">Red Global</h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Servidores distribuidos en jurisdicciones con leyes de privacidad estrictas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <app-public-footer />
+</div>

@@ -1,1 +1,111 @@
-/* Placeholder para pantalla publica de inicio. */
+:host {
+  display: block;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid #cbd5e1;
+}
+
+.step-connector {
+  background: repeating-linear-gradient(90deg, #cbd5e1, #cbd5e1 4px, transparent 4px, transparent 8px);
+}
+
+.inicio-section {
+  scroll-margin-top: 5.5rem;
+}
+
+@media (min-width: 1024px) {
+  .hero-section {
+    padding-top: 4rem;
+    padding-bottom: 5rem;
+  }
+
+  .hero-grid {
+    width: 100%;
+  }
+
+  .hero-image {
+    height: clamp(360px, 46vh, 500px);
+  }
+
+  .compliance-strip {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .process-section {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  .section-heading {
+    margin-bottom: 4rem;
+  }
+
+  .process-grid {
+    align-items: start;
+  }
+
+  .security-section {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  .security-grid {
+    height: min(540px, calc(100vh - 9rem));
+    min-height: 460px;
+  }
+
+  .security-card {
+    padding: 2.25rem;
+  }
+
+  .primary-security-card {
+    min-height: 100%;
+  }
+
+  .identity-card .material-symbols-outlined {
+    font-size: 6.5rem;
+  }
+
+  .compact-security-card .w-16 {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .compact-security-card .material-symbols-outlined {
+    font-size: 1.65rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-section,
+  .process-section,
+  .security-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .hero-section {
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+  }
+
+  .hero-image {
+    height: 360px;
+  }
+
+  .hero-media .absolute.bottom-10 {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .section-heading {
+    margin-bottom: 3rem;
+  }
+}

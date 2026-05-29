@@ -4,10 +4,10 @@ import { PublicFooterComponent } from '../components/public-footer/public-footer
 import { PublicHeaderComponent } from '../components/public-header/public-header.component';
 
 @Component({
-  selector: 'app-inicio',
+  selector: 'app-nosotros-page',
   standalone: true,
   imports: [RouterLink, PublicHeaderComponent, PublicFooterComponent],
-  templateUrl: './inicio.page.html',
-  styleUrl: './inicio.page.css'
+  templateUrl: './nosotros.page.html',
+  styleUrl: './nosotros.page.css'
 })
-export class InicioPage {}
+export class NosotrosPage {}
