@@ -1,0 +1,47 @@
+<header class="public-header flex justify-between items-center gap-md px-margin-desktop w-full min-h-16 z-50 bg-surface/90 backdrop-blur-md fixed top-0 border-b border-outline-variant">
+  <div class="flex items-center gap-lg min-w-0">
+    <a class="font-headline-sm text-headline-sm font-bold text-primary no-underline" routerLink="/inicio">
+      SafeZone
+    </a>
+
+    <nav class="public-nav flex gap-sm items-center h-full" aria-label="Navegación principal">
+      <a
+        class="public-nav-link"
+        routerLink="/inicio"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        Inicio
+      </a>
+      <a
+        class="public-nav-link"
+        routerLink="/informacion"
+        routerLinkActive="is-active"
+      >
+        Información
+      </a>
+      <a
+        class="public-nav-link"
+        routerLink="/inicio"
+        fragment="nosotros"
+      >
+        Nosotros
+      </a>
+      <a class="public-nav-link" routerLink="/inicio" fragment="faq">FAQ</a>
+      <a class="public-nav-link" routerLink="/inicio" fragment="contacto">Contacto</a>
+      <a class="public-nav-link" routerLink="/inicio" fragment="politicas">Políticas</a>
+    </nav>
+  </div>
+
+  <div class="public-actions flex items-center gap-sm">
+    <a class="bg-primary-container text-white px-md py-2.5 rounded-lg font-label-md text-label-md hover:bg-primary transition-all active:scale-95 shadow-sm no-underline" routerLink="/denuncia">
+      Nueva Denuncia
+    </a>
+    <a class="font-label-md text-label-md text-on-surface-variant border border-outline-variant hover:bg-surface-container-high transition-colors px-4 py-2 rounded-lg no-underline" routerLink="/mis-casos">
+      Consultar Caso
+    </a>
+    <a class="font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high transition-colors px-4 py-2 rounded-lg no-underline" routerLink="/login">
+      Iniciar Sesión
+    </a>
+  </div>
+</header>
