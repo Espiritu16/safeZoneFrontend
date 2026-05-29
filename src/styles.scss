@@ -37,3 +37,7 @@
 @use './styles/pages/victimas';
 @use './styles/pages/reportes';
 @use './styles/pages/configuracion';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
