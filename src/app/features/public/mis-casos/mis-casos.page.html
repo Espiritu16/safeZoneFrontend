@@ -1,1 +1,206 @@
-<!-- Placeholder para historial de atencion de la victima. -->
+<div class="min-h-screen bg-[#F8FAFC] text-on-surface font-body-md flex flex-col">
+  <app-public-header />
+
+  <main class="case-tracker-main flex-grow pt-24 pb-xl px-margin-desktop max-w-max-width mx-auto w-full">
+    <section class="case-search-hero mb-xl text-center max-w-3xl mx-auto">
+      <h1 class="font-headline-lg text-headline-lg text-primary mb-md">Consulta el estado de tu caso</h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant mb-lg">
+        Introduce el número de seguimiento proporcionado al registrar tu incidencia para verificar el progreso en tiempo real de forma segura.
+      </p>
+
+      <div class="relative max-w-xl mx-auto">
+        <div class="case-search-box flex gap-xs bg-white p-2 rounded-xl border border-outline shadow-sm focus-within:ring-2 focus-within:ring-primary-container transition-all">
+          <span class="material-symbols-outlined flex items-center px-sm text-on-surface-variant">search</span>
+          <input
+            class="flex-grow border-none focus:ring-0 font-body-md text-body-md py-3 bg-transparent outline-none min-w-0"
+            placeholder="Ej: SZ-2024-8842"
+            type="text"
+            value="SZ-2024-8842"
+          />
+          <button
+            (click)="consultarCaso()"
+            class="bg-primary text-on-primary px-lg py-3 rounded-lg font-label-md text-label-md font-bold hover:opacity-90 transition-opacity"
+            type="button"
+          >
+            Consultar
+          </button>
+        </div>
+
+        <div class="mt-sm flex items-center justify-center gap-xs">
+          <span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+          <span class="text-secondary font-label-sm text-label-sm">Búsqueda encriptada de extremo a extremo</span>
+        </div>
+      </div>
+    </section>
+
+    <div #caseResults class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
+      <div class="lg:col-span-8 space-y-lg">
+        <section class="bento-card rounded-xl p-lg">
+          <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-md mb-lg">
+            <div>
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-xs block">Resumen del Expediente</span>
+              <h2 class="font-headline-md text-headline-md text-on-surface">Caso SZ-2024-8842</h2>
+            </div>
+
+            <div class="flex items-center gap-sm bg-secondary-container/20 px-md py-sm rounded-full w-fit">
+              <span class="w-3 h-3 bg-secondary rounded-full animate-pulse"></span>
+              <span class="text-on-secondary-container font-bold font-label-md text-label-md uppercase">En revisión</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-lg border-t border-outline-variant pt-lg">
+            <div>
+              <p class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Fecha de Inicio</p>
+              <p class="font-body-md text-body-md font-semibold">14 de Octubre, 2024</p>
+            </div>
+            <div>
+              <p class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Última Actualización</p>
+              <p class="font-body-md text-body-md font-semibold">Hace 2 horas</p>
+            </div>
+            <div>
+              <p class="font-label-sm text-label-sm text-on-surface-variant mb-xs">Próximo Paso</p>
+              <p class="font-body-md text-body-md font-semibold text-primary">Validación de Identidad</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="bento-card rounded-xl p-lg relative overflow-hidden">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface mb-lg">Cronología del Proceso</h3>
+
+          <div class="space-y-lg relative">
+            <div class="absolute left-[19px] top-2 bottom-2 w-0.5 timeline-line"></div>
+
+            <article class="flex gap-lg relative z-10">
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-white">
+                  <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0, 'wght' 700;">check</span>
+                </div>
+              </div>
+              <div class="flex-grow pb-md">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-xs">
+                  <h4 class="font-body-md text-body-md font-bold text-on-surface">Solicitud Registrada</h4>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant">14 Oct, 09:12</span>
+                </div>
+                <p class="text-on-surface-variant font-body-sm text-body-sm mt-xs">
+                  El caso ha sido ingresado en el sistema central de SafeZone y se ha asignado un ID único.
+                </p>
+              </div>
+            </article>
+
+            <article class="flex gap-lg relative z-10">
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-white">
+                  <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0, 'wght' 700;">check</span>
+                </div>
+              </div>
+              <div class="flex-grow pb-md">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-xs">
+                  <h4 class="font-body-md text-body-md font-bold text-on-surface">Documentación Verificada</h4>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant">15 Oct, 14:30</span>
+                </div>
+                <p class="text-on-surface-variant font-body-sm text-body-sm mt-xs">
+                  Todos los archivos adjuntos han sido analizados por el equipo de cumplimiento normativo.
+                </p>
+              </div>
+            </article>
+
+            <article class="flex gap-lg relative z-10">
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white ring-4 ring-primary-container/30">
+                  <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">pending</span>
+                </div>
+              </div>
+              <div class="flex-grow pb-md">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-xs">
+                  <h4 class="font-body-md text-body-md font-bold text-primary">Análisis de Riesgo en Curso</h4>
+                  <span class="font-label-sm text-label-sm text-primary font-bold">ACTUAL</span>
+                </div>
+                <p class="text-on-surface-variant font-body-sm text-body-sm mt-xs">
+                  Nuestros especialistas están evaluando el impacto y los protocolos de seguridad necesarios.
+                </p>
+                <div class="mt-md p-md bg-surface-container rounded-lg border border-outline-variant">
+                  <div class="flex gap-sm items-center mb-xs">
+                    <span class="material-symbols-outlined text-primary text-sm">info</span>
+                    <span class="font-label-md text-label-md font-bold text-on-surface">Nota del Auditor</span>
+                  </div>
+                  <p class="font-body-sm text-body-sm italic text-on-surface-variant">
+                    "Se requiere confirmación adicional del departamento legal externo. Estimamos 24h adicionales."
+                  </p>
+                </div>
+              </div>
+            </article>
+
+            <article class="flex gap-lg relative z-10">
+              <div class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-outline">
+                  <span class="material-symbols-outlined text-[20px]">lock</span>
+                </div>
+              </div>
+              <div class="flex-grow">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-xs">
+                  <h4 class="font-body-md text-body-md font-bold text-outline">Resolución Final</h4>
+                  <span class="font-label-sm text-label-sm text-outline">Pendiente</span>
+                </div>
+                <p class="text-outline font-body-sm text-body-sm mt-xs">
+                  El veredicto final será emitido una vez completadas las fases de validación anteriores.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <aside class="lg:col-span-4 space-y-lg">
+        <section class="bento-card trust-card rounded-xl p-lg bg-primary text-white border-none">
+          <span class="material-symbols-outlined text-headline-sm mb-md block">gpp_good</span>
+          <h3 class="font-headline-sm text-headline-sm text-white mb-sm leading-tight">Seguridad Institucional</h3>
+          <p class="font-body-sm text-body-sm text-primary-fixed mb-lg">
+            Su información está protegida bajo estándares militares de encriptación (AES-256). Solo personal autorizado puede acceder a estos detalles.
+          </p>
+          <button class="w-full bg-white text-primary font-bold py-md rounded-lg font-label-md text-label-md hover:bg-opacity-90 transition-all" type="button">
+            Descargar Reporte PDF
+          </button>
+        </section>
+
+        <section class="bento-card rounded-xl p-lg">
+          <h3 class="font-label-md text-label-md font-bold uppercase tracking-widest text-on-surface-variant mb-md">Soporte Directo</h3>
+          <div class="space-y-md">
+            <div class="flex gap-md items-center group cursor-pointer">
+              <div class="p-sm bg-surface-container rounded-lg group-hover:bg-primary-container/10 transition-colors">
+                <span class="material-symbols-outlined text-primary">support_agent</span>
+              </div>
+              <div>
+                <p class="font-body-md text-body-md font-bold text-on-surface">Asignado: Ana García</p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Gestora de Casos Senior</p>
+              </div>
+            </div>
+
+            <div class="flex gap-md items-center group cursor-pointer">
+              <div class="p-sm bg-surface-container rounded-lg group-hover:bg-primary-container/10 transition-colors">
+                <span class="material-symbols-outlined text-primary">chat</span>
+              </div>
+              <div>
+                <p class="font-body-md text-body-md font-bold text-on-surface">Chat de Soporte</p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Disponible 24/7 para consultas</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="case-image-card rounded-xl overflow-hidden aspect-video relative group">
+          <img
+            alt="Seguridad y Confianza"
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXVoqBudTZXzrBowzGNdqLnfWqBDbBUNkBro4YudFLLw8BhF5aQNkM2bw7qvaDSewKFeXzLzX4iUlnGaN4rcHEspf7hAReNjej-HsMqGROHF-sz8lEY889iM5rhAP7U6Mtvdc98AwF74U_EgfrDdbzdN6M-9UaoNU6TDhLAEiFufk7l0AjTzhYLDfXtTiGoHGv4QXmis47stmf-yOser6N-P1rrPuSAp57laQp4fqfrax64JEq9wJbfV20ds1ckPaHeVeGRj5qDyw"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex flex-col justify-end p-lg">
+            <p class="text-white font-label-md text-label-md font-bold">Compromiso SafeZone</p>
+            <p class="text-primary-fixed font-body-sm text-body-sm">Transparencia y rapidez en cada gestión.</p>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <app-public-footer />
+</div>

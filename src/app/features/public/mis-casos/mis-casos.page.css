@@ -1,1 +1,74 @@
-/* Placeholder para historial de atencion de la victima. */
+:host {
+  display: block;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.bento-card {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.bento-card:not(.trust-card) {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+}
+
+.bento-card:hover {
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+.trust-card {
+  background-color: #00288e;
+  border: none;
+  color: #ffffff;
+}
+
+.trust-card h3,
+.trust-card .material-symbols-outlined {
+  color: #ffffff;
+}
+
+.trust-card p {
+  color: #dde1ff;
+}
+
+.timeline-line {
+  background: repeating-linear-gradient(
+    to bottom,
+    #cbd5e1 0,
+    #cbd5e1 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+.case-image-card {
+  aspect-ratio: 16 / 9;
+}
+
+@media (min-width: 1024px) {
+  .case-tracker-main {
+    padding-top: 6rem;
+  }
+
+  .case-search-hero {
+    margin-bottom: 3rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .case-tracker-main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .case-search-box {
+    flex-direction: column;
+  }
+
+  .case-search-box button {
+    width: 100%;
+  }
+}
