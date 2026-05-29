@@ -252,15 +252,22 @@
   width: 16px;
 }
 
-.login-options-row a {
+.login-options-row a,
+.login-options-row .login-inline-action {
+  background: transparent;
+  border: 0;
   color: #00288e;
+  cursor: pointer;
+  font-family: inherit;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
+  padding: 0;
   text-decoration: none;
 }
 
-.login-options-row a:hover {
+.login-options-row a:hover,
+.login-options-row .login-inline-action:hover {
   text-decoration: underline;
 }
 
@@ -301,6 +308,47 @@
   font-size: 24px;
 }
 
+.login-create-account {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid rgba(196, 197, 213, 0.42);
+  border-radius: 10px;
+  color: #444653;
+  display: flex;
+  flex-wrap: wrap;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  gap: 10px;
+  justify-content: center;
+  letter-spacing: 0.04em;
+  line-height: 18px;
+  margin-top: -8px;
+  padding: 12px 14px;
+  text-align: center;
+}
+
+.login-create-button {
+  background: transparent;
+  border: 0;
+  color: #00288e;
+  cursor: pointer;
+  font-family: "Manrope", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  padding: 0;
+  transition: color 160ms ease, transform 160ms ease;
+}
+
+.login-create-button:hover {
+  color: #1e40af;
+  text-decoration: underline;
+}
+
+.login-create-button:active {
+  transform: scale(0.98);
+}
+
 .login-modal-footer {
   align-items: center;
   background: rgba(244, 242, 252, 0.5);
@@ -320,6 +368,7 @@
 }
 
 .login-modal-footer a,
+.login-modal-footer .login-inline-action,
 .login-modal-footer p {
   color: #757684;
   font-family: "JetBrains Mono", monospace;
@@ -330,13 +379,19 @@
   margin: 0;
 }
 
-.login-modal-footer a {
+.login-modal-footer a,
+.login-modal-footer .login-inline-action {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
   text-decoration: none;
   text-transform: uppercase;
   transition: color 160ms ease;
 }
 
-.login-modal-footer a:hover {
+.login-modal-footer a:hover,
+.login-modal-footer .login-inline-action:hover {
   color: #00288e;
   text-decoration: underline;
 }

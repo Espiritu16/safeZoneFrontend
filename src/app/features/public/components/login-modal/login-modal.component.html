@@ -75,19 +75,24 @@
             <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" />
             <span>Recordarme</span>
           </label>
-          <a href="/login" (click)="$event.preventDefault()">Recuperar contraseña</a>
+          <button class="login-inline-action" type="button">Recuperar contraseña</button>
         </div>
 
         <button class="login-submit" type="submit" [disabled]="isLoggingIn">
           <span>{{ isLoggingIn ? 'Ingresando...' : 'Ingresar' }}</span>
           <span class="material-symbols-outlined">arrow_forward</span>
         </button>
+
+        <div class="login-create-account">
+          <span>¿Aún no tienes cuenta?</span>
+          <button class="login-create-button" type="button">Crear cuenta</button>
+        </div>
       </form>
 
       <footer class="login-modal-footer">
         <div>
           <a routerLink="/politicas">Política de Privacidad</a>
-          <a href="/login" (click)="$event.preventDefault()">Seguridad de Acceso</a>
+          <button class="login-inline-action" type="button">Seguridad de Acceso</button>
         </div>
         <p>© 2024 SafeZone. All rights reserved.</p>
       </footer>
