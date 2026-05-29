@@ -15,6 +15,11 @@ export const routes: Routes = [
       import('./features/public/informacion/informacion.page').then((m) => m.InformacionPage),
   },
   {
+    path: 'nosotros',
+    loadComponent: () =>
+      import('./features/public/nosotros/nosotros.page').then((m) => m.NosotrosPage),
+  },
+  {
     path: 'denuncia',
     loadComponent: () =>
       import('./features/public/denuncia/denuncia.page').then((m) => m.DenunciaPage),
