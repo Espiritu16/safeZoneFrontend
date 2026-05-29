@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TrimOnBlurDirective } from '../../../../../shared/directives/trim-on-blur.directive';
+import { sanitizeCaseCode } from '../../../../../shared/utils/input-sanitizers.util';
+import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rules';
 
 @Component({
   selector: 'app-public-consultar-caso',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TrimOnBlurDirective],
   template: `
     <div class="consultar-caso-container">
       <section class="header-section">
@@ -20,9 +23,12 @@ import { FormsModule } from '@angular/forms';
             <div class="search-form">
               <input
                 type="text"
+                appTrimOnBlur
                 [(ngModel)]="codigoSeguimiento"
                 placeholder="Ej: PD-ABC12345"
                 class="search-input"
+                maxlength="17"
+                pattern="^[A-Z]{2,4}-[A-Z0-9]{6,12}$"
               >
               <button (click)="buscarCaso()" class="btn btn-primary">
                 Buscar
@@ -30,6 +36,9 @@ import { FormsModule } from '@angular/forms';
             </div>
             <p class="info-text">
               El código de seguimiento fue generado cuando enviaste tu denuncia.
+            </p>
+            <p *ngIf="validationMessage" class="info-text" style="color: var(--color-destructive);">
+              {{ validationMessage }}
             </p>
           </div>
 
@@ -481,6 +490,7 @@ export class PublicConsultarCasoPage {
   codigoSeguimiento = '';
   casoBuscado = false;
   casoEncontrado = false;
+  validationMessage = '';
 
   estadoLabel: { [key: string]: string } = {
     registrado: 'Registrado',
@@ -530,6 +540,14 @@ export class PublicConsultarCasoPage {
   };
 
   buscarCaso() {
+    this.codigoSeguimiento = sanitizeCaseCode(this.codigoSeguimiento);
+    this.validationMessage = '';
+    if (!VALIDATION_PATTERNS.CASE_CODE.test(this.codigoSeguimiento)) {
+      this.validationMessage = 'El código debe tener el formato PD-ABC12345.';
+      this.casoBuscado = false;
+      this.casoEncontrado = false;
+      return;
+    }
     // Simular búsqueda
     this.casoBuscado = true;
     // En una aplicación real, aquí haríamos una llamada a la API

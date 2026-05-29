@@ -100,37 +100,47 @@
 
         <div class="lg:col-span-7">
           <div class="bg-white p-lg lg:p-xl rounded-xl border border-outline-variant shadow-sm">
-            <form class="space-y-lg">
+            <form class="space-y-lg" (submit)="onSubmit($event)">
+              @if (validationMessage) {
+                <div class="rounded-lg border border-error bg-error-container px-md py-sm text-on-error-container font-body-sm">
+                  {{ validationMessage }}
+                </div>
+              }
+              @if (messageSent) {
+                <div class="rounded-lg border border-secondary/30 bg-secondary/10 px-md py-sm text-secondary font-body-sm">
+                  Solicitud enviada correctamente.
+                </div>
+              }
               <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
                 <label class="space-y-xs block">
                   <span class="font-label-md text-label-md text-on-surface-variant px-1 block">Nombre Completo</span>
-                  <input class="w-full p-4 rounded-lg border border-outline-variant bg-surface-bright form-input-focus transition-all text-body-md" placeholder="Ej. Juan Pérez" type="text" />
+                  <input class="w-full p-4 rounded-lg border border-outline-variant bg-surface-bright form-input-focus transition-all text-body-md" appLettersOnly appTrimOnBlur placeholder="Ej. Juan Pérez" type="text" name="nombre" [(ngModel)]="formData.nombre" required minlength="2" maxlength="120" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñÜü' -]+$" />
                 </label>
 
                 <label class="space-y-xs block">
                   <span class="font-label-md text-label-md text-on-surface-variant px-1 block">Correo Institucional</span>
-                  <input class="w-full p-4 rounded-lg border border-outline-variant bg-surface-bright form-input-focus transition-all text-body-md" placeholder="usuario@empresa.com" type="email" />
+                  <input class="w-full p-4 rounded-lg border border-outline-variant bg-surface-bright form-input-focus transition-all text-body-md" appTrimOnBlur placeholder="usuario@empresa.com" type="email" name="email" [(ngModel)]="formData.email" required maxlength="254" />
                 </label>
               </div>
 
               <label class="space-y-xs block">
                 <span class="font-label-md text-label-md text-on-surface-variant px-1 block">Asunto de la Consulta</span>
-                <select class="w-full p-4 rounded-lg border border-outline-variant bg-surface-bright form-input-focus transition-all text-body-md appearance-none">
-                  <option>Seleccione una categoría</option>
-                  <option>Soporte Técnico de Plataforma</option>
-                  <option>Cumplimiento e Integridad</option>
-                  <option>Consultas de Privacidad (GDPR)</option>
-                  <option>Relaciones Institucionales</option>
+                <select class="w-full p-4 rounded-lg border border-outline-variant bg-surface-bright form-input-focus transition-all text-body-md appearance-none" name="asunto" [(ngModel)]="formData.asunto" required>
+                  <option value="">Seleccione una categoría</option>
+                  <option value="soporte">Soporte Técnico de Plataforma</option>
+                  <option value="cumplimiento">Cumplimiento e Integridad</option>
+                  <option value="privacidad">Consultas de Privacidad (GDPR)</option>
+                  <option value="relaciones">Relaciones Institucionales</option>
                 </select>
               </label>
 
               <label class="space-y-xs block">
                 <span class="font-label-md text-label-md text-on-surface-variant px-1 block">Mensaje</span>
-                <textarea class="w-full p-4 rounded-lg border border-outline-variant bg-surface-bright form-input-focus transition-all text-body-md resize-none" placeholder="Describa su solicitud de manera detallada..." rows="5"></textarea>
+                <textarea class="w-full p-4 rounded-lg border border-outline-variant bg-surface-bright form-input-focus transition-all text-body-md resize-none" appTrimOnBlur placeholder="Describa su solicitud de manera detallada..." rows="5" name="mensaje" [(ngModel)]="formData.mensaje" required minlength="10" maxlength="1000"></textarea>
               </label>
 
               <label class="bg-surface-container-low p-md rounded-lg border border-outline-variant flex gap-sm items-start">
-                <input class="mt-1 w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox" />
+                <input class="mt-1 w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox" name="acceptedPrivacy" [(ngModel)]="formData.acceptedPrivacy" />
                 <span class="text-body-sm text-on-surface-variant">
                   He leído y acepto la <a class="text-primary font-semibold underline" href="#">Política de Privacidad</a>. Entiendo que mi información será tratada de forma estrictamente confidencial bajo los protocolos de seguridad de SafeZone.
                 </span>

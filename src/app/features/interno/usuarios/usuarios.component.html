@@ -132,7 +132,7 @@
         <form #uForm="ngForm" id="userForm">
           <div class="form-group">
             <label class="form-label">Nombre Completo *</label>
-            <input class="form-input" type="text" name="nombre" [(ngModel)]="formData.nombre" #nombre="ngModel" required minlength="4" placeholder="Nombre y apellidos" [ngClass]="{'border-danger': nombre.invalid && nombre.touched}">
+            <input class="form-input" type="text" name="nombre" appLettersOnly appTrimOnBlur [(ngModel)]="formData.nombre" #nombre="ngModel" required minlength="4" maxlength="120" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñÜü' -]+$" placeholder="Nombre y apellidos" [ngClass]="{'border-danger': nombre.invalid && nombre.touched}">
             @if (nombre.invalid && nombre.touched) {
               <p class="text-xs text-danger mt-1">El nombre completo es obligatorio (mín. 4 caracteres).</p>
             }
@@ -140,7 +140,7 @@
 
           <div class="form-group">
             <label class="form-label">Correo Institucional *</label>
-            <input class="form-input" type="email" name="email" [(ngModel)]="formData.email" #email="ngModel" required pattern="^[a-zA-Z0-9._%+-]+@safezone\.gob\.pe$" placeholder="usuario@safezone.gob.pe" [ngClass]="{'border-danger': email.invalid && email.touched}">
+            <input class="form-input" type="email" name="email" appTrimOnBlur [(ngModel)]="formData.email" #email="ngModel" required maxlength="254" pattern="^[a-zA-Z0-9._%+-]+@safezone\.gob\.pe$" placeholder="usuario@safezone.gob.pe" [ngClass]="{'border-danger': email.invalid && email.touched}">
             @if (email.invalid && email.touched) {
               <p class="text-xs text-danger mt-1">Debe ser un correo institucional válido (...@safezone.gob.pe).</p>
             }

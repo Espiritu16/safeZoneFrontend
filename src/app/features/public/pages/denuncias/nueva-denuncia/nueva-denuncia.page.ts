@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { LettersOnlyDirective } from '../../../../../shared/directives/letters-only.directive';
+import { NumbersOnlyDirective } from '../../../../../shared/directives/numbers-only.directive';
+import { TrimOnBlurDirective } from '../../../../../shared/directives/trim-on-blur.directive';
+import { normalizeText, sanitizeLettersOnly, sanitizeNumbersOnly } from '../../../../../shared/utils/input-sanitizers.util';
+import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rules';
 
 @Component({
   selector: 'app-public-nueva-denuncia',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LettersOnlyDirective, NumbersOnlyDirective, TrimOnBlurDirective],
   template: `
     <div class="nueva-denuncia-container">
       <section class="header-section">
@@ -28,6 +33,7 @@ import { FormsModule } from '@angular/forms';
             </div>
 
             <form (ngSubmit)="onSubmit()" #denunciaForm="ngForm" class="denuncia-form">
+              <div *ngIf="validationMessage" class="warning">{{ validationMessage }}</div>
               <div class="form-step" [hidden]="step !== 1">
                 <h3>Paso 1: Tipo de Violencia</h3>
                 <p>¿Qué tipo de violencia has experimentado?</p>
@@ -98,10 +104,13 @@ import { FormsModule } from '@angular/forms';
                   <textarea
                     id="descripcion"
                     name="descripcion"
+                    appTrimOnBlur
                     [(ngModel)]="formData.descripcion"
                     placeholder="Cuéntanos qué sucedió..."
                     rows="4"
                     required
+                    minlength="20"
+                    maxlength="2000"
                   ></textarea>
                   <small>Sé lo más detallado posible para ayudarnos a entender tu situación</small>
                 </div>
@@ -122,17 +131,17 @@ import { FormsModule } from '@angular/forms';
 
                 <div class="form-group">
                   <label for="nombre">Nombre completo:</label>
-                  <input type="text" id="nombre" name="nombre" [(ngModel)]="formData.nombre" required>
+                  <input type="text" id="nombre" name="nombre" appLettersOnly appTrimOnBlur [(ngModel)]="formData.nombre" required minlength="2" maxlength="120" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñÜü' -]+$">
                 </div>
 
                 <div class="form-group">
                   <label for="email">Email:</label>
-                  <input type="email" id="email" name="email" [(ngModel)]="formData.email" required>
+                  <input type="email" id="email" name="email" appTrimOnBlur [(ngModel)]="formData.email" required maxlength="254">
                 </div>
 
                 <div class="form-group">
                   <label for="telefono">Teléfono de contacto seguro:</label>
-                  <input type="tel" id="telefono" name="telefono" [(ngModel)]="formData.telefono" required>
+                  <input type="text" inputmode="numeric" id="telefono" name="telefono" appNumbersOnly [(ngModel)]="formData.telefono" required pattern="^[0-9]{9}$" maxlength="9">
                   <small>Usa un número donde podamos contactarte de forma privada</small>
                 </div>
 
@@ -504,6 +513,7 @@ export class PublicNuevaDenunciaPage {
   step = 1;
   denunciaEnviada = false;
   codigoSeguimiento = '';
+  validationMessage = '';
 
   formData = {
     tiposViolencia: {
@@ -521,6 +531,9 @@ export class PublicNuevaDenunciaPage {
   };
 
   nextStep() {
+    if (!this.validateStep(this.step)) {
+      return;
+    }
     if (this.step < 3) {
       this.step++;
       window.scrollTo(0, 0);
@@ -535,13 +548,62 @@ export class PublicNuevaDenunciaPage {
   }
 
   onSubmit() {
+    if (![1, 2, 3].every(step => this.validateStep(step))) {
+      return;
+    }
     // Generar código de seguimiento
     this.codigoSeguimiento = 'PD-' + Math.random().toString(36).substring(2, 9).toUpperCase();
 
-    console.log('Denuncia enviada:', this.formData);
-    console.log('Código:', this.codigoSeguimiento);
-
     this.denunciaEnviada = true;
     window.scrollTo(0, 0);
+  }
+
+  private normalizeForm() {
+    this.formData = {
+      ...this.formData,
+      descripcion: normalizeText(this.formData.descripcion),
+      nombre: sanitizeLettersOnly(this.formData.nombre).trim(),
+      email: this.formData.email.trim().toLowerCase(),
+      telefono: sanitizeNumbersOnly(this.formData.telefono),
+    };
+  }
+
+  private validateStep(step: number): boolean {
+    this.normalizeForm();
+    this.validationMessage = '';
+
+    if (step === 1 && !Object.values(this.formData.tiposViolencia).some(Boolean)) {
+      this.validationMessage = 'Seleccione al menos un tipo de violencia.';
+    }
+
+    if (step === 2) {
+      const today = new Date().toISOString().split('T')[0];
+      if (!this.formData.ubicacion) {
+        this.validationMessage = 'Seleccione dónde ocurrió el incidente.';
+      } else if (!this.formData.fechaUltimo || this.formData.fechaUltimo > today) {
+        this.validationMessage = 'La fecha es obligatoria y no puede ser futura.';
+      } else if (
+        this.formData.descripcion.length < VALIDATION_LIMITS.LONG_TEXT_MIN ||
+        this.formData.descripcion.length > VALIDATION_LIMITS.LONG_TEXT_MAX
+      ) {
+        this.validationMessage = 'La descripción debe tener entre 20 y 2000 caracteres.';
+      }
+    }
+
+    if (step === 3) {
+      if (
+        this.formData.nombre.length < VALIDATION_LIMITS.NAME_MIN ||
+        this.formData.nombre.length > VALIDATION_LIMITS.NAME_MAX ||
+        !VALIDATION_PATTERNS.PERSON_NAME.test(this.formData.nombre)
+      ) {
+        this.validationMessage = 'El nombre debe tener entre 2 y 120 caracteres y solo letras.';
+      } else if (!isValidBasicEmail(this.formData.email)) {
+        this.validationMessage = 'Ingrese un email válido.';
+      } else if (!VALIDATION_PATTERNS.CELULAR.test(this.formData.telefono)) {
+        this.validationMessage = 'El teléfono debe tener 9 dígitos numéricos.';
+      }
+    }
+
+    return !this.validationMessage;
   }
 }

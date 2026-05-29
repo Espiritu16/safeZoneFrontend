@@ -143,7 +143,7 @@
         
         <div class="form-group">
           <label class="form-label">Caso Vinculado</label>
-          <select class="form-select" [(ngModel)]="appointmentsService.nuevaCita.casoId">
+          <select class="form-select" [(ngModel)]="appointmentsService.nuevaCita.casoId" required>
             @for (c of casesService.casos(); track c.id) {
               <option [value]="c.codigo">{{ c.codigo }} - {{ c.victim }}</option>
             }
@@ -152,7 +152,7 @@
 
         <div class="form-group">
           <label class="form-label">Tipo de Asesoría</label>
-          <select class="form-select" [(ngModel)]="appointmentsService.nuevaCita.tipo">
+          <select class="form-select" [(ngModel)]="appointmentsService.nuevaCita.tipo" required>
             <option value="Psicológica">Psicológica</option>
             <option value="Legal">Legal</option>
             <option value="Evaluación">Evaluación Social</option>
@@ -162,17 +162,17 @@
         <div class="sz-grid-2">
           <div class="form-group">
             <label class="form-label">Fecha</label>
-            <input class="form-input" type="date" [(ngModel)]="appointmentsService.nuevaCita.fecha">
+            <input class="form-input" type="date" [(ngModel)]="appointmentsService.nuevaCita.fecha" required>
           </div>
           <div class="form-group">
             <label class="form-label">Hora</label>
-            <input class="form-input" type="time" [(ngModel)]="appointmentsService.nuevaCita.hora">
+            <input class="form-input" type="time" [(ngModel)]="appointmentsService.nuevaCita.hora" required>
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">Notas Adicionales</label>
-          <textarea class="form-textarea" [(ngModel)]="appointmentsService.nuevaCita.notas" placeholder="Motivo o requerimiento específico de la cita..."></textarea>
+          <textarea class="form-textarea" appTrimOnBlur [(ngModel)]="appointmentsService.nuevaCita.notas" placeholder="Motivo o requerimiento específico de la cita..." maxlength="500"></textarea>
         </div>
 
       </div>

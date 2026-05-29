@@ -1,6 +1,8 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { ToastService } from './toast.service';
 import { AuthService } from './auth.service';
+import { normalizeText } from '../../shared/utils/input-sanitizers.util';
+import { VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../../shared/utils/validation-rules';
 
 export interface Cita {
   id: string;
@@ -39,6 +41,29 @@ export class AppointmentsService {
   };
 
   saveCita() {
+    this.nuevaCita.notas = normalizeText(this.nuevaCita.notas);
+
+    if (!this.nuevaCita.casoId.trim()) {
+      this.toastService.show('Seleccione un caso vinculado.', 'error');
+      return;
+    }
+    if (!['PsicolÃ³gica', 'Legal', 'EvaluaciÃ³n'].includes(this.nuevaCita.tipo)) {
+      this.toastService.show('Seleccione un tipo de asesoría válido.', 'error');
+      return;
+    }
+    if (!this.nuevaCita.fecha || this.nuevaCita.fecha < new Date().toISOString().split('T')[0]) {
+      this.toastService.show('La fecha de la cita no puede ser anterior a la fecha actual.', 'error');
+      return;
+    }
+    if (!VALIDATION_PATTERNS.TIME_24H.test(this.nuevaCita.hora)) {
+      this.toastService.show('Ingrese una hora válida en formato HH:mm.', 'error');
+      return;
+    }
+    if (this.nuevaCita.notas.length > VALIDATION_LIMITS.NOTES_MAX) {
+      this.toastService.show('Las notas no deben superar los 500 caracteres.', 'error');
+      return;
+    }
+
     const doctorName = this.authService.currentRole() === 'Psicólogo' ? 'Dr. Carlos Rojas' : 'Dra. Sofía Medina';
     const nueva: Cita = {
       id: 'c' + (this.citas().length + 1),

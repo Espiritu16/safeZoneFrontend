@@ -4,11 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { UsersService, User } from '../../../core/services/users.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { LettersOnlyDirective } from '../../../shared/directives/letters-only.directive';
+import { TrimOnBlurDirective } from '../../../shared/directives/trim-on-blur.directive';
+import { sanitizeLettersOnly } from '../../../shared/utils/input-sanitizers.util';
+import { isValidInstitutionalEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../../../shared/utils/validation-rules';
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LettersOnlyDirective, TrimOnBlurDirective],
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.scss'
 })
@@ -45,8 +49,30 @@ export class UsuariosComponent {
   }
 
   saveUser() {
+    this.formData = {
+      ...this.formData,
+      nombre: sanitizeLettersOnly(this.formData.nombre).trim(),
+      email: this.formData.email.trim().toLowerCase(),
+    };
+
     if (!this.formData.nombre.trim() || !this.formData.email.trim()) {
       this.toastService.show('Complete todos los campos obligatorios.', 'error');
+      return;
+    }
+    if (
+      this.formData.nombre.length < VALIDATION_LIMITS.USER_NAME_MIN ||
+      this.formData.nombre.length > VALIDATION_LIMITS.USER_NAME_MAX ||
+      !VALIDATION_PATTERNS.PERSON_NAME.test(this.formData.nombre)
+    ) {
+      this.toastService.show('El nombre debe tener entre 4 y 120 caracteres y solo letras.', 'error');
+      return;
+    }
+    if (!isValidInstitutionalEmail(this.formData.email)) {
+      this.toastService.show('Debe ingresar un correo institucional válido @safezone.gob.pe.', 'error');
+      return;
+    }
+    if (!this.authService.roles.includes(this.formData.rol) || !['Activo', 'Inactivo'].includes(this.formData.estado)) {
+      this.toastService.show('Seleccione un rol y estado válidos.', 'error');
       return;
     }
 
