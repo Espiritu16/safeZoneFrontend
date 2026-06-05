@@ -1,273 +1,111 @@
 @use '../abstracts/variables' as vars;
-@use '../abstracts/colors' as colors;
-@use '../abstracts/mixins' as mixins;
 @use '../abstracts/breakpoints' as bp;
 
 .sz-header {
-  min-height: 76px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
   border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: vars.$radius-xl;
+  border-radius: 24px;
   background: rgba(255, 255, 255, 0.8);
   box-shadow: var(--ts-shadow);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  position: sticky;
-  top: 16px;
-  z-index: 90;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 12px 18px;
-  margin: 16px 32px 0 292px;
-  transition: margin 0.3s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 
-  @include bp.mobile {
-    margin-left: 0;
-    margin: 12px 16px 0;
-    padding: 12px;
-    align-items: flex-start;
+  @include bp.tablet-up {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  &.is-collapsed {
-    margin-left: 102px;
-  }
-
-  &-left {
+  > div:first-child {
     display: flex;
     align-items: center;
     gap: 12px;
-    min-width: 0;
+  }
+}
+
+.sz-header-title-block {
+  h5 {
+    margin: 0 0 4px;
+    color: #334155;
+    font-size: 1rem;
+    font-weight: 800;
   }
 
-  &-title-block {
-    min-width: 0;
-
-    h1 {
-      margin: 0;
-      color: var(--ts-ink);
-      font-size: 1.22rem;
-      font-weight: 800;
-      line-height: 1.15;
-    }
-
-    p {
-      margin: 2px 0 0;
-      color: #5e738f;
-      font-size: 0.78rem;
-      font-weight: 700;
-    }
+  small {
+    color: #64748b;
+    font-size: 0.875rem;
   }
+}
 
-  &-safe-badge {
+.sz-header-menu-toggle {
+  display: none;
+  color: #475569;
+
+  @include bp.mobile {
     display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 7px 11px;
-    border-radius: vars.$radius-full;
-    border: 1px solid rgba(167, 243, 208, 0.78);
-    background: rgba(236, 253, 245, 0.62);
-    color: #047857;
+  }
+}
+
+.sz-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sz-header-safe-badge {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  color: #64748b;
+  font-size: 0.875rem;
+  border: 1px solid #e2e8f0;
+  border-radius: vars.$radius-full;
+  background: rgba(255, 255, 255, 0.8);
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  @include bp.tablet-up {
+    display: inline-flex;
+  }
+}
+
+.sz-header-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: vars.$radius-full;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.sz-header-profile-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: vars.$radius-full;
+  background: linear-gradient(135deg, #34d399, #059669);
+  box-shadow: 0 0 0 3px rgba(89, 194, 152, 0.2);
+}
+
+.sz-header-profile-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+
+  strong {
+    color: #334155;
     font-size: 0.75rem;
     font-weight: 800;
-    white-space: nowrap;
-
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: vars.$radius-full;
-      background: linear-gradient(135deg, #34d399, #059669);
-      box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.16);
-    }
-
-    @include bp.mobile {
-      display: none;
-    }
   }
 
-  // Hamburger móvil
-  &-menu-toggle {
-    display: none;
-    color: colors.$color-text-primary;
-    padding: 8px;
-    margin-right: 8px;
-    border-radius: vars.$radius-lg;
-    transition: vars.$transition-fast;
-
-    &:hover {
-      background-color: rgba(224, 242, 254, 0.58);
-    }
-
-    @include bp.mobile {
-      display: block;
-    }
-  }
-
-  // Búsqueda global
-  &-search {
-    position: relative;
-    max-width: 320px;
-    width: 100%;
-
-    @include bp.mobile {
-      display: none; // Ocultar en móviles para dar espacio al selector de roles
-    }
-
-    &-icon {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: colors.$color-text-muted;
-      pointer-events: none;
-      width: 16px;
-      height: 16px;
-    }
-
-    &-input {
-      width: 100%;
-      padding: 8px 12px 8px 36px;
-      border: 1px solid colors.$color-border-subtle;
-      border-radius: vars.$radius-xl;
-      font-size: 0.8125rem;
-      background-color: rgba(255, 255, 255, 0.62);
-      transition: vars.$transition-fast;
-
-      &:focus {
-        @include mixins.focus-ring;
-        background-color: rgba(255, 255, 255, 0.9);
-      }
-
-      &::placeholder {
-        color: colors.$color-text-muted;
-      }
-    }
-  }
-
-  // Acciones en la derecha
-  &-actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-
-    @include bp.mobile {
-      gap: 8px;
-      width: 100%;
-      justify-content: flex-end;
-    }
-  }
-
-  // Selector de roles interactivo
-  &-role-selector {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: colors.$color-white;
-    border: 1px solid rgba(221, 231, 242, 0.9);
-    padding: 6px 12px;
-    border-radius: vars.$radius-xl;
-    box-shadow: 0 8px 18px rgba(28, 50, 89, 0.08);
-
-    label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: colors.$color-text-secondary;
-      white-space: nowrap;
-
-      @include bp.mobile {
-        display: none;
-      }
-    }
-
-    select {
-      border: none;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: colors.$color-brand-medium;
-      background-color: transparent;
-      cursor: pointer;
-      outline: none;
-      padding-right: 4px;
-    }
-  }
-
-  // Notificaciones
-  &-notifications {
-    position: relative;
-
-    &-trigger {
-      color: colors.$color-text-secondary;
-      padding: 8px;
-      border-radius: vars.$radius-full;
-      position: relative;
-      transition: vars.$transition-fast;
-
-      &:hover {
-        background-color: rgba(224, 242, 254, 0.58);
-        color: var(--ts-primary-dark);
-      }
-
-      svg {
-        width: 20px;
-        height: 20px;
-        stroke-width: 2;
-      }
-
-      .badge-dot {
-        position: absolute;
-        top: 6px;
-        right: 6px;
-        width: 8px;
-        height: 8px;
-        background-color: colors.$color-danger;
-        border-radius: vars.$radius-full;
-        border: 2px solid colors.$color-white;
-      }
-    }
-  }
-
-  // Perfil rápido
-  &-profile {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    padding: 6px 10px;
-    border: 1px solid rgba(209, 250, 229, 0.82);
-    border-radius: vars.$radius-xl;
-    background: rgba(236, 253, 245, 0.56);
-
-    &-info {
-      text-align: right;
-      @include bp.mobile {
-        display: none;
-      }
-    }
-
-    &-name {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: colors.$color-text-primary;
-    }
-
-    &-role {
-      font-size: 0.7rem;
-      color: colors.$color-text-muted;
-    }
-
-    &-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: vars.$radius-full;
-      background: linear-gradient(135deg, #34d399, #059669);
-      color: colors.$color-white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.8125rem;
-      border: 1px solid colors.$color-border-subtle;
-    }
+  small {
+    color: #64748b;
+    font-size: 0.6875rem;
   }
 }

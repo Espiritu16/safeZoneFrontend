@@ -1,29 +1,27 @@
 <header class="sz-header" [ngClass]="{'is-collapsed': layoutService.isSidebarCollapsed()}">
-  <div class="sz-header-left">
+  <div>
     <button class="sz-header-menu-toggle" (click)="layoutService.toggleMobileSidebar()">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <span class="material-symbols-outlined">menu</span>
     </button>
 
     <div class="sz-header-title-block">
-      <h1>Panel SafeZone</h1>
-      <p>Administración operativa y seguimiento de casos</p>
+      <h5>Sistema de Gestión SafeZone</h5>
+      <small>Centro de atención y trazabilidad</small>
     </div>
   </div>
 
   <div class="sz-header-actions">
     <span class="sz-header-safe-badge">
-      <span class="badge-dot"></span>
-      Operación interna segura
+      <span class="material-symbols-outlined">verified_user</span>
+      <small>Operación interna segura</small>
     </span>
 
-    <!-- Perfil rápido -->
     <div class="sz-header-profile">
-      <div class="sz-header-profile-avatar">AD</div>
+      <span class="sz-header-profile-dot"></span>
       <div class="sz-header-profile-info">
-        <p class="sz-header-profile-name">MIMP Lima</p>
-        <p class="sz-header-profile-role">{{ authService.currentRole() }}</p>
+        <strong>MIMP Lima</strong>
+        <small>{{ authService.currentRole() }}</small>
       </div>
     </div>
-
   </div>
 </header>
