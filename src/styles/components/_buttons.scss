@@ -129,3 +129,71 @@
     cursor: not-allowed;
   }
 }
+
+.sz-dashboard-layout,
+.sz-drawer {
+  .btn {
+    border-radius: vars.$radius-xl;
+    font-weight: 800;
+    letter-spacing: 0;
+    box-shadow: none;
+
+    &-primary {
+      background: linear-gradient(135deg, #38bdf8, #3b82f6);
+      color: colors.$color-white;
+      border-color: transparent;
+      box-shadow: 0 8px 20px rgba(79, 131, 212, 0.3);
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #0ea5e9, var(--ts-primary-dark));
+        border-color: transparent;
+        transform: translateY(-1px);
+      }
+    }
+
+    &-secondary {
+      background: rgba(224, 242, 254, 0.78);
+      color: var(--ts-primary-dark);
+      border-color: rgba(186, 230, 253, 0.9);
+
+      &:hover:not(:disabled) {
+        background: rgba(224, 242, 254, 0.95);
+        color: var(--ts-ink);
+      }
+    }
+
+    &-outline {
+      background: rgba(255, 255, 255, 0.72);
+      color: #43546b;
+      border-color: rgba(203, 213, 225, 0.9);
+
+      &:hover:not(:disabled) {
+        background: rgba(224, 242, 254, 0.6);
+        color: var(--ts-primary-dark);
+        border-color: rgba(175, 207, 244, 0.95);
+      }
+    }
+
+    &-ghost {
+      color: #5e738f;
+
+      &:hover:not(:disabled) {
+        background: rgba(224, 242, 254, 0.5);
+        color: var(--ts-primary-dark);
+      }
+    }
+
+    &-danger {
+      background: linear-gradient(135deg, #fb7185, #e11d48);
+      color: colors.$color-white;
+      border-color: transparent;
+      box-shadow: 0 8px 18px rgba(201, 67, 103, 0.3);
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #f43f5e, #be123c);
+        border-color: transparent;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}

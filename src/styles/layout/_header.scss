@@ -4,26 +4,85 @@
 @use '../abstracts/breakpoints' as bp;
 
 .sz-header {
-  height: 70px;
-  @include mixins.glass(0.8, 12px);
-  border-bottom: 1px solid colors.$color-border-subtle;
+  min-height: 76px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: vars.$radius-xl;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: var(--ts-shadow);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   position: sticky;
-  top: 0;
+  top: 16px;
   z-index: 90;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  margin-left: 260px;
-  transition: margin-left 0.3s ease;
+  gap: 18px;
+  padding: 12px 18px;
+  margin: 16px 32px 0 292px;
+  transition: margin 0.3s ease;
 
   @include bp.mobile {
     margin-left: 0;
-    padding: 0 16px;
+    margin: 12px 16px 0;
+    padding: 12px;
+    align-items: flex-start;
   }
 
   &.is-collapsed {
-    margin-left: 70px;
+    margin-left: 102px;
+  }
+
+  &-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  &-title-block {
+    min-width: 0;
+
+    h1 {
+      margin: 0;
+      color: var(--ts-ink);
+      font-size: 1.22rem;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    p {
+      margin: 2px 0 0;
+      color: #5e738f;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+  }
+
+  &-safe-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 11px;
+    border-radius: vars.$radius-full;
+    border: 1px solid rgba(167, 243, 208, 0.78);
+    background: rgba(236, 253, 245, 0.62);
+    color: #047857;
+    font-size: 0.75rem;
+    font-weight: 800;
+    white-space: nowrap;
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: vars.$radius-full;
+      background: linear-gradient(135deg, #34d399, #059669);
+      box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.16);
+    }
+
+    @include bp.mobile {
+      display: none;
+    }
   }
 
   // Hamburger móvil
@@ -32,11 +91,11 @@
     color: colors.$color-text-primary;
     padding: 8px;
     margin-right: 8px;
-    border-radius: vars.$radius-md;
+    border-radius: vars.$radius-lg;
     transition: vars.$transition-fast;
 
     &:hover {
-      background-color: colors.$color-bg-main;
+      background-color: rgba(224, 242, 254, 0.58);
     }
 
     @include bp.mobile {
@@ -69,14 +128,14 @@
       width: 100%;
       padding: 8px 12px 8px 36px;
       border: 1px solid colors.$color-border-subtle;
-      border-radius: vars.$radius-md;
+      border-radius: vars.$radius-xl;
       font-size: 0.8125rem;
-      background-color: rgba(colors.$color-bg-main, 0.5);
+      background-color: rgba(255, 255, 255, 0.62);
       transition: vars.$transition-fast;
 
       &:focus {
         @include mixins.focus-ring;
-        background-color: colors.$color-white;
+        background-color: rgba(255, 255, 255, 0.9);
       }
 
       &::placeholder {
@@ -90,6 +149,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    flex-wrap: wrap;
 
     @include bp.mobile {
       gap: 8px;
@@ -104,10 +164,10 @@
     align-items: center;
     gap: 8px;
     background-color: colors.$color-white;
-    border: 1px solid colors.$color-border-subtle;
+    border: 1px solid rgba(221, 231, 242, 0.9);
     padding: 6px 12px;
-    border-radius: vars.$radius-md;
-    box-shadow: vars.$shadow-sm;
+    border-radius: vars.$radius-xl;
+    box-shadow: 0 8px 18px rgba(28, 50, 89, 0.08);
 
     label {
       font-size: 0.75rem;
@@ -144,8 +204,8 @@
       transition: vars.$transition-fast;
 
       &:hover {
-        background-color: colors.$color-bg-main;
-        color: colors.$color-text-primary;
+        background-color: rgba(224, 242, 254, 0.58);
+        color: var(--ts-primary-dark);
       }
 
       svg {
@@ -173,6 +233,10 @@
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    padding: 6px 10px;
+    border: 1px solid rgba(209, 250, 229, 0.82);
+    border-radius: vars.$radius-xl;
+    background: rgba(236, 253, 245, 0.56);
 
     &-info {
       text-align: right;
@@ -196,8 +260,8 @@
       width: 32px;
       height: 32px;
       border-radius: vars.$radius-full;
-      background-color: colors.$color-brand-soft;
-      color: colors.$color-brand-medium;
+      background: linear-gradient(135deg, #34d399, #059669);
+      color: colors.$color-white;
       display: flex;
       align-items: center;
       justify-content: center;

@@ -1,17 +1,20 @@
 <header class="sz-header" [ngClass]="{'is-collapsed': layoutService.isSidebarCollapsed()}">
-  <div class="flex items-center">
+  <div class="sz-header-left">
     <button class="sz-header-menu-toggle" (click)="layoutService.toggleMobileSidebar()">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    
-    <!-- Búsqueda rápida -->
-    <div class="sz-header-search">
-      <svg class="sz-header-search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-      <input class="sz-header-search-input" type="text" placeholder="Buscador global...">
+
+    <div class="sz-header-title-block">
+      <h1>Panel SafeZone</h1>
+      <p>Administración operativa y seguimiento de casos</p>
     </div>
   </div>
 
   <div class="sz-header-actions">
+    <span class="sz-header-safe-badge">
+      <span class="badge-dot"></span>
+      Operación segura
+    </span>
     
     <!-- SIMULADOR DE ROLES (Control interactivo para el UX) -->
     <div class="sz-header-role-selector">

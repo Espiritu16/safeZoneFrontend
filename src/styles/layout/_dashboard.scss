@@ -7,12 +7,24 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: colors.$color-bg-main;
+  color: var(--ts-ink);
+  font-family: vars.$font-family-admin;
+  font-size: 17px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.55) 0%, transparent 38%),
+    radial-gradient(circle at 100% 100%, rgba(243, 169, 194, 0.28) 0%, transparent 42%),
+    linear-gradient(120deg, var(--ts-mint), var(--ts-sky));
+}
+
+.sz-main-layout-right {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .sz-main-content {
   margin-left: 260px;
-  padding: 32px;
+  padding: 24px 32px 32px;
   min-height: calc(100vh - 70px);
   transition: margin-left 0.3s ease;
   display: flex;
@@ -36,8 +48,13 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
-  border-bottom: 1px solid colors.$color-border-subtle;
-  padding-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  border-radius: vars.$radius-xl;
+  padding: 18px 20px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 10px 24px rgba(28, 50, 89, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
   @include bp.mobile {
     flex-direction: column;
@@ -47,8 +64,8 @@
   &-info {
     .sz-page-title {
       font-size: 1.5rem;
-      font-weight: 700;
-      color: colors.$color-text-primary;
+      font-weight: 800;
+      color: var(--ts-ink);
       display: flex;
       align-items: center;
       gap: 12px;
@@ -79,13 +96,13 @@
   align-items: center;
   gap: 8px;
   font-size: 0.75rem;
-  color: colors.$color-text-muted;
-  margin-bottom: 8px;
+  color: #5e738f;
+  margin-bottom: -8px;
 
   a {
     transition: vars.$transition-fast;
     &:hover {
-      color: colors.$color-brand-light;
+      color: var(--ts-primary-dark);
     }
   }
 
@@ -94,7 +111,7 @@
   }
 
   .active {
-    color: colors.$color-text-secondary;
-    font-weight: 500;
+    color: var(--ts-ink);
+    font-weight: 700;
   }
 }

@@ -5,8 +5,8 @@
 
 .sz-sidebar {
   width: 260px;
-  background-color: colors.$color-brand-dark;
-  color: colors.$color-white;
+  background: var(--ts-sidebar);
+  color: var(--ts-ink);
   height: 100vh;
   position: fixed;
   top: 0;
@@ -14,7 +14,10 @@
   z-index: 100;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid rgba(colors.$color-border-subtle, 0.1);
+  border-right: 1px solid rgba(221, 231, 242, 0.9);
+  box-shadow: 12px 0 34px rgba(28, 50, 89, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   transition: transform 0.3s ease, width 0.3s ease;
 
   @include bp.mobile {
@@ -30,8 +33,12 @@
     .sz-sidebar-logo-text,
     .sz-sidebar-nav-label,
     .sz-sidebar-footer-text,
+    .sz-sidebar-footer-info,
     .sz-sidebar-role-badge {
-      display: none;
+      width: 0;
+      opacity: 0;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .sz-sidebar-logo-container {
@@ -43,6 +50,10 @@
       justify-content: center;
       padding: 12px;
       margin: 4px 8px;
+
+      &::before {
+        display: none;
+      }
     }
   }
 
@@ -52,27 +63,26 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    border-bottom: 1px solid rgba(colors.$color-border-subtle, 0.08);
+    border-bottom: 1px solid rgba(221, 231, 242, 0.72);
   }
 
   &-logo-icon {
-    width: 32px;
-    height: 32px;
-    background-color: colors.$color-brand-light;
-    border-radius: vars.$radius-md;
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, rgba(243, 169, 194, 0.6), rgba(175, 207, 244, 0.7));
+    border-radius: vars.$radius-lg;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: colors.$color-white;
+    color: var(--ts-ink);
     font-weight: 800;
-    box-shadow: 0 0 12px rgba(74, 144, 226, 0.4);
+    box-shadow: 0 10px 24px rgba(79, 131, 212, 0.18);
   }
 
   &-logo-text {
     font-size: 1.125rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    background: linear-gradient(135deg, colors.$color-white, colors.$color-brand-soft);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--ts-ink), var(--ts-primary-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -80,25 +90,26 @@
   // Información del Rol actual en el sidebar
   &-role-info {
     padding: 16px 20px;
-    background-color: rgba(colors.$color-white, 0.03);
-    border-bottom: 1px solid rgba(colors.$color-border-subtle, 0.08);
+    background: rgba(236, 253, 245, 0.4);
+    border-bottom: 1px solid rgba(167, 243, 208, 0.7);
 
     .sz-sidebar-role-title {
       font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: colors.$color-text-muted;
+      color: #5e738f;
     }
 
     .sz-sidebar-role-badge {
       display: inline-block;
       margin-top: 4px;
-      background-color: rgba(colors.$color-brand-light, 0.2);
-      color: colors.$color-brand-soft;
+      background: rgba(255, 255, 255, 0.72);
+      color: #047857;
       padding: 4px 8px;
-      border-radius: vars.$radius-sm;
+      border: 1px solid rgba(167, 243, 208, 0.8);
+      border-radius: vars.$radius-full;
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 800;
     }
   }
 
@@ -116,7 +127,7 @@
         font-size: 0.7rem;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: rgba(colors.$color-white, 0.4);
+        color: #6b7f99;
         padding: 0 20px 8px 20px;
       }
     }
@@ -127,11 +138,12 @@
       gap: 12px;
       padding: 10px 16px;
       margin: 2px 12px;
-      border-radius: vars.$radius-md;
-      color: rgba(colors.$color-white, 0.7);
+      border-radius: vars.$radius-lg;
+      color: #43546b;
       font-size: 0.875rem;
-      font-weight: 500;
+      font-weight: 700;
       transition: vars.$transition-fast;
+      position: relative;
 
       svg {
         width: 18px;
@@ -141,18 +153,29 @@
       }
 
       &:hover {
-        background-color: rgba(colors.$color-white, 0.05);
-        color: colors.$color-white;
+        background: rgba(224, 242, 254, 0.5);
+        color: var(--ts-primary-dark);
+        transform: translateX(2px);
       }
 
       &.is-active {
-        background-color: rgba(colors.$color-brand-light, 0.15);
-        color: colors.$color-brand-light;
-        font-weight: 600;
+        background: linear-gradient(90deg, rgba(224, 242, 254, 0.8), rgba(252, 231, 243, 0.6));
+        color: var(--ts-primary-dark);
+        font-weight: 800;
+        box-shadow: 0 8px 18px rgba(79, 131, 212, 0.12);
+
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 8px auto 8px 0;
+          width: 3px;
+          border-radius: vars.$radius-full;
+          background: var(--ts-primary);
+        }
         
         svg {
           opacity: 1;
-          color: colors.$color-brand-light;
+          color: var(--ts-primary-dark);
         }
       }
     }
@@ -161,7 +184,10 @@
   // Footer del sidebar
   &-footer {
     padding: 16px;
-    border-top: 1px solid rgba(colors.$color-border-subtle, 0.08);
+    margin: 12px;
+    border: 1px solid rgba(167, 243, 208, 0.7);
+    border-radius: vars.$radius-xl;
+    background: rgba(209, 250, 229, 0.4);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -170,13 +196,13 @@
       width: 36px;
       height: 36px;
       border-radius: vars.$radius-full;
-      background-color: colors.$color-brand-medium;
-      color: colors.$color-white;
+      background: linear-gradient(135deg, #6ee7b7, #34d399);
+      color: #064e3b;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      border: 2px solid rgba(colors.$color-white, 0.1);
+      font-weight: 800;
+      border: 2px solid rgba(255, 255, 255, 0.72);
     }
 
     &-info {
@@ -186,25 +212,28 @@
 
     &-name {
       font-size: 0.8125rem;
-      font-weight: 600;
+      font-weight: 800;
+      color: var(--ts-ink);
       @include mixins.truncate(1);
     }
 
     &-email {
       font-size: 0.7rem;
-      color: colors.$color-text-muted;
+      color: #5e738f;
       @include mixins.truncate(1);
     }
 
     &-logout {
-      color: colors.$color-text-muted;
-      padding: 4px;
-      border-radius: vars.$radius-sm;
+      color: colors.$color-white;
+      padding: 8px;
+      border-radius: vars.$radius-md;
+      background: linear-gradient(135deg, #fb7185, #e11d48);
+      box-shadow: 0 8px 18px rgba(201, 67, 103, 0.28);
       transition: vars.$transition-fast;
 
       &:hover {
-        color: colors.$color-danger;
-        background-color: rgba(colors.$color-danger, 0.1);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(201, 67, 103, 0.34);
       }
     }
   }
@@ -221,7 +250,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(15, 23, 42, 0.36);
       backdrop-filter: blur(4px);
       z-index: 99;
     }

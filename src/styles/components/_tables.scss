@@ -119,3 +119,39 @@
     gap: 8px;
   }
 }
+
+.sz-dashboard-layout {
+  .sz-table-container {
+    background: rgba(255, 255, 255, 0.78);
+    border-color: rgba(255, 255, 255, 0.7);
+    border-radius: vars.$radius-xl;
+    box-shadow: var(--ts-shadow);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .sz-table {
+    thead {
+      background: rgba(224, 242, 254, 0.58);
+      border-bottom-color: rgba(221, 231, 242, 0.82);
+    }
+
+    tbody {
+      tr {
+        border-bottom-color: rgba(221, 231, 242, 0.72);
+
+        &:hover {
+          background: rgba(224, 242, 254, 0.42);
+        }
+
+        &.is-selected {
+          background: rgba(224, 242, 254, 0.7);
+        }
+      }
+    }
+  }
+
+  .sz-table-pagination {
+    background: rgba(255, 255, 255, 0.72);
+  }
+}

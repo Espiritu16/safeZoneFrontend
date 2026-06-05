@@ -218,3 +218,52 @@
     color: colors.$color-text-secondary;
   }
 }
+
+.sz-dashboard-layout,
+.sz-drawer {
+  .form-label {
+    color: #43546b;
+    font-weight: 800;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    background: rgba(255, 255, 255, 0.78);
+    border-color: rgba(203, 213, 225, 0.9);
+    border-radius: vars.$radius-xl;
+    box-shadow: 0 8px 18px rgba(28, 50, 89, 0.05);
+
+    &:hover {
+      border-color: rgba(175, 207, 244, 0.95);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #7dd3fc;
+      box-shadow: 0 0 0 4px rgba(186, 230, 253, 0.75);
+    }
+
+    &:disabled {
+      background: rgba(248, 250, 252, 0.74);
+    }
+  }
+
+  .form-upload {
+    background: rgba(255, 255, 255, 0.56);
+    border-color: rgba(175, 207, 244, 0.82);
+    border-radius: vars.$radius-xl;
+
+    &:hover {
+      background: rgba(224, 242, 254, 0.58);
+      border-color: var(--ts-primary);
+    }
+  }
+
+  .form-switch-input:checked,
+  .form-checkbox input:checked,
+  .form-radio input:checked {
+    background-color: var(--ts-primary);
+    border-color: var(--ts-primary);
+  }
+}

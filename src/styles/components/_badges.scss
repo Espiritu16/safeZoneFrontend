@@ -72,3 +72,39 @@
     .badge-dot { background-color: #2563EB; }
   }
 }
+
+.sz-dashboard-layout,
+.sz-drawer {
+  .badge {
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: vars.$radius-full;
+    font-weight: 800;
+    box-shadow: 0 6px 14px rgba(28, 50, 89, 0.07);
+
+    &-dot {
+      width: 7px;
+      height: 7px;
+    }
+
+    &-success {
+      background: rgba(209, 250, 229, 0.78);
+      color: #047857;
+    }
+
+    &-warning {
+      background: rgba(254, 243, 199, 0.82);
+      color: #b45309;
+    }
+
+    &-danger {
+      background: rgba(255, 228, 230, 0.84);
+      color: #be123c;
+    }
+
+    &-info,
+    &-brand {
+      background: rgba(224, 242, 254, 0.82);
+      color: var(--ts-primary-dark);
+    }
+  }
+}
