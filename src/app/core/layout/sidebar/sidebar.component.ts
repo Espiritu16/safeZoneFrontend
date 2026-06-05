@@ -5,20 +5,6 @@ import { AuthService } from '../../../core/services/auth.service';
 import { LayoutService } from '../../../core/services/layout.service';
 import { AuditService } from '../../../core/services/audit.service';
 
-/** Mapa de visibilidad de módulos por rol */
-const ROLE_ACCESS: Record<string, string[]> = {
-  'dashboard':    ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'denuncias':    ['Administrador', 'Recepcionista'],
-  'casos':        ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'victimas':     ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'citas':        ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'evidencias':   ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'reportes':     ['Administrador', 'Psicólogo', 'Defensor Legal'],
-  'auditoria':    ['Administrador'],
-  'usuarios':     ['Administrador'],
-  'configuracion':['Administrador'],
-};
-
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -31,10 +17,9 @@ export class SidebarComponent {
   protected readonly layoutService = inject(LayoutService);
   protected readonly auditService = inject(AuditService);
 
-  /** Verifica si el rol actual tiene acceso al módulo indicado */
-  hasAccess(module: string): boolean {
-    const allowed = ROLE_ACCESS[module];
-    return allowed ? allowed.includes(this.authService.currentRole()) : false;
+  /** Modo demo de diseño: todos los módulos internos se muestran sin filtrar por rol. */
+  hasAccess(_module: string): boolean {
+    return true;
   }
 
   logout() {
