@@ -8,6 +8,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.sz-dashboard-layout {
+  font-family: vars.$font-family-admin;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: 0;
+  }
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   color: colors.$color-text-primary;

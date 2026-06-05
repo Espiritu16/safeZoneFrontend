@@ -1,50 +1,27 @@
 <header class="sz-header" [ngClass]="{'is-collapsed': layoutService.isSidebarCollapsed()}">
-  <div class="flex items-center">
+  <div>
     <button class="sz-header-menu-toggle" (click)="layoutService.toggleMobileSidebar()">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <span class="material-symbols-outlined">menu</span>
     </button>
-    
-    <!-- Búsqueda rápida -->
-    <div class="sz-header-search">
-      <svg class="sz-header-search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-      <input class="sz-header-search-input" type="text" placeholder="Buscador global...">
+
+    <div class="sz-header-title-block">
+      <h5>Sistema de Gestión SafeZone</h5>
+      <small>Centro de atención y trazabilidad</small>
     </div>
   </div>
 
   <div class="sz-header-actions">
-    
-    <!-- SIMULADOR DE ROLES (Control interactivo para el UX) -->
-    <div class="sz-header-role-selector">
-      <label>Vista de Rol:</label>
-      <select (change)="changeRole($event)" [value]="authService.currentRole()">
-        @for (rol of authService.roles; track rol) {
-          <option [value]="rol">{{ rol }}</option>
-        }
-      </select>
-    </div>
+    <span class="sz-header-safe-badge">
+      <span class="material-symbols-outlined">verified_user</span>
+      <small>Operación interna segura</small>
+    </span>
 
-    <!-- Botón de simulación de carga -->
-    <button class="btn btn-secondary btn-sm" (click)="triggerLoading()" title="Probar Skeleton Loader">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H17"/></svg>
-      <span class="hidden-mobile">Simular Carga</span>
-    </button>
-
-    <!-- Notificaciones Dropdown Mock -->
-    <div class="sz-header-notifications">
-      <button class="sz-header-notifications-trigger" (click)="showNotificationsToast()">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-        <span class="badge-dot"></span>
-      </button>
-    </div>
-
-    <!-- Perfil rápido -->
     <div class="sz-header-profile">
-      <div class="sz-header-profile-avatar">AD</div>
+      <span class="sz-header-profile-dot"></span>
       <div class="sz-header-profile-info">
-        <p class="sz-header-profile-name">MIMP Lima</p>
-        <p class="sz-header-profile-role">{{ authService.currentRole() }}</p>
+        <strong>MIMP Lima</strong>
+        <small>{{ authService.currentRole() }}</small>
       </div>
     </div>
-
   </div>
 </header>

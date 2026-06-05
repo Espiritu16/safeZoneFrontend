@@ -5,19 +5,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { LayoutService } from '../../../core/services/layout.service';
 import { AuditService } from '../../../core/services/audit.service';
 
-/** Mapa de visibilidad de módulos por rol */
-const ROLE_ACCESS: Record<string, string[]> = {
-  'dashboard':    ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'denuncias':    ['Administrador', 'Recepcionista'],
-  'casos':        ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'victimas':     ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'citas':        ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'evidencias':   ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
-  'reportes':     ['Administrador', 'Psicólogo', 'Defensor Legal'],
-  'auditoria':    ['Administrador'],
-  'usuarios':     ['Administrador'],
-  'configuracion':['Administrador'],
-};
+interface SidebarItem {
+  readonly label: string;
+  readonly path: string;
+  readonly icon: string;
+  readonly hasArrow?: boolean;
+}
 
 @Component({
   selector: 'app-sidebar',
@@ -31,10 +24,28 @@ export class SidebarComponent {
   protected readonly layoutService = inject(LayoutService);
   protected readonly auditService = inject(AuditService);
 
-  /** Verifica si el rol actual tiene acceso al módulo indicado */
-  hasAccess(module: string): boolean {
-    const allowed = ROLE_ACCESS[module];
-    return allowed ? allowed.includes(this.authService.currentRole()) : false;
+  protected readonly navItems: SidebarItem[] = [
+    { label: 'Panel', path: '/dashboard', icon: 'bi-grid-1x2-fill' },
+    { label: 'Denuncias', path: '/denuncias', icon: 'bi-file-earmark-text', hasArrow: true },
+    { label: 'Casos', path: '/casos', icon: 'bi-folder2-open', hasArrow: true },
+    { label: 'Víctimas', path: '/victimas', icon: 'bi-shield-check', hasArrow: true },
+    { label: 'Citas', path: '/citas', icon: 'bi-calendar3', hasArrow: true },
+    { label: 'Evidencias', path: '/evidencias', icon: 'bi-file-earmark-arrow-up', hasArrow: true },
+    { label: 'Reportes', path: '/reportes', icon: 'bi-bar-chart', hasArrow: true }
+  ];
+
+  protected readonly configItems: SidebarItem[] = [
+    { label: 'Auditoría', path: '/auditoria', icon: 'bi-clock-history', hasArrow: true },
+    { label: 'Usuarios', path: '/usuarios', icon: 'bi-people', hasArrow: true },
+    { label: 'Configuración', path: '/configuracion', icon: 'bi-gear' }
+  ];
+
+  protected readonly userName = 'SafeZone';
+  protected readonly userRole = 'ADMINISTRADOR';
+
+  /** Modo demo de diseño: todos los módulos internos se muestran sin filtrar por rol. */
+  hasAccess(_module: string): boolean {
+    return true;
   }
 
   logout() {

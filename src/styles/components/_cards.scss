@@ -130,3 +130,58 @@
     &-danger::before { background-color: colors.$color-danger; }
   }
 }
+
+.sz-dashboard-layout {
+  .card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: vars.$radius-xl;
+    box-shadow: var(--ts-shadow);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    &-header {
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    &-header-title {
+      color: var(--ts-ink);
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    &-footer {
+      border-top-color: rgba(221, 231, 242, 0.72);
+    }
+
+    &-interactive:hover {
+      transform: translateY(-2px);
+      border-color: rgba(175, 207, 244, 0.9);
+      box-shadow: 0 14px 32px rgba(28, 50, 89, 0.14);
+    }
+
+    &-kpi {
+      &::before {
+        width: 5px;
+        background: linear-gradient(180deg, var(--ts-primary), var(--ts-pink));
+      }
+
+      .kpi-title {
+        color: #5e738f;
+        font-weight: 800;
+      }
+
+      .kpi-value {
+        color: var(--ts-ink);
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+    }
+
+    &-kpi-brand::before { background: linear-gradient(180deg, var(--ts-primary), var(--ts-sky)); }
+    &-kpi-success::before { background: linear-gradient(180deg, #34d399, #059669); }
+    &-kpi-warning::before { background: linear-gradient(180deg, #fbbf24, #f59e0b); }
+    &-kpi-danger::before { background: linear-gradient(180deg, #fb7185, #e11d48); }
+  }
+}
