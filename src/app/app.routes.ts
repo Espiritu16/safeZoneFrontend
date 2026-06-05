@@ -94,10 +94,9 @@ export const routes: Routes = [
       import('./features/auth/login/login.component').then((m) => m.LoginComponent),
   },
 
-  // Rutas protegidas (requieren autenticación)
+  // Layout interno. Dashboard queda libre para vista de demo; los módulos sensibles se protegen por ruta.
   {
     path: '',
-    canActivate: [authGuard],
     loadComponent: () =>
       import('./core/layout/main-layout/main-layout.component').then((m) => m.MainLayoutComponent),
     children: [
@@ -109,63 +108,63 @@ export const routes: Routes = [
       },
       {
         path: 'denuncias',
-        canActivate: [roleGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
           import('./features/interno/denuncias/denuncias.component').then((m) => m.DenunciasComponent),
         data: { roles: ['Administrador', 'Recepcionista', 'Víctima'] },
       },
       {
         path: 'casos',
-        canActivate: [roleGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
           import('./features/interno/casos/casos.component').then((m) => m.CasosComponent),
         data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'victimas',
-        canActivate: [roleGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
           import('./features/interno/victimas/victimas.component').then((m) => m.VictimasComponent),
         data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'citas',
-        canActivate: [roleGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
           import('./features/interno/citas/citas.component').then((m) => m.CitasComponent),
         data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Víctima'] },
       },
       {
         path: 'evidencias',
-        canActivate: [roleGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
           import('./features/interno/evidencias/evidencias.component').then((m) => m.EvidenciasComponent),
         data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'reportes',
-        canActivate: [roleGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
           import('./features/interno/reportes/reportes.component').then((m) => m.ReportesComponent),
         data: { roles: ['Administrador', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'auditoria',
-        canActivate: [roleGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
           import('./features/interno/auditoria/auditoria.component').then((m) => m.AuditoriaComponent),
         data: { roles: ['Administrador', 'Soporte Técnico'] },
       },
       {
         path: 'usuarios',
-        canActivate: [roleGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
           import('./features/interno/usuarios/usuarios.component').then((m) => m.UsuariosComponent),
         data: { roles: ['Administrador', 'Soporte Técnico'] },
       },
       {
         path: 'configuracion',
-        canActivate: [roleGuard],
+        canActivate: [authGuard, roleGuard],
         loadComponent: () =>
           import('./features/interno/configuracion/configuracion.component').then((m) => m.ConfiguracionComponent),
         data: { roles: ['Administrador', 'Soporte Técnico'] },
