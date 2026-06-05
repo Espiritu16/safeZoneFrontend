@@ -7,22 +7,22 @@
       <span class="sz-sidebar-brand-name">SafeZone</span>
     </div>
     <button class="sz-sidebar-close" type="button" aria-label="Cerrar menú" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">close</span>
+      <i class="bi bi-x-lg" aria-hidden="true"></i>
     </button>
   </div>
 
   <div class="sz-sidebar-search" role="search">
-    <span class="material-symbols-outlined" aria-hidden="true">search</span>
+    <i class="bi bi-search" aria-hidden="true"></i>
     <span>Buscar</span>
   </div>
 
   <nav class="sz-sidebar-nav">
     @for (item of navItems; track item.label) {
       <a class="sz-sidebar-nav-item" [routerLink]="item.path" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-        <span class="material-symbols-outlined sz-sidebar-nav-icon" aria-hidden="true">{{ item.icon }}</span>
+        <i class="bi sz-sidebar-nav-icon" [ngClass]="item.icon" aria-hidden="true"></i>
         <span class="sz-sidebar-nav-label">{{ item.label }}</span>
         @if (item.hasArrow) {
-          <span class="material-symbols-outlined sz-sidebar-nav-arrow" aria-hidden="true">chevron_right</span>
+          <i class="bi bi-chevron-right sz-sidebar-nav-arrow" aria-hidden="true"></i>
         }
       </a>
     }
@@ -31,10 +31,10 @@
 
     @for (item of configItems; track item.label) {
       <a class="sz-sidebar-nav-item" [routerLink]="item.path" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-        <span class="material-symbols-outlined sz-sidebar-nav-icon" aria-hidden="true">{{ item.icon }}</span>
+        <i class="bi sz-sidebar-nav-icon" [ngClass]="item.icon" aria-hidden="true"></i>
         <span class="sz-sidebar-nav-label">{{ item.label }}</span>
         @if (item.hasArrow) {
-          <span class="material-symbols-outlined sz-sidebar-nav-arrow" aria-hidden="true">chevron_right</span>
+          <i class="bi bi-chevron-right sz-sidebar-nav-arrow" aria-hidden="true"></i>
         }
       </a>
     }
@@ -50,7 +50,7 @@
         <small>{{ userRole }}</small>
       </div>
       <button class="sz-sidebar-footer-logout" (click)="logout()" title="Cerrar sesión" type="button" aria-label="Cerrar sesión">
-        <span class="material-symbols-outlined">logout</span>
+        <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
       </button>
     </div>
   </div>
