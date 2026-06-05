@@ -44,7 +44,7 @@
   display: none;
   color: #475569;
 
-  @include bp.mobile {
+  @media (max-width: 1023px) {
     display: inline-flex;
   }
 }

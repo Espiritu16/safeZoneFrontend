@@ -1,52 +1,57 @@
 <aside class="sz-sidebar" [ngClass]="{'is-open': layoutService.isMobileSidebarOpen()}">
   <div class="sz-sidebar-brand">
-    <div class="sz-sidebar-logo-icon">
-      <span class="material-symbols-outlined">shield_person</span>
+    <div class="sz-sidebar-brandmark">
+      <div class="sz-sidebar-logo-icon">
+        <span>S</span>
+      </div>
+      <span class="sz-sidebar-brand-name">SafeZone</span>
     </div>
-    <h5>SAFEZONE</h5>
-    <small>Gestión interna</small>
+    <button class="sz-sidebar-close" type="button" aria-label="Cerrar menú" (click)="layoutService.closeMobileSidebar()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+
+  <div class="sz-sidebar-search" role="search">
+    <span class="material-symbols-outlined" aria-hidden="true">search</span>
+    <span>Buscar</span>
   </div>
 
   <nav class="sz-sidebar-nav">
-    <a class="sz-sidebar-nav-item" routerLink="/dashboard" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">grid_view</span>Panel
-    </a>
-    <a class="sz-sidebar-nav-item" routerLink="/denuncias" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">edit_document</span>Denuncias
-    </a>
-    <a class="sz-sidebar-nav-item" routerLink="/casos" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">groups</span>Casos
-    </a>
-    <a class="sz-sidebar-nav-item" routerLink="/victimas" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">health_and_safety</span>Víctimas
-    </a>
-    <a class="sz-sidebar-nav-item" routerLink="/citas" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">calendar_month</span>Citas
-    </a>
-    <a class="sz-sidebar-nav-item" routerLink="/evidencias" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">upload_file</span>Evidencias
-    </a>
-    <a class="sz-sidebar-nav-item" routerLink="/reportes" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">monitoring</span>Reportes
-    </a>
-    <a class="sz-sidebar-nav-item" routerLink="/auditoria" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">history</span>Auditoría
-    </a>
-    <a class="sz-sidebar-nav-item" routerLink="/usuarios" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">manage_accounts</span>Usuarios
-    </a>
-    <a class="sz-sidebar-nav-item" routerLink="/configuracion" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-      <span class="material-symbols-outlined">settings</span>Configuración
-    </a>
+    @for (item of navItems; track item.label) {
+      <a class="sz-sidebar-nav-item" [routerLink]="item.path" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
+        <span class="material-symbols-outlined sz-sidebar-nav-icon" aria-hidden="true">{{ item.icon }}</span>
+        <span class="sz-sidebar-nav-label">{{ item.label }}</span>
+        @if (item.hasArrow) {
+          <span class="material-symbols-outlined sz-sidebar-nav-arrow" aria-hidden="true">chevron_right</span>
+        }
+      </a>
+    }
+
+    <p class="sz-sidebar-section-title">Configuración</p>
+
+    @for (item of configItems; track item.label) {
+      <a class="sz-sidebar-nav-item" [routerLink]="item.path" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
+        <span class="material-symbols-outlined sz-sidebar-nav-icon" aria-hidden="true">{{ item.icon }}</span>
+        <span class="sz-sidebar-nav-label">{{ item.label }}</span>
+        @if (item.hasArrow) {
+          <span class="material-symbols-outlined sz-sidebar-nav-arrow" aria-hidden="true">chevron_right</span>
+        }
+      </a>
+    }
   </nav>
 
   <div class="sz-sidebar-footer">
-    <div class="sz-sidebar-session">
-      <div>Usuario Demo</div>
-      <small>{{ authService.currentRole() }}</small>
+    <div class="sz-sidebar-user">
+      <div class="sz-sidebar-user-avatar">
+        <span>{{ userName[0] }}</span>
+      </div>
+      <div class="sz-sidebar-user-info">
+        <p>{{ userName }}</p>
+        <small>{{ userRole }}</small>
+      </div>
+      <button class="sz-sidebar-footer-logout" (click)="logout()" title="Cerrar sesión" type="button" aria-label="Cerrar sesión">
+        <span class="material-symbols-outlined">logout</span>
+      </button>
     </div>
-    <button class="sz-sidebar-footer-logout" (click)="logout()" title="Cerrar sesión">
-      <span class="material-symbols-outlined">logout</span>Salir
-    </button>
   </div>
 </aside>
