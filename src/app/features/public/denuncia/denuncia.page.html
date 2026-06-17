@@ -227,21 +227,21 @@
             <div class="border border-outline-variant rounded-xl divide-y divide-outline-variant">
               <div class="p-lg grid grid-cols-1 md:grid-cols-3 gap-md">
                 <span class="font-label-md text-on-surface-variant uppercase tracking-wider">Situación</span>
-                <span class="md:col-span-2 font-body-md font-semibold">Violencia Física / Otros</span>
+                <span class="md:col-span-2 font-body-md font-semibold">{{ reviewSituation }}</span>
               </div>
               <div class="p-lg grid grid-cols-1 md:grid-cols-3 gap-md">
                 <span class="font-label-md text-on-surface-variant uppercase tracking-wider">Fecha y Lugar</span>
-                <span class="md:col-span-2 font-body-md">14 de Mayo, 2024 - Lima</span>
+                <span class="md:col-span-2 font-body-md">{{ reviewDateAndLocation }}</span>
               </div>
               <div class="p-lg grid grid-cols-1 md:grid-cols-3 gap-md">
                 <span class="font-label-md text-on-surface-variant uppercase tracking-wider">Hechos</span>
-                <p class="md:col-span-2 font-body-sm text-on-surface-variant italic line-clamp-3">"Los hechos ocurrieron en el domicilio particular. Se presentó una situación de agresión verbal que escaló..."</p>
+                <p class="md:col-span-2 font-body-sm text-on-surface-variant italic line-clamp-3">"{{ formData.description }}"</p>
               </div>
               <div class="p-lg grid grid-cols-1 md:grid-cols-3 gap-md">
                 <span class="font-label-md text-on-surface-variant uppercase tracking-wider">Contacto</span>
                 <div class="md:col-span-2 space-y-1">
-                  <p class="font-body-md">María Pérez (Alias)</p>
-                  <p class="text-body-sm text-primary">+51 999 999 999 (WhatsApp)</p>
+                  <p class="font-body-md">{{ reviewContact }}</p>
+                  <p class="text-body-sm text-primary">{{ reviewContactValue }}</p>
                 </div>
               </div>
             </div>
@@ -251,9 +251,9 @@
             </div>
             <div class="flex justify-between pt-md">
               <button class="text-on-surface-variant font-bold px-lg py-md hover:bg-surface-container-low rounded-lg transition-all" type="button" (click)="goToStep(3)">Regresar</button>
-              <button class="bg-primary text-white px-xl py-md rounded-lg font-bold hover:opacity-90 active:scale-95 transition-all flex items-center gap-sm" type="button" (click)="submitForm()">
+              <button class="bg-primary text-white px-xl py-md rounded-lg font-bold hover:opacity-90 active:scale-95 transition-all flex items-center gap-sm disabled:opacity-60" type="button" [disabled]="isSubmitting" (click)="submitForm()">
                 <span class="material-symbols-outlined">send</span>
-                Enviar predenuncia
+                {{ isSubmitting ? 'Enviando...' : 'Enviar predenuncia' }}
               </button>
             </div>
           </section>
@@ -270,7 +270,7 @@
             </div>
             <div class="bg-surface-container-low rounded-xl p-lg inline-block">
               <p class="font-label-md text-on-surface-variant mb-xs">Código de seguimiento único</p>
-              <p class="font-headline-md text-headline-md font-mono tracking-widest text-primary">SZ-8821-44XP</p>
+              <p class="font-headline-md text-headline-md font-mono tracking-widest text-primary">{{ trackingCode }}</p>
               <p class="text-body-sm text-on-surface-variant mt-sm underline cursor-pointer">Descargar comprobante en PDF</p>
             </div>
             <div class="max-w-2xl mx-auto">

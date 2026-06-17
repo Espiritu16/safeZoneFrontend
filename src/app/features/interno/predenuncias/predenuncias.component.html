@@ -1,0 +1,204 @@
+<div class="animate-slide-up">
+  <div class="sz-page-header">
+    <div class="sz-page-header-info">
+      <h1 class="sz-page-title">Bandeja de Predenuncias</h1>
+      <p class="sz-page-description">Revisión inicial, contacto seguro y asignación operativa antes de formalizar una denuncia.</p>
+    </div>
+    <div class="sz-page-header-actions">
+      <button class="btn btn-outline btn-sm" type="button" (click)="load()" [disabled]="loading()">Actualizar</button>
+    </div>
+  </div>
+
+  <div class="sz-table-filters mt-6">
+    <div class="sz-table-filters-left">
+      <div class="form-group m-0">
+        <label class="sr-only" for="estadoPredenuncia">Estado</label>
+        <select id="estadoPredenuncia" class="form-select" [(ngModel)]="estadoFilter" (ngModelChange)="load()">
+          <option value="">Todos los estados</option>
+          <option value="PENDIENTE">Pendientes</option>
+          <option value="EN_CONTACTO">En contacto</option>
+          <option value="FORMALIZADA">Formalizadas</option>
+          <option value="DESCARTADA">Descartadas</option>
+        </select>
+      </div>
+    </div>
+    <div class="sz-table-filters-right">
+      <span class="text-xs text-muted font-medium">Resultados: {{ predenuncias().length }}</span>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="card mt-4">
+      <div class="card-body text-sm text-muted">Cargando predenuncias...</div>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="card mt-4 border-danger">
+      <div class="card-body text-sm text-danger">{{ errorMessage() }}</div>
+    </div>
+  } @else if (!predenuncias().length) {
+    <div class="card mt-4">
+      <div class="card-body text-sm text-muted">No hay predenuncias para el filtro seleccionado.</div>
+    </div>
+  } @else {
+    <div class="sz-table-container mt-2">
+      <table class="sz-table">
+        <thead>
+          <tr>
+            <th>Contacto</th>
+            <th>Tipo</th>
+            <th>Fecha y distrito</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th class="col-actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (predenuncia of predenuncias(); track predenuncia.id) {
+            <tr>
+              <td>
+                <div class="font-semibold">{{ predenuncia.nombresContacto || 'Sin nombre' }}</div>
+                <div class="text-xs text-muted">
+                  {{ predenuncia.telefonoContacto || predenuncia.correoContacto || 'Sin dato de contacto' }}
+                </div>
+              </td>
+              <td>{{ predenuncia.tipoViolencia || 'No especificado' }}</td>
+              <td>
+                <div>{{ predenuncia.fechaIncidente | date: 'dd/MM/yyyy' }}</div>
+                <div class="text-xs text-muted">{{ predenuncia.distrito || 'Sin distrito' }}</div>
+              </td>
+              <td class="predenuncia-description">{{ predenuncia.descripcionHecho }}</td>
+              <td>
+                <span class="badge" [ngClass]="badgeClass(predenuncia.estado)">
+                  <span class="badge-dot"></span>{{ predenuncia.estado }}
+                </span>
+              </td>
+              <td class="col-actions">
+                @if (predenuncia.estado === 'PENDIENTE') {
+                  <button
+                    class="btn btn-primary btn-sm"
+                    type="button"
+                    (click)="markInContact(predenuncia)"
+                    [disabled]="actionId() === predenuncia.id"
+                  >
+                    {{ actionId() === predenuncia.id ? 'Asignando...' : 'Tomar contacto' }}
+                  </button>
+                } @else if (predenuncia.estado === 'EN_CONTACTO') {
+                  <button
+                    class="btn btn-primary btn-sm"
+                    type="button"
+                    (click)="openFormalize(predenuncia)"
+                    [disabled]="formalizeActionId() === predenuncia.id"
+                  >
+                    Formalizar
+                  </button>
+                } @else if (predenuncia.estado === 'FORMALIZADA') {
+                  <span class="text-xs text-success">Formalizada</span>
+                } @else {
+                  <span class="text-xs text-muted">Sin acción</span>
+                }
+              </td>
+            </tr>
+            @if (formalizeId() === predenuncia.id && predenuncia.estado === 'EN_CONTACTO') {
+              <tr class="predenuncia-form-row">
+                <td colspan="6">
+                  <form class="predenuncia-formalize-form" (ngSubmit)="formalize(predenuncia)">
+                    <label class="predenuncia-alias-toggle">
+                      <input
+                        class="predenuncia-alias-checkbox"
+                        type="checkbox"
+                        name="formalizarAnonima"
+                        [(ngModel)]="formalizeForms[predenuncia.id].formalizarAnonima"
+                      />
+                      <span>
+                        <strong>Formalizar bajo alias anónimo</strong>
+                        <small>No solicita DNI; el sistema genera una víctima protegida.</small>
+                      </span>
+                    </label>
+                    @if (!formalizeForms[predenuncia.id].formalizarAnonima) {
+                      <div class="form-group">
+                        <label class="form-label" [for]="'dni-' + predenuncia.id">DNI víctima</label>
+                        <input
+                          [id]="'dni-' + predenuncia.id"
+                          class="form-input"
+                          name="dni"
+                          inputmode="numeric"
+                          appNumbersOnly
+                          appTrimOnBlur
+                          maxlength="8"
+                          [(ngModel)]="formalizeForms[predenuncia.id].dni"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label" [for]="'nombre-' + predenuncia.id">Nombre completo</label>
+                        <input
+                          [id]="'nombre-' + predenuncia.id"
+                          class="form-input"
+                          name="nombre"
+                          appLettersOnly
+                          appTrimOnBlur
+                          [(ngModel)]="formalizeForms[predenuncia.id].nombre"
+                        />
+                      </div>
+                    } @else {
+                      <div class="predenuncia-alias-note">
+                        Se creará una víctima protegida con alias institucional.
+                      </div>
+                      <div class="predenuncia-alias-note">
+                        La denuncia se marcará como anónima.
+                      </div>
+                    }
+                    <div class="form-group">
+                      <label class="form-label" [for]="'telefono-' + predenuncia.id">Teléfono</label>
+                      <input
+                        [id]="'telefono-' + predenuncia.id"
+                        class="form-input"
+                        name="telefono"
+                        inputmode="numeric"
+                        appNumbersOnly
+                        appTrimOnBlur
+                        maxlength="9"
+                        [(ngModel)]="formalizeForms[predenuncia.id].telefono"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" [for]="'distrito-' + predenuncia.id">Distrito</label>
+                      <input
+                        [id]="'distrito-' + predenuncia.id"
+                        class="form-input"
+                        name="distrito"
+                        appTrimOnBlur
+                        [(ngModel)]="formalizeForms[predenuncia.id].distrito"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" [for]="'riesgo-' + predenuncia.id">Riesgo</label>
+                      <select
+                        [id]="'riesgo-' + predenuncia.id"
+                        class="form-select"
+                        name="nivelRiesgo"
+                        [(ngModel)]="formalizeForms[predenuncia.id].nivelRiesgo"
+                      >
+                        <option value="BAJO">Bajo</option>
+                        <option value="MEDIO">Medio</option>
+                        <option value="ALTO">Alto</option>
+                        <option value="CRITICO">Crítico</option>
+                      </select>
+                    </div>
+                    <div class="predenuncia-form-actions">
+                      <button class="btn btn-outline btn-sm" type="button" (click)="openFormalize(predenuncia)">
+                        Cancelar
+                      </button>
+                      <button class="btn btn-primary btn-sm" type="submit" [disabled]="formalizeActionId() === predenuncia.id">
+                        {{ formalizeActionId() === predenuncia.id ? 'Formalizando...' : 'Crear denuncia y caso' }}
+                      </button>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
