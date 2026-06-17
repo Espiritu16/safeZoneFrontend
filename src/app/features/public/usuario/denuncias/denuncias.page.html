@@ -1,2 +1,25 @@
 <h2 class="font-headline-sm text-headline-sm text-on-surface mb-sm">Mis denuncias</h2>
-<p class="font-body-md text-body-md text-on-surface-variant">Listado de denuncias registradas por el usuario o asociadas a su atención.</p>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg">Listado de denuncias registradas por el usuario o asociadas a su atención.</p>
+
+<section class="victim-actions" aria-label="Acciones de denuncias">
+  <a class="victim-action-card primary" routerLink="/denuncia" target="_blank" rel="noopener noreferrer">
+    <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+    <span>
+      <strong>Nueva denuncia</strong>
+      <small>Registra una nueva predenuncia de forma segura.</small>
+    </span>
+  </a>
+
+  <a class="victim-action-card" routerLink="/mis-casos" target="_blank" rel="noopener noreferrer">
+    <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
+    <span>
+      <strong>Consultar caso</strong>
+      <small>Revisa el avance usando tu código de seguimiento.</small>
+    </span>
+  </a>
+</section>
+
+<div class="empty-state">
+  <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+  <p>Aún no hay denuncias vinculadas a esta cuenta.</p>
+</div>

@@ -1,1 +1,71 @@
-/* Placeholder para listado de denuncias del usuario/victima. */
+.victim-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.victim-action-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 104px;
+  padding: 1rem;
+  border: 1px solid var(--color-outline-variant, #d7dde7);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--color-on-surface, #102033);
+  text-decoration: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.victim-action-card:hover {
+  border-color: var(--color-primary, #0f766e);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+.victim-action-card.primary {
+  background: var(--color-primary, #0f766e);
+  border-color: var(--color-primary, #0f766e);
+  color: #ffffff;
+}
+
+.victim-action-card .material-symbols-outlined {
+  flex: 0 0 auto;
+  font-size: 2rem;
+}
+
+.victim-action-card strong,
+.victim-action-card small {
+  display: block;
+}
+
+.victim-action-card strong {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.victim-action-card small {
+  color: currentColor;
+  opacity: 0.82;
+  line-height: 1.35;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 120px;
+  border: 1px dashed var(--color-outline-variant, #d7dde7);
+  border-radius: 12px;
+  color: var(--color-on-surface-variant, #607086);
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .victim-actions {
+    grid-template-columns: 1fr;
+  }
+}
