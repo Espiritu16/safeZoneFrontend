@@ -1,1 +1,19 @@
-// Placeholder para centralizar endpoints del backend SafeZone.
+export const API_ENDPOINTS = {
+  auth: {
+    login: '/auth/iniciar-sesion',
+    register: '/auth/registrar',
+    me: '/auth/me',
+    refresh: '/auth/renovar-token',
+    logout: '/auth/cerrar-sesion',
+    recoverPassword: '/auth/recuperar-contrasena',
+    verifyCode: '/auth/verificar-codigo',
+    resetPassword: '/auth/restablecer-contrasena',
+  },
+  predenuncias: '/predenuncias',
+  casos: '/casos',
+  denuncias: '/denuncias',
+  seguimientos: '/seguimientos',
+  usuarios: '/usuarios',
+  victimas: '/victimas',
+  panelPrincipal: '/panel-principal/me',
+} as const;
