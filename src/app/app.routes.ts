@@ -47,8 +47,10 @@ export const routes: Routes = [
   },
   {
     path: 'usuario',
+    canActivate: [authGuard, roleGuard],
     loadComponent: () =>
       import('./features/public/usuario/usuario-layout/usuario-layout.page').then((m) => m.UsuarioLayoutPage),
+    data: { roles: ['Víctima'] },
     children: [
       {
         path: '',
@@ -103,16 +105,24 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
+        canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/interno/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-        data: { roles: [] }, // Accesible para todos los roles
+        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Soporte Técnico'] },
+      },
+      {
+        path: 'predenuncias',
+        canActivate: [roleGuard],
+        loadComponent: () =>
+          import('./features/interno/predenuncias/predenuncias.component').then((m) => m.PredenunciasComponent),
+        data: { roles: ['Administrador', 'Recepcionista'] },
       },
       {
         path: 'denuncias',
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/interno/denuncias/denuncias.component').then((m) => m.DenunciasComponent),
-        data: { roles: ['Administrador', 'Recepcionista', 'Víctima'] },
+        data: { roles: ['Administrador', 'Recepcionista'] },
       },
       {
         path: 'casos',
@@ -133,7 +143,7 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/interno/citas/citas.component').then((m) => m.CitasComponent),
-        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Víctima'] },
+        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'evidencias',

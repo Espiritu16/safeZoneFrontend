@@ -20,7 +20,10 @@ export class TopbarComponent {
 
   changeRole(event: Event) {
     const role = (event.target as HTMLSelectElement).value;
-    this.authService.changeRole(role);
+    const knownRole = this.authService.roles.find((item) => item === role);
+    if (knownRole) {
+      this.authService.changeRole(knownRole);
+    }
   }
 
   triggerLoading() {
@@ -29,5 +32,15 @@ export class TopbarComponent {
 
   showNotificationsToast() {
     this.toastService.show('No hay notificaciones críticas pendientes.', 'info');
+  }
+
+  userInitials(): string {
+    const name = this.authService.nombre() || this.authService.correo() || 'SZ';
+    return name
+      .split(/\s|@/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join('');
   }
 }

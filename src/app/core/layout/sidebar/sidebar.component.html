@@ -34,6 +34,13 @@
         </a>
       }
 
+      @if (hasAccess('predenuncias')) {
+        <a class="sz-sidebar-nav-item" routerLink="/predenuncias" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2m-8 0h8m-8 0a2 2 0 00-2 2v9a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2m-7 4h6m-6 4h4"/></svg>
+          <span class="sz-sidebar-nav-label">Predenuncias</span>
+        </a>
+      }
+
       @if (hasAccess('casos')) {
         <a class="sz-sidebar-nav-item" routerLink="/casos" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -101,10 +108,10 @@
 
   <!-- Footer Perfil de Usuario -->
   <div class="sz-sidebar-footer">
-    <div class="sz-sidebar-footer-avatar">U</div>
+    <div class="sz-sidebar-footer-avatar">{{ userInitials() }}</div>
     <div class="sz-sidebar-footer-info">
-      <p class="sz-sidebar-footer-name">Usuario Demo</p>
-      <p class="sz-sidebar-footer-email">lima.demo&#64;gob.pe</p>
+      <p class="sz-sidebar-footer-name">{{ authService.nombre() || 'Usuario SafeZone' }}</p>
+      <p class="sz-sidebar-footer-email">{{ authService.correo() || 'sin-correo@safezone.local' }}</p>
     </div>
     <button class="sz-sidebar-footer-logout" (click)="logout()" title="Cerrar sesión">
       <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>

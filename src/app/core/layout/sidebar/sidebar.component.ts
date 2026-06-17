@@ -8,6 +8,7 @@ import { AuditService } from '../../../core/services/audit.service';
 /** Mapa de visibilidad de módulos por rol */
 const ROLE_ACCESS: Record<string, string[]> = {
   'dashboard':    ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
+  'predenuncias': ['Administrador', 'Recepcionista'],
   'denuncias':    ['Administrador', 'Recepcionista'],
   'casos':        ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
   'victimas':     ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'],
@@ -40,5 +41,15 @@ export class SidebarComponent {
   logout() {
     this.auditService.logAction('Cierre de Sesión', 'El usuario cerró su sesión activamente.', 'Auth');
     this.authService.logout();
+  }
+
+  userInitials(): string {
+    const name = this.authService.nombre() || this.authService.correo() || 'SZ';
+    return name
+      .split(/\s|@/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join('');
   }
 }

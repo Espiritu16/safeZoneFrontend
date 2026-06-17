@@ -39,9 +39,9 @@
 
     <!-- Perfil rápido -->
     <div class="sz-header-profile">
-      <div class="sz-header-profile-avatar">AD</div>
+      <div class="sz-header-profile-avatar">{{ userInitials() }}</div>
       <div class="sz-header-profile-info">
-        <p class="sz-header-profile-name">MIMP Lima</p>
+        <p class="sz-header-profile-name">{{ authService.nombre() || 'Usuario SafeZone' }}</p>
         <p class="sz-header-profile-role">{{ authService.currentRole() }}</p>
       </div>
     </div>
