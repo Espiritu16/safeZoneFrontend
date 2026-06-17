@@ -185,7 +185,9 @@
       @if (activeStep() < 4) {
         <button class="btn btn-primary" (click)="nextStep()">Siguiente</button>
       } @else {
-        <button class="btn btn-success" (click)="submitDenuncia()">Registrar Caso Seguro</button>
+        <button class="btn btn-success" [disabled]="isSubmitting()" (click)="submitDenuncia()">
+          {{ isSubmitting() ? 'Registrando...' : 'Registrar Caso Seguro' }}
+        </button>
       }
     </div>
   </div>
