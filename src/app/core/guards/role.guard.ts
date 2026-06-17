@@ -6,7 +6,7 @@ import { ToastService } from '../services/toast.service';
 /**
  * Guard de autorización por rol.
  * Lee la metadata `data.roles` de cada ruta y compara contra el rol activo del usuario.
- * Si el rol no está en la lista, redirige al dashboard con un mensaje de advertencia.
+ * Si el rol no está en la lista, redirige a la portada permitida para su rol.
  */
 export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const authService = inject(AuthService);
@@ -30,6 +30,6 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     `Acceso denegado. El rol "${currentRole}" no tiene permisos para acceder a este módulo.`,
     'error'
   );
-  void router.navigateByUrl('/dashboard');
+  void router.navigateByUrl(authService.homeUrl());
   return false;
 };

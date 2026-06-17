@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuditService } from '../../../core/services/audit.service';
@@ -28,13 +29,17 @@ export class LoginComponent {
     }
 
     this.isLoggingIn = true;
-    
-    // Simular latencia de red para UX más realista
-    setTimeout(() => {
-      this.isLoggingIn = false;
-      this.authService.login(this.username);
-      this.auditService.logAction('Inicio de Sesión', `Autenticación exitosa con usuario: ${this.username}`, 'Auth');
-    }, 800);
+
+    this.authService.login(this.username, this.password).pipe(
+      finalize(() => {
+        this.isLoggingIn = false;
+      }),
+    ).subscribe({
+      next: () => {
+        this.auditService.logAction('Inicio de Sesión', `Autenticación exitosa con usuario: ${this.username}`, 'Auth');
+      },
+      error: () => undefined,
+    });
   }
 
   showToast(message: string, type: 'success' | 'error' | 'warning' | 'info') {
