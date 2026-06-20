@@ -199,7 +199,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
     .header-section h1 {
       font-size: var(--text-5xl);
       margin: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -207,7 +207,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       font-size: var(--text-lg);
       margin: var(--space-4) 0 0 0;
       opacity: 0.9;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .container {
@@ -239,7 +239,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       margin-top: 0;
       color: var(--color-primary);
       font-size: var(--text-lg);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -253,7 +253,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       margin: var(--space-4) 0;
       color: var(--color-muted-foreground);
       line-height: var(--leading-normal);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .denuncia-form {
@@ -280,13 +280,13 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       color: var(--color-primary);
       margin-top: 0;
       font-size: var(--text-2xl);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
     .form-step p {
       color: var(--color-muted-foreground);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .form-group {
@@ -299,7 +299,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       color: var(--color-foreground);
       font-weight: var(--font-semibold);
       cursor: pointer;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .form-group label input[type="checkbox"] {
@@ -329,7 +329,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       padding: var(--space-3);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-md);
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: var(--text-base);
       transition: all var(--duration-base) var(--ease-in-out);
     }
@@ -354,7 +354,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       border-radius: var(--radius-md);
       color: var(--color-warning-dark);
       margin-bottom: var(--space-6);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .form-actions {
@@ -371,7 +371,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       cursor: pointer;
       transition: all var(--duration-base) var(--ease-in-out);
       flex: 1;
-      font-family: var(--font-sans);
+      font-family: inherit;
       min-height: 44px;
       display: flex;
       align-items: center;
@@ -451,14 +451,14 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
     .success-panel h2 {
       color: var(--color-foreground);
       margin-top: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-size: var(--text-3xl);
       font-weight: var(--font-bold);
     }
 
     .success-panel p {
       color: var(--color-muted-foreground);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .code-box {
@@ -472,7 +472,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
     .code-box p {
       color: var(--color-muted-foreground);
       margin: 0;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .code-box h3 {
@@ -487,7 +487,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
     .important {
       color: var(--color-destructive);
       font-weight: var(--font-bold);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     @media (max-width: 768px) {

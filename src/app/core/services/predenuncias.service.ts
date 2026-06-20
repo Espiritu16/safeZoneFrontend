@@ -23,6 +23,10 @@ export class PredenunciasService {
     return this.api.get<PreDenunciaResponse[]>(API_ENDPOINTS.predenuncias, { estado });
   }
 
+  listMine(): Observable<PreDenunciaResponse[]> {
+    return this.api.get<PreDenunciaResponse[]>(`${API_ENDPOINTS.predenuncias}/mis-registros`);
+  }
+
   markInContact(id: string): Observable<PreDenunciaResponse> {
     return this.api.patch<PreDenunciaResponse>(`${API_ENDPOINTS.predenuncias}/${id}/contactar`);
   }
