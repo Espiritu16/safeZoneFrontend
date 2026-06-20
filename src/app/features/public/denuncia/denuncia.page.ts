@@ -1,25 +1,31 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 import { PublicFooterComponent } from '../components/public-footer/public-footer.component';
 import { PublicHeaderComponent } from '../components/public-header/public-header.component';
 import { LettersOnlyDirective } from '../../../shared/directives/letters-only.directive';
-import { NumbersOnlyDirective } from '../../../shared/directives/numbers-only.directive';
 import { TrimOnBlurDirective } from '../../../shared/directives/trim-on-blur.directive';
 import { normalizeText, sanitizeLettersOnly, sanitizeNumbersOnly } from '../../../shared/utils/input-sanitizers.util';
 import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../../../shared/utils/validation-rules';
+import { PredenunciasService } from '../../../core/services/predenuncias.service';
 
 @Component({
   selector: 'app-denuncia-page',
   standalone: true,
-  imports: [FormsModule, RouterLink, PublicHeaderComponent, PublicFooterComponent, LettersOnlyDirective, NumbersOnlyDirective, TrimOnBlurDirective],
+  imports: [FormsModule, RouterLink, PublicHeaderComponent, PublicFooterComponent, LettersOnlyDirective, TrimOnBlurDirective],
   templateUrl: './denuncia.page.html',
   styleUrl: './denuncia.page.css'
 })
 export class DenunciaPage {
+  private readonly predenunciasService = inject(PredenunciasService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   currentStep = 1;
   submitted = false;
   validationMessage = '';
+  isSubmitting = false;
+  trackingCode = '';
 
   formData = {
     situationType: '',
@@ -47,14 +53,42 @@ export class DenunciaPage {
     if (![1, 2, 3, 4].every(step => this.validateStep(step))) {
       return;
     }
-    this.submitted = true;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.isSubmitting = true;
+    this.predenunciasService.create({
+      nombresContacto: this.formData.contactName,
+      apellidosContacto: 'No especificado',
+      telefonoContacto: this.formData.channel === 'Correo Electrónico Seguro' ? undefined : this.formData.contactValue,
+      correoContacto: this.formData.channel === 'Correo Electrónico Seguro' ? this.formData.contactValue : undefined,
+      descripcionHecho: this.formData.description,
+      tipoViolencia: this.formData.situationType,
+      fechaIncidente: this.toOffsetDateTime(this.formData.incidentDate),
+      distrito: this.formData.location,
+      direccionReferencia: this.formData.preferredTime,
+      anonima: false,
+    }).pipe(
+      finalize(() => {
+        this.isSubmitting = false;
+        this.cdr.detectChanges();
+      }),
+    ).subscribe({
+      next: (response) => {
+        this.trackingCode = `PD-${response.id.slice(0, 8).toUpperCase()}`;
+        this.submitted = true;
+        this.cdr.detectChanges();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      },
+      error: () => {
+        this.validationMessage = 'No se pudo enviar la predenuncia. Revise los datos o intente nuevamente.';
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   startOver() {
     this.currentStep = 1;
     this.submitted = false;
     this.validationMessage = '';
+    this.trackingCode = '';
     this.formData = {
       situationType: '',
       incidentDate: '',
@@ -68,6 +102,31 @@ export class DenunciaPage {
       acceptedTerms: false,
     };
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  get reviewSituation(): string {
+    return this.formData.situationType || 'Sin tipo seleccionado';
+  }
+
+  get reviewDateAndLocation(): string {
+    const date = this.formData.incidentDate
+      ? new Intl.DateTimeFormat('es-PE', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+          timeZone: 'America/Lima',
+        }).format(new Date(`${this.formData.incidentDate}T00:00:00-05:00`))
+      : 'Fecha no registrada';
+
+    return `${date} - ${this.formData.location || 'Ubicación no registrada'}`;
+  }
+
+  get reviewContact(): string {
+    return this.formData.contactName || 'Contacto no registrado';
+  }
+
+  get reviewContactValue(): string {
+    return `${this.formData.contactValue || 'Dato no registrado'} (${this.formData.channel})`;
   }
 
   private normalizeForm() {
@@ -127,5 +186,9 @@ export class DenunciaPage {
     }
 
     return !this.validationMessage;
+  }
+
+  private toOffsetDateTime(date: string): string | undefined {
+    return date ? new Date(`${date}T00:00:00`).toISOString() : undefined;
   }
 }

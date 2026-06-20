@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════
    SafeZone Design System - Professional & Empathetic
-   Built with: EB Garamond + Lato
+   Built with: Inter
    Authority Navy + Trust Gold + Compassionate Green
    ═══════════════════════════════════════════════════════════════════════ */
 
@@ -59,9 +59,9 @@
   /* ─── TYPOGRAPHY ────────────────────────────────────────────────────── */
 
   /* Font Families */
-  --font-serif: 'EB Garamond', serif;           /* Elegance, authority */
-  --font-sans: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'Courier New', monospace;
+  --font-serif: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 
   /* Font Sizes - Modular scale (1.125) */
   --text-xs: 0.75rem;                 /* 12px */

@@ -1,4 +1,4 @@
-<div class="animate-slide-up max-width-800" style="margin: 0 auto; width: 100%;">
+<div class="animate-slide-up max-width-800 mx-auto w-full">
   
   <div class="sz-page-header">
     <div class="sz-page-header-info">
@@ -9,31 +9,31 @@
 
   <!-- Stepper Header -->
   <div class="card mt-6 p-4">
-    <div class="flex justify-between items-center" style="max-width: 600px; margin: 0 auto; width: 100%;">
+    <div class="flex justify-between items-center sz-stepper-track">
       
       <div class="flex flex-col items-center gap-1">
-        <div class="btn btn-sm rounded-full" [ngClass]="activeStep() >= 1 ? 'btn-primary' : 'btn-outline'" style="width: 32px; height: 32px; padding: 0;">1</div>
+        <div class="btn btn-sm rounded-full icon-square-32" [ngClass]="activeStep() >= 1 ? 'btn-primary' : 'btn-outline'">1</div>
         <span class="text-xs font-semibold">Identificación</span>
       </div>
       
-      <div class="flex-1 border-t mx-2" style="height: 1px;"></div>
+      <div class="flex-1 border-t mx-2 sz-stepper-line"></div>
 
       <div class="flex flex-col items-center gap-1">
-        <div class="btn btn-sm rounded-full" [ngClass]="activeStep() >= 2 ? 'btn-primary' : 'btn-outline'" style="width: 32px; height: 32px; padding: 0;">2</div>
+        <div class="btn btn-sm rounded-full icon-square-32" [ngClass]="activeStep() >= 2 ? 'btn-primary' : 'btn-outline'">2</div>
         <span class="text-xs font-semibold">Hechos</span>
       </div>
 
-      <div class="flex-1 border-t mx-2" style="height: 1px;"></div>
+      <div class="flex-1 border-t mx-2 sz-stepper-line"></div>
 
       <div class="flex flex-col items-center gap-1">
-        <div class="btn btn-sm rounded-full" [ngClass]="activeStep() >= 3 ? 'btn-primary' : 'btn-outline'" style="width: 32px; height: 32px; padding: 0;">3</div>
+        <div class="btn btn-sm rounded-full icon-square-32" [ngClass]="activeStep() >= 3 ? 'btn-primary' : 'btn-outline'">3</div>
         <span class="text-xs font-semibold">Evidencias</span>
       </div>
 
-      <div class="flex-1 border-t mx-2" style="height: 1px;"></div>
+      <div class="flex-1 border-t mx-2 sz-stepper-line"></div>
 
       <div class="flex flex-col items-center gap-1">
-        <div class="btn btn-sm rounded-full" [ngClass]="activeStep() >= 4 ? 'btn-primary' : 'btn-outline'" style="width: 32px; height: 32px; padding: 0;">4</div>
+        <div class="btn btn-sm rounded-full icon-square-32" [ngClass]="activeStep() >= 4 ? 'btn-primary' : 'btn-outline'">4</div>
         <span class="text-xs font-semibold">Validación</span>
       </div>
 
@@ -140,7 +140,7 @@
             <div class="form-upload-icon">📁</div>
             <p class="form-upload-title">Arrastre archivos aquí o haga clic para examinar</p>
             <p class="form-upload-description">Formatos seguros permitidos: JPG, PNG, PDF, MP3 (Audios de amenazas), MP4. Tamaño máx. 25MB.</p>
-            <input #fileInput type="file" style="display: none;" (change)="simulateFileUpload($event)">
+            <input #fileInput class="sr-only" type="file" (change)="simulateFileUpload($event)">
           </div>
 
           <div class="mt-4">
@@ -185,7 +185,9 @@
       @if (activeStep() < 4) {
         <button class="btn btn-primary" (click)="nextStep()">Siguiente</button>
       } @else {
-        <button class="btn btn-success" (click)="submitDenuncia()">Registrar Caso Seguro</button>
+        <button class="btn btn-success" [disabled]="isSubmitting()" (click)="submitDenuncia()">
+          {{ isSubmitting() ? 'Registrando...' : 'Registrar Caso Seguro' }}
+        </button>
       }
     </div>
   </div>

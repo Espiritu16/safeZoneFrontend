@@ -167,7 +167,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
     .header-section h1 {
       font-size: var(--text-5xl);
       margin: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -175,7 +175,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       font-size: var(--text-lg);
       margin: var(--space-4) 0 0 0;
       opacity: 0.9;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .container {
@@ -198,7 +198,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
     .contact-info h2 {
       color: var(--color-foreground);
       margin-top: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
       font-size: var(--text-2xl);
     }
@@ -219,7 +219,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       margin-bottom: var(--space-2);
       color: var(--color-foreground);
       font-weight: var(--font-semibold);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .form-group input,
@@ -229,7 +229,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       padding: var(--space-3);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-md);
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: var(--text-base);
       transition: all var(--duration-base) var(--ease-in-out);
     }
@@ -250,7 +250,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       cursor: pointer;
       transition: all var(--duration-base) var(--ease-in-out);
       width: 100%;
-      font-family: var(--font-sans);
+      font-family: inherit;
       min-height: 44px;
     }
 
@@ -282,7 +282,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       border-radius: var(--radius-md);
       margin-top: var(--space-4);
       border: 1px solid var(--color-success);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .contact-info {
@@ -302,7 +302,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
     .info-block h3 {
       margin-top: 0;
       color: var(--color-primary);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-size: var(--text-lg);
       font-weight: var(--font-semibold);
     }
@@ -311,7 +311,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       margin: var(--space-2) 0;
       color: var(--color-muted-foreground);
       line-height: var(--leading-normal);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .info-block a {
@@ -335,7 +335,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       font-size: var(--text-xl);
       font-weight: var(--font-bold);
       color: var(--color-primary);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .info-block.emergency {
@@ -351,7 +351,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
       list-style: none;
       padding: 0;
       margin: var(--space-4) 0 0 0;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .info-block li {
@@ -375,7 +375,7 @@ import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../..
 
     .social-block h3 {
       color: var(--color-primary);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-size: var(--text-lg);
       font-weight: var(--font-semibold);
     }

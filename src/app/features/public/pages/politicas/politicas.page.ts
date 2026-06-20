@@ -161,7 +161,7 @@ import { CommonModule } from '@angular/common';
     .header-section h1 {
       font-size: var(--text-5xl);
       margin: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -169,7 +169,7 @@ import { CommonModule } from '@angular/common';
       font-size: var(--text-lg);
       margin: var(--space-4) 0 0 0;
       opacity: 0.9;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .container {
@@ -189,7 +189,7 @@ import { CommonModule } from '@angular/common';
       box-shadow: var(--shadow-base);
       line-height: var(--leading-relaxed);
       color: var(--color-foreground-secondary);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .politicas-content h2 {
@@ -199,7 +199,7 @@ import { CommonModule } from '@angular/common';
       margin-bottom: var(--space-4);
       padding-bottom: var(--space-4);
       border-bottom: 2px solid var(--color-primary);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -212,7 +212,7 @@ import { CommonModule } from '@angular/common';
       font-size: var(--text-xl);
       margin-top: var(--space-6);
       margin-bottom: var(--space-4);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-semibold);
     }
 

@@ -129,7 +129,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
     .header-section h1 {
       font-size: var(--text-5xl);
       margin: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -137,7 +137,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
       font-size: var(--text-lg);
       margin: var(--space-4) 0 0 0;
       opacity: 0.9;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .container {
@@ -162,7 +162,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
     .search-box h2 {
       color: var(--color-primary);
       margin-top: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-size: var(--text-2xl);
       font-weight: var(--font-bold);
     }
@@ -180,7 +180,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
       border-radius: var(--radius-md);
       font-size: var(--text-base);
       transition: border-color var(--duration-base) var(--ease-in-out);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .search-input:focus {
@@ -196,7 +196,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
       font-weight: var(--font-semibold);
       cursor: pointer;
       transition: all var(--duration-base) var(--ease-in-out);
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: var(--text-base);
       min-height: 44px;
       display: inline-flex;
@@ -233,7 +233,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
       color: var(--color-muted-foreground);
       font-size: var(--text-sm);
       margin: 0;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .no-result {
@@ -259,7 +259,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
     .caso-info h2 {
       color: var(--color-primary);
       margin-top: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-size: var(--text-2xl);
       font-weight: var(--font-bold);
     }
@@ -286,13 +286,13 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
     .info-row .label {
       font-weight: var(--font-semibold);
       color: var(--color-foreground);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .info-row .value {
       color: var(--color-primary);
       font-weight: var(--font-semibold);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .estado-registrado {
@@ -358,7 +358,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
 
     .timeline-section h3 {
       color: var(--color-primary);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-size: var(--text-xl);
       font-weight: var(--font-semibold);
     }
@@ -394,7 +394,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
     .timeline-content h4 {
       margin: 0 0 var(--space-2) 0;
       color: var(--color-foreground);
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-weight: var(--font-semibold);
     }
 
@@ -402,7 +402,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
       margin: 0 0 var(--space-2) 0;
       color: var(--color-muted-foreground);
       line-height: var(--leading-normal);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .timeline-content small {
@@ -421,7 +421,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
     .upcoming h3 {
       color: var(--color-primary);
       margin-top: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-size: var(--text-xl);
       font-weight: var(--font-semibold);
     }
@@ -436,14 +436,14 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
       font-weight: var(--font-semibold);
       color: var(--color-primary);
       margin: 0 0 var(--space-2) 0;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .event-date {
       font-size: var(--text-lg);
       color: var(--color-foreground);
       margin: var(--space-2) 0;
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-weight: var(--font-semibold);
     }
 
@@ -451,7 +451,7 @@ import { VALIDATION_PATTERNS } from '../../../../../shared/utils/validation-rule
       color: var(--color-muted-foreground);
       margin: var(--space-2) 0 0 0;
       line-height: var(--leading-normal);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .actions {

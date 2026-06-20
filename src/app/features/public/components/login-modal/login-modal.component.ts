@@ -2,6 +2,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, EventEmitter, HostListener, Inject, Input, OnChanges, OnDestroy, Output, SimpleChanges, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 import { AuditService } from '../../../../core/services/audit.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -57,12 +58,17 @@ export class LoginModalComponent implements OnChanges, OnDestroy {
     }
 
     this.isLoggingIn = true;
-    setTimeout(() => {
-      this.isLoggingIn = false;
-      this.closed.emit();
-      this.authService.login(this.email);
-      this.auditService.logAction('Inicio de Sesión', `Autenticación exitosa con usuario: ${this.email}`, 'Auth');
-    }, 800);
+    this.authService.login(this.email, this.password).pipe(
+      finalize(() => {
+        this.isLoggingIn = false;
+      }),
+    ).subscribe({
+      next: () => {
+        this.closed.emit();
+        this.auditService.logAction('Inicio de Sesión', `Autenticación exitosa con usuario: ${this.email}`, 'Auth');
+      },
+      error: () => undefined,
+    });
   }
 
   private toggleBodyScroll(locked: boolean): void {

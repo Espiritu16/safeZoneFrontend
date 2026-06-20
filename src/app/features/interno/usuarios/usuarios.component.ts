@@ -71,7 +71,7 @@ export class UsuariosComponent {
       this.toastService.show('Debe ingresar un correo institucional válido @safezone.gob.pe.', 'error');
       return;
     }
-    if (!this.authService.roles.includes(this.formData.rol) || !['Activo', 'Inactivo'].includes(this.formData.estado)) {
+    if (!this.authService.roles.some((role) => role === this.formData.rol) || !['Activo', 'Inactivo'].includes(this.formData.estado)) {
       this.toastService.show('Seleccione un rol y estado válidos.', 'error');
       return;
     }

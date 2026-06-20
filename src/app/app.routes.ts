@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
-import { PUBLIC_ROUTES } from './features/public/public.routes';
+import { authGuard } from './core/guards/auth.guard';
+import { publicFlowGuard } from './core/guards/public-flow.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
@@ -35,18 +37,22 @@ export const routes: Routes = [
   },
   {
     path: 'denuncia',
+    canActivate: [publicFlowGuard],
     loadComponent: () =>
       import('./features/public/denuncia/denuncia.page').then((m) => m.DenunciaPage),
   },
   {
     path: 'mis-casos',
+    canActivate: [publicFlowGuard],
     loadComponent: () =>
       import('./features/public/mis-casos/mis-casos.page').then((m) => m.MisCasosPage),
   },
   {
     path: 'usuario',
+    canActivate: [authGuard, roleGuard],
     loadComponent: () =>
       import('./features/public/usuario/usuario-layout/usuario-layout.page').then((m) => m.UsuarioLayoutPage),
+    data: { roles: ['Víctima'] },
     children: [
       {
         path: '',
@@ -100,15 +106,23 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
+        canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/interno/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-        data: { roles: [] }, // Accesible para todos los roles
+        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Soporte Técnico'] },
+      },
+      {
+        path: 'predenuncias',
+        canActivate: [roleGuard],
+        loadComponent: () =>
+          import('./features/interno/predenuncias/predenuncias.component').then((m) => m.PredenunciasComponent),
+        data: { roles: ['Administrador', 'Recepcionista'] },
       },
       {
         path: 'denuncias',
         loadComponent: () =>
           import('./features/interno/denuncias/denuncias.component').then((m) => m.DenunciasComponent),
-        data: { roles: ['Administrador', 'Recepcionista', 'Víctima'] },
+        data: { roles: ['Administrador', 'Recepcionista'] },
       },
       {
         path: 'casos',
@@ -126,7 +140,7 @@ export const routes: Routes = [
         path: 'citas',
         loadComponent: () =>
           import('./features/interno/citas/citas.component').then((m) => m.CitasComponent),
-        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Víctima'] },
+        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'evidencias',

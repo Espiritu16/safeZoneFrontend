@@ -315,7 +315,7 @@
         <div class="card-body">
           <div class="sz-activity-list">
             @for (caso of casesService.casos().slice(0, 4); track caso.id) {
-              <div class="activity-item" style="cursor: pointer;" (click)="viewCaseDetails(caso)">
+              <div class="activity-item card-interactive" (click)="viewCaseDetails(caso)">
                 <div class="badge-icon type-case">📋</div>
                 <div class="details">
                   <p class="text"><strong>{{ caso.victim }}</strong> — {{ caso.codigo }}</p>

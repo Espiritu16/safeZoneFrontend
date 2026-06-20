@@ -12,11 +12,16 @@
 
   <div class="public-actions">
     @if (authService.isLoggedIn()) {
-      <a class="public-action-secondary" routerLink="/dashboard">Mi Panel</a>
+      <a class="public-user-summary" [routerLink]="authService.homeUrl()" aria-label="Ir al panel del usuario">
+        <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
+        <span class="public-user-copy">
+          <strong>{{ authService.nombre() || authService.correo() || 'Usuario' }}</strong>
+          <small>{{ authService.currentRole() }}</small>
+        </span>
+      </a>
+      <a class="public-action-secondary" [routerLink]="authService.homeUrl()">Mi Panel</a>
       <button class="public-login-trigger" type="button" (click)="logout()">Cerrar Sesión</button>
     } @else {
-      <a class="public-action-primary" routerLink="/denuncia">Nueva Denuncia</a>
-      <a class="public-action-secondary" routerLink="/mis-casos">Consultar Caso</a>
       <button class="public-login-trigger" type="button" (click)="openLoginModal()">Iniciar Sesión</button>
     }
   </div>
@@ -39,7 +44,7 @@
     <div class="mobile-menu-head">
       <span>Menú Público</span>
       @if (authService.isLoggedIn()) {
-        <small>Sesión activa</small>
+        <small>{{ authService.nombre() || authService.correo() || 'Sesión activa' }}</small>
       } @else {
         <small>Acceso ciudadano</small>
       }
@@ -56,11 +61,9 @@
 
     <div class="mobile-actions">
       @if (authService.isLoggedIn()) {
-        <a class="public-action-primary" routerLink="/dashboard" (click)="closeMenu()">Ir al Panel</a>
+        <a class="public-action-primary" [routerLink]="authService.homeUrl()" (click)="closeMenu()">Ir al Panel</a>
         <button class="public-action-secondary" type="button" (click)="logout()">Cerrar Sesión</button>
       } @else {
-        <a class="public-action-primary" routerLink="/denuncia" (click)="closeMenu()">Nueva Denuncia</a>
-        <a class="public-action-secondary" routerLink="/mis-casos" (click)="closeMenu()">Consultar Caso</a>
         <button class="public-action-secondary" type="button" (click)="openLoginModal()">Iniciar Sesión</button>
       }
     </div>

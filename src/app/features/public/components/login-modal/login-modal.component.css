@@ -29,7 +29,7 @@
   border-radius: 12px;
   box-shadow: 0 20px 50px rgba(0, 40, 142, 0.15);
   color: #1a1b22;
-  font-family: "Inter", sans-serif;
+  font-family: inherit;
   max-height: calc(100vh - 32px);
   max-width: 480px;
   overflow: hidden;
@@ -88,7 +88,7 @@
 
 .login-modal-header h2 {
   color: #1a1b22;
-  font-family: "Manrope", sans-serif;
+  font-family: inherit;
   font-size: 30px;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -98,7 +98,7 @@
 
 .login-modal-subtitle {
   color: #444653;
-  font-family: "Manrope", sans-serif;
+  font-family: inherit;
   font-size: 24px;
   font-weight: 500;
   line-height: 32px;
@@ -133,7 +133,7 @@
   border-radius: 999px;
   color: #007230;
   display: inline-flex;
-  font-family: "JetBrains Mono", monospace;
+  font-family: inherit;
   font-size: 12px;
   font-weight: 500;
   gap: 6px;
@@ -153,7 +153,7 @@
 .login-field {
   color: #444653;
   display: grid;
-  font-family: "JetBrains Mono", monospace;
+  font-family: inherit;
   font-size: 14px;
   font-weight: 500;
   gap: 8px;
@@ -175,7 +175,7 @@
   border: 1px solid #c4c5d5;
   border-radius: 8px;
   color: #1a1b22;
-  font-family: "Inter", sans-serif;
+  font-family: inherit;
   font-size: 16px;
   line-height: 24px;
   outline: none;
@@ -279,7 +279,7 @@
   color: #ffffff;
   cursor: pointer;
   display: inline-flex;
-  font-family: "Manrope", sans-serif;
+  font-family: inherit;
   font-size: 24px;
   font-weight: 600;
   gap: 8px;
@@ -316,7 +316,7 @@
   color: #444653;
   display: flex;
   flex-wrap: wrap;
-  font-family: "JetBrains Mono", monospace;
+  font-family: inherit;
   font-size: 13px;
   gap: 10px;
   justify-content: center;
@@ -332,7 +332,7 @@
   border: 0;
   color: #00288e;
   cursor: pointer;
-  font-family: "Manrope", sans-serif;
+  font-family: inherit;
   font-size: 15px;
   font-weight: 700;
   line-height: 20px;
@@ -371,7 +371,7 @@
 .login-modal-footer .login-inline-action,
 .login-modal-footer p {
   color: #757684;
-  font-family: "JetBrains Mono", monospace;
+  font-family: inherit;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.05em;

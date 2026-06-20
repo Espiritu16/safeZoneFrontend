@@ -1,2 +1,354 @@
-<h2 class="font-headline-sm text-headline-sm text-on-surface mb-sm">Mis denuncias</h2>
-<p class="font-body-md text-body-md text-on-surface-variant">Listado de denuncias registradas por el usuario o asociadas a su atención.</p>
+<section class="sz-page-heading">
+  <h2 class="sz-page-title">Mis denuncias</h2>
+  <p class="sz-page-description">Listado de denuncias registradas por el usuario o asociadas a su atención.</p>
+</section>
+
+<section class="victim-actions" aria-label="Acciones de denuncias">
+  <button
+    class="victim-action-card primary"
+    data-testid="open-new-predenuncia"
+    type="button"
+    (click)="openNewPredenuncia()"
+  >
+    <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+    <span>
+      <strong>Nueva denuncia</strong>
+      <small>Registra una nueva predenuncia de forma segura.</small>
+    </span>
+  </button>
+
+  <button
+    class="victim-action-card"
+    data-testid="open-case-consultation"
+    type="button"
+    (click)="openCaseConsultation()"
+  >
+    <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
+    <span>
+      <strong>Consultar caso</strong>
+      <small>Revisa el avance de tus registros vinculados.</small>
+    </span>
+  </button>
+</section>
+
+@if (submitMessage()) {
+  <div class="victim-alert success" role="status">
+    <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+    <span>{{ submitMessage() }}</span>
+  </div>
+}
+
+@if (showNewPredenuncia()) {
+  <section #newPredenunciaPanel class="embedded-report-panel" aria-labelledby="new-predenuncia-title">
+    <div class="embedded-report-header">
+      <div>
+        <h3 id="new-predenuncia-title">Registrar nueva predenuncia</h3>
+        <p>Proceso guiado y compacto para registrar una predenuncia desde tu panel.</p>
+      </div>
+      <button class="icon-button" type="button" aria-label="Cerrar formulario" (click)="cancelNewPredenuncia()">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+
+    @if (submitError()) {
+      <div class="victim-alert error" role="alert">
+        <span class="material-symbols-outlined" aria-hidden="true">error</span>
+        <span>{{ submitError() }}</span>
+      </div>
+    }
+
+    <div class="compact-report-layout">
+      <aside class="compact-progress" aria-label="Progreso de predenuncia">
+        <h4>Progreso</h4>
+        <nav>
+          @for (item of reportSteps; track item.step) {
+            <button
+              class="progress-step"
+              type="button"
+              [class.is-active]="currentReportStep() === item.step"
+              [class.is-complete]="currentReportStep() > item.step"
+              (click)="goToReportStep(item.step)"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">
+                {{ currentReportStep() > item.step ? 'check_circle' : item.icon }}
+              </span>
+              <span>{{ item.label }}</span>
+            </button>
+          }
+        </nav>
+
+        <div class="compact-support-note">
+          <div>
+            <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+            <strong>Encriptacion de Extremo a Extremo</strong>
+            <p>Datos protegidos durante todo el proceso.</p>
+          </div>
+          <div>
+            <span class="material-symbols-outlined" aria-hidden="true">privacy_tip</span>
+            <strong>Anonimato Garantizado</strong>
+            <p>La formalizacion puede manejarse con identidad protegida.</p>
+          </div>
+        </div>
+
+        <div class="compact-emergency">
+          <strong>Emergencia inmediata</strong>
+          <p>Si estas en peligro, llama a emergencias.</p>
+          <a href="tel:911">Llamar al 911</a>
+        </div>
+      </aside>
+
+      <form class="compact-report-card" [formGroup]="newPredenunciaForm" (ngSubmit)="submitNewPredenuncia()">
+        @if (currentReportStep() === 1) {
+          <section class="wizard-step">
+            <h4>Seleccione el tipo de situacion</h4>
+            <div class="situation-grid">
+              @for (type of situationTypes; track type.value) {
+                <label class="situation-card">
+                  <input
+                    class="sr-only"
+                    type="radio"
+                    formControlName="tipoViolencia"
+                    [value]="type.value"
+                    [attr.data-testid]="'tipo-violencia-' + type.value"
+                  />
+                  <span class="material-symbols-outlined" aria-hidden="true">{{ type.icon }}</span>
+                  <strong>{{ type.title }}</strong>
+                  <small>{{ type.description }}</small>
+                </label>
+              }
+            </div>
+            <div class="form-actions">
+              <button class="primary-button" data-testid="continue-step-1" type="button" (click)="nextReportStep()">Continuar</button>
+            </div>
+          </section>
+        }
+
+        @if (currentReportStep() === 2) {
+          <section class="wizard-step">
+            <h4>Detalle de los hechos</h4>
+            <div class="embedded-report-form">
+              <label>
+                <span>Fecha del incidente</span>
+                <input data-testid="fecha-incidente" formControlName="fechaIncidente" type="date" />
+              </label>
+
+              <label>
+                <span>Distrito</span>
+                <input data-testid="distrito" formControlName="distrito" maxlength="120" placeholder="Ej. Comas" type="text" />
+              </label>
+
+              <label class="full-row">
+                <span>Descripcion breve</span>
+                <textarea
+                  data-testid="descripcion-hecho"
+                  formControlName="descripcionHecho"
+                  maxlength="4000"
+                  minlength="20"
+                  placeholder="Describe lo ocurrido con la mayor claridad posible."
+                  rows="4"
+                ></textarea>
+              </label>
+            </div>
+            <div class="form-actions">
+              <button class="secondary-button" type="button" (click)="previousReportStep()">Regresar</button>
+              <button class="primary-button" data-testid="continue-step-2" type="button" (click)="nextReportStep()">Continuar</button>
+            </div>
+          </section>
+        }
+
+        @if (currentReportStep() === 3) {
+          <section class="wizard-step">
+            <h4>Informacion de contacto</h4>
+            <p class="step-copy">Usaremos tu sesion para identificarte. Puedes agregar un telefono alternativo para contacto rapido.</p>
+            <div class="embedded-report-form">
+              <label>
+                <span>Nombre registrado</span>
+                <input [value]="authService.nombre()" type="text" readonly />
+              </label>
+
+              <label>
+                <span>Correo registrado</span>
+                <input [value]="authService.correo()" type="email" readonly />
+              </label>
+
+              <label class="full-row">
+                <span>Telefono de contacto opcional</span>
+                <input data-testid="contacto-valor" formControlName="contactoValor" inputmode="numeric" maxlength="30" placeholder="Ej. 999888777" type="tel" />
+              </label>
+            </div>
+            <div class="form-actions">
+              <button class="secondary-button" type="button" (click)="previousReportStep()">Regresar</button>
+              <button class="primary-button" data-testid="continue-step-3" type="button" (click)="nextReportStep()">Revisar</button>
+            </div>
+          </section>
+        }
+
+        @if (currentReportStep() === 4) {
+          <section class="wizard-step">
+            <h4>Revision y envio</h4>
+            <div class="review-grid">
+              <span>Situacion</span>
+              <strong>{{ newPredenunciaForm.controls.tipoViolencia.value }}</strong>
+              <span>Fecha y distrito</span>
+              <strong>{{ newPredenunciaForm.controls.fechaIncidente.value }} - {{ newPredenunciaForm.controls.distrito.value }}</strong>
+              <span>Descripcion</span>
+              <p>{{ newPredenunciaForm.controls.descripcionHecho.value }}</p>
+              <span>Contacto</span>
+              <strong>{{ newPredenunciaForm.controls.contactoValor.value || authService.correo() }}</strong>
+            </div>
+
+            <label class="terms-row">
+              <input data-testid="acepto-terminos" formControlName="aceptoTerminos" type="checkbox" />
+              <span>Confirmo que la informacion registrada es veridica para iniciar la atencion.</span>
+            </label>
+
+            <div class="form-actions">
+              <button class="secondary-button" type="button" (click)="previousReportStep()">Regresar</button>
+              <button class="primary-button" data-testid="submit-new-predenuncia" type="submit" [disabled]="isSubmitting()">
+                {{ isSubmitting() ? 'Enviando...' : 'Enviar predenuncia' }}
+              </button>
+            </div>
+          </section>
+        }
+      </form>
+    </div>
+  </section>
+}
+
+@if (showCaseConsultation()) {
+  <section #caseConsultationPanel class="embedded-case-panel" aria-labelledby="case-consultation-title">
+    <div class="embedded-report-header">
+      <div>
+        <h3 id="case-consultation-title">Consulta de caso</h3>
+        <p>Seguimiento compacto de tus predenuncias y denuncias vinculadas a esta cuenta.</p>
+      </div>
+      <button class="icon-button" type="button" aria-label="Cerrar consulta" (click)="closeCaseConsultation()">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+
+    @if (isLoadingRecords()) {
+      <div class="empty-state compact-empty">
+        <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
+        <p>Cargando casos vinculados...</p>
+      </div>
+    } @else if (selectedCaseRecord(); as record) {
+      <div class="compact-case-layout">
+        <aside class="case-selector" aria-label="Casos vinculados">
+          <h4>Tus registros</h4>
+          <div class="case-selector-list">
+            @for (item of myPredenuncias(); track item.id) {
+              <button
+                class="case-selector-item"
+                type="button"
+                [class.is-active]="isSelectedCaseRecord(item)"
+                (click)="selectCaseRecord(item)"
+              >
+                <span class="record-code">{{ trackingCode(item) }}</span>
+                <strong>{{ recordSummary(item) }}</strong>
+                <small>{{ item.estado }}</small>
+              </button>
+            }
+          </div>
+        </aside>
+
+        <div class="case-summary-grid">
+          <article class="case-summary-card">
+            <div class="case-summary-heading">
+              <div>
+                <span>Resumen del expediente</span>
+                <h4>{{ trackingCode(record) }}</h4>
+              </div>
+              <span class="case-status">{{ record.estado }}</span>
+            </div>
+
+            <dl class="case-facts">
+              <div>
+                <dt>Fecha de inicio</dt>
+                <dd>{{ formatCaseDate(record.fechaCreacion) }}</dd>
+              </div>
+              <div>
+                <dt>Ultima actualizacion</dt>
+                <dd>{{ formatCaseDate(record.fechaActualizacion) }}</dd>
+              </div>
+              <div>
+                <dt>Proximo paso</dt>
+                <dd>{{ caseNextStep(record) }}</dd>
+              </div>
+            </dl>
+
+            <p class="case-description">{{ record.descripcionHecho }}</p>
+          </article>
+
+          <aside class="case-security-card">
+            <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+            <h4>Seguridad institucional</h4>
+            <p>Tu informacion se muestra solo dentro de tu sesion autenticada y se mantiene protegida durante el seguimiento.</p>
+          </aside>
+
+          <article class="case-timeline-card">
+            <h4>Cronología del proceso</h4>
+            <ol class="case-timeline">
+              @for (event of timelineFor(record); track event.label) {
+                <li [class.is-complete]="event.complete">
+                  <span class="timeline-dot">
+                    <span class="material-symbols-outlined" aria-hidden="true">{{ event.complete ? 'check' : 'more_horiz' }}</span>
+                  </span>
+                  <div>
+                    <strong>{{ event.label }}</strong>
+                    <p>{{ event.detail }}</p>
+                  </div>
+                  <time>{{ event.date }}</time>
+                </li>
+              }
+            </ol>
+          </article>
+        </div>
+      </div>
+    } @else {
+      <div class="empty-state compact-empty">
+        <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+        <p>No hay registros vinculados para consultar desde este panel.</p>
+      </div>
+    }
+  </section>
+}
+
+@if (recordsError()) {
+  <div class="victim-alert error" role="alert">
+    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+    <span>{{ recordsError() }}</span>
+  </div>
+}
+
+@if (isLoadingRecords()) {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
+    <p>Cargando denuncias vinculadas...</p>
+  </div>
+} @else if (myPredenuncias().length > 0) {
+  <section class="victim-record-list" aria-label="Denuncias vinculadas">
+    @for (record of myPredenuncias(); track record.id) {
+      <article class="victim-record-card">
+        <div>
+          <span class="record-code">{{ trackingCode(record) }}</span>
+          <h3>{{ recordSummary(record) }}</h3>
+          <p>{{ record.descripcionHecho }}</p>
+        </div>
+        <div class="record-meta">
+          <span class="record-status">{{ record.estado }}</span>
+          @if (record.denunciaId) {
+            <span class="record-link">Formalizada</span>
+          } @else {
+            <span class="record-link">Predenuncia</span>
+          }
+        </div>
+      </article>
+    }
+  </section>
+} @else {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+    <p>Aún no hay denuncias vinculadas a esta cuenta.</p>
+  </div>
+}

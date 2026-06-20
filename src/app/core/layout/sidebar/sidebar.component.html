@@ -18,36 +18,40 @@
 
   <nav class="sz-sidebar-nav">
     @for (item of navItems; track item.label) {
-      <a class="sz-sidebar-nav-item" [routerLink]="item.path" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-        <i class="bi sz-sidebar-nav-icon" [ngClass]="item.icon" aria-hidden="true"></i>
-        <span class="sz-sidebar-nav-label">{{ item.label }}</span>
-        @if (item.hasArrow) {
-          <i class="bi bi-chevron-right sz-sidebar-nav-arrow" aria-hidden="true"></i>
-        }
-      </a>
+      @if (hasAccess(item)) {
+        <a class="sz-sidebar-nav-item" [routerLink]="item.path" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
+          <i class="bi sz-sidebar-nav-icon" [ngClass]="item.icon" aria-hidden="true"></i>
+          <span class="sz-sidebar-nav-label">{{ item.label }}</span>
+          @if (item.hasArrow) {
+            <i class="bi bi-chevron-right sz-sidebar-nav-arrow" aria-hidden="true"></i>
+          }
+        </a>
+      }
     }
 
     <p class="sz-sidebar-section-title">Configuración</p>
 
     @for (item of configItems; track item.label) {
-      <a class="sz-sidebar-nav-item" [routerLink]="item.path" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
-        <i class="bi sz-sidebar-nav-icon" [ngClass]="item.icon" aria-hidden="true"></i>
-        <span class="sz-sidebar-nav-label">{{ item.label }}</span>
-        @if (item.hasArrow) {
-          <i class="bi bi-chevron-right sz-sidebar-nav-arrow" aria-hidden="true"></i>
-        }
-      </a>
+      @if (hasAccess(item)) {
+        <a class="sz-sidebar-nav-item" [routerLink]="item.path" routerLinkActive="is-active" (click)="layoutService.closeMobileSidebar()">
+          <i class="bi sz-sidebar-nav-icon" [ngClass]="item.icon" aria-hidden="true"></i>
+          <span class="sz-sidebar-nav-label">{{ item.label }}</span>
+          @if (item.hasArrow) {
+            <i class="bi bi-chevron-right sz-sidebar-nav-arrow" aria-hidden="true"></i>
+          }
+        </a>
+      }
     }
   </nav>
 
   <div class="sz-sidebar-footer">
     <div class="sz-sidebar-user">
       <div class="sz-sidebar-user-avatar">
-        <span>{{ userName[0] }}</span>
+        <span>{{ userInitials() }}</span>
       </div>
       <div class="sz-sidebar-user-info">
-        <p>{{ userName }}</p>
-        <small>{{ userRole }}</small>
+        <p>{{ authService.nombre() || 'Usuario SafeZone' }}</p>
+        <small>{{ authService.correo() || authService.currentRole() }}</small>
       </div>
       <button class="sz-sidebar-footer-logout" (click)="logout()" title="Cerrar sesión" type="button" aria-label="Cerrar sesión">
         <i class="bi bi-box-arrow-right" aria-hidden="true"></i>

@@ -28,7 +28,7 @@ export class EvidenceService {
 
   public readonly showEvidenceModal = signal<boolean>(false);
 
-  simulateFileUpload(event: any) {
+  simulateFileUpload(event: Event) {
     this.toastService.show('Subiendo archivo...', 'warning');
     setTimeout(() => {
       const nuevoArchivo: Evidencia = {

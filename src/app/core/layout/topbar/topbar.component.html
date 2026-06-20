@@ -1,6 +1,6 @@
 <header class="sz-header" [ngClass]="{'is-collapsed': layoutService.isSidebarCollapsed()}">
   <div>
-    <button class="sz-header-menu-toggle" (click)="layoutService.toggleMobileSidebar()">
+    <button class="sz-header-menu-toggle" type="button" aria-label="Abrir menú" (click)="layoutService.toggleMobileSidebar()">
       <span class="material-symbols-outlined">menu</span>
     </button>
 
@@ -17,9 +17,9 @@
     </span>
 
     <div class="sz-header-profile">
-      <span class="sz-header-profile-dot"></span>
+      <div class="sz-header-profile-avatar">{{ userInitials() }}</div>
       <div class="sz-header-profile-info">
-        <strong>MIMP Lima</strong>
+        <strong>{{ authService.nombre() || 'Usuario SafeZone' }}</strong>
         <small>{{ authService.currentRole() }}</small>
       </div>
     </div>

@@ -1,7 +1,8 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-public-header',
@@ -78,6 +79,20 @@ import { filter } from 'rxjs/operators';
             </ul>
 
             <div class="nav-actions">
+              @if (authService.isLoggedIn()) {
+                <a
+                  class="user-pill"
+                  routerLink="/usuario"
+                  aria-label="Ir al portal del usuario"
+                  (click)="closeMenu()"
+                >
+                  <span class="icon icon--lg user-pill-icon" aria-hidden="true">account_circle</span>
+                  <span class="user-pill-text">
+                    <strong>{{ authService.nombre() || 'Usuario' }}</strong>
+                    <small>{{ authService.currentRole() }}</small>
+                  </span>
+                </a>
+              }
               <a routerLink="/public/denuncias/consultar" class="btn btn-ghost" (click)="closeMenu()">
                 <span class="icon icon--sm" aria-hidden="true">search</span>
                 <span>Mi caso</span>
@@ -105,7 +120,7 @@ import { filter } from 'rxjs/operators';
       color: var(--color-on-primary);
       text-decoration: none;
       border-radius: var(--radius-base);
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-weight: var(--font-semibold);
       box-shadow: var(--shadow-md);
       transition: top var(--duration-fast) var(--ease-out);
@@ -179,13 +194,13 @@ import { filter } from 'rxjs/operators';
       line-height: 1.15;
     }
     .brand-name {
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
       font-size: var(--text-xl);
       letter-spacing: var(--tracking-tight);
     }
     .brand-tagline {
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: 0.7rem;
       font-weight: var(--font-medium);
       letter-spacing: 0.06em;
@@ -240,7 +255,7 @@ import { filter } from 'rxjs/operators';
       gap: var(--space-2);
       color: rgba(255, 255, 255, 0.85);
       text-decoration: none;
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: var(--text-sm);
       font-weight: var(--font-semibold);
       padding: var(--space-2) var(--space-3);
@@ -285,6 +300,53 @@ import { filter } from 'rxjs/operators';
       gap: var(--space-2);
       align-items: center;
     }
+    .user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      min-height: 44px;
+      max-width: 220px;
+      padding: var(--space-1) var(--space-3);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--color-on-primary);
+      text-decoration: none;
+      transition: background var(--duration-fast) var(--ease-in-out),
+                  border-color var(--duration-fast) var(--ease-in-out);
+    }
+    .user-pill:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.38);
+    }
+    .user-pill:focus-visible {
+      outline: 2px solid var(--color-accent-lighter);
+      outline-offset: 2px;
+    }
+    .user-pill-icon {
+      flex: 0 0 auto;
+      color: rgba(255, 255, 255, 0.92);
+    }
+    .user-pill-text {
+      display: grid;
+      min-width: 0;
+      line-height: 1.15;
+    }
+    .user-pill-text strong,
+    .user-pill-text small {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .user-pill-text strong {
+      font-size: var(--text-sm);
+      font-weight: var(--font-bold);
+    }
+    .user-pill-text small {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.7rem;
+      font-weight: var(--font-medium);
+    }
     .btn {
       display: inline-flex;
       align-items: center;
@@ -293,7 +355,7 @@ import { filter } from 'rxjs/operators';
       padding: var(--space-2) var(--space-4);
       min-height: 44px;
       border-radius: var(--radius-base);
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: var(--text-sm);
       font-weight: var(--font-semibold);
       text-decoration: none;
@@ -391,11 +453,21 @@ import { filter } from 'rxjs/operators';
         padding-top: var(--space-2);
         border-top: 1px solid rgba(255, 255, 255, 0.08);
       }
-      .nav-actions .btn { width: 100%; }
+      .nav-actions .btn,
+      .user-pill {
+        width: 100%;
+        max-width: none;
+      }
+      .user-pill {
+        justify-content: flex-start;
+        border-radius: var(--radius-md);
+        padding: var(--space-3) var(--space-4);
+      }
     }
   `]
 })
 export class PublicHeaderComponent {
+  protected readonly authService = inject(AuthService);
   readonly menuOpen = signal(false);
   readonly isScrolled = signal(false);
 

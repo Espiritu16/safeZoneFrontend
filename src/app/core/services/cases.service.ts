@@ -1,4 +1,8 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
+import { catchError, map, Observable, of, tap } from 'rxjs';
+import { API_ENDPOINTS } from '../http/api-endpoints';
+import { ApiClientService } from '../http/api-client.service';
+import type { ActualizarCasoRequest, CasoResponse, EstadoCaso, PrioridadCaso } from '../models/api.models';
 import { ToastService } from './toast.service';
 
 export interface Caso {
@@ -21,14 +25,11 @@ export interface Caso {
 })
 export class CasesService {
   private readonly toastService = inject(ToastService);
+  private readonly api = inject(ApiClientService);
 
-  public readonly casos = signal<Caso[]>([
-    { id: '1', codigo: 'Caso #082-2026', victim: 'Ana María L.', anonimo: false, edad: 34, distrito: 'Lima Metropolitana', tipo: 'Física', estado: 'En Proceso', riesgo: 'Severo', asignado: 'Dra. Sofía Medina', fecha: '2026-05-20', emocion: 'Ansiedad Alta' },
-    { id: '2', codigo: 'Caso #079-2026', victim: 'María-99', anonimo: true, edad: 28, distrito: 'San Martín de Porres', tipo: 'Psicológica', estado: 'Evaluación', riesgo: 'Moderado', asignado: 'Dr. Carlos Rojas', fecha: '2026-05-18', emocion: 'Temor / Inseguridad' },
-    { id: '3', codigo: 'Caso #075-2026', victim: 'Patricia S.', anonimo: false, edad: 42, distrito: 'San Juan de Lurigancho', tipo: 'Física', estado: 'Medidas de Protección', riesgo: 'Severo', asignado: 'Dra. Sofía Medina', fecha: '2026-05-15', emocion: 'Angustia Extrema' },
-    { id: '4', codigo: 'Caso #070-2026', victim: 'Luz-88', anonimo: true, edad: 19, distrito: 'Comas', tipo: 'Económica', estado: 'Archivado', riesgo: 'Leve', asignado: 'Dr. Carlos Rojas', fecha: '2026-05-10', emocion: 'Tristeza profunda' },
-    { id: '5', codigo: 'Caso #083-2026', victim: 'Gabriela M.', anonimo: false, edad: 31, distrito: 'Villa El Salvador', tipo: 'Física y Psicológica', estado: 'Evaluación', riesgo: 'Severo', asignado: 'Dra. Sofía Medina', fecha: '2026-05-21', emocion: 'Aislada / Indefensa' }
-  ]);
+  public readonly casos = signal<Caso[]>([]);
+  public readonly isLoading = signal<boolean>(false);
+  public readonly loadError = signal<string>('');
 
   public readonly casesSearchQuery = signal<string>('');
   public readonly casesRiskFilter = signal<string>('all');
@@ -55,19 +56,38 @@ export class CasesService {
   public readonly casosModerados = computed(() => this.casos().filter(c => c.riesgo === 'Moderado').length);
   public readonly casosLeves = computed(() => this.casos().filter(c => c.riesgo === 'Leve').length);
 
+  constructor() {
+    this.loadCasos().subscribe();
+  }
+
+  loadCasos(): Observable<Caso[]> {
+    this.isLoading.set(true);
+    this.loadError.set('');
+    return this.api.get<CasoResponse[]>(API_ENDPOINTS.casos).pipe(
+      map((response) => response.map((caso) => this.toViewModel(caso))),
+      tap((casos) => this.casos.set(casos)),
+      catchError(() => {
+        this.loadError.set('No se pudieron cargar los casos desde el backend.');
+        return of([] as Caso[]);
+      }),
+      tap(() => this.isLoading.set(false)),
+    );
+  }
+
   getCasosByStatus(status: string) {
     return this.casos().filter(c => c.estado === status);
   }
 
   moveCase(caseId: string, newStatus: string) {
-    this.casos.update(casosList => {
-      return casosList.map(c => {
-        if (c.id === caseId) {
-          this.toastService.show(`${c.codigo} movido a estado: ${newStatus}`, 'success');
-          return { ...c, estado: newStatus };
-        }
-        return c;
-      });
+    const estado = this.backendStatus(newStatus);
+    const request: ActualizarCasoRequest = { estado };
+    this.api.put<CasoResponse>(`${API_ENDPOINTS.casos}/${caseId}`, request).subscribe({
+      next: (response) => {
+        const updated = this.toViewModel(response);
+        this.casos.update((casosList) => casosList.map((caso) => caso.id === caseId ? updated : caso));
+        this.toastService.show(`${updated.codigo} movido a estado: ${updated.estado}`, 'success');
+      },
+      error: () => this.toastService.show('No se pudo actualizar el estado del caso.', 'error'),
     });
   }
 
@@ -83,5 +103,59 @@ export class CasesService {
 
   closeCaseDrawer() {
     this.selectedCase.set(null);
+  }
+
+  private toViewModel(caso: CasoResponse): Caso {
+    return {
+      id: caso.id,
+      codigo: `Caso #${caso.id.slice(0, 8).toUpperCase()}`,
+      victim: `Víctima ${caso.victimaId.slice(0, 8)}`,
+      anonimo: true,
+      edad: 0,
+      distrito: caso.distrito,
+      tipo: this.tipoFromSummary(caso.resumen),
+      estado: this.statusLabel(caso.estado),
+      riesgo: this.riskLabel(caso.prioridad),
+      asignado: 'Pendiente de asignación',
+      fecha: caso.fechaCreacion.split('T')[0] ?? caso.fechaCreacion,
+      emocion: 'Seguimiento pendiente',
+    };
+  }
+
+  private statusLabel(status: EstadoCaso): string {
+    const labels: Record<EstadoCaso, string> = {
+      REGISTRADO: 'Evaluación',
+      EN_EVALUACION: 'Evaluación',
+      EN_ATENCION: 'En Proceso',
+      DERIVADO: 'Medidas de Protección',
+      CERRADO: 'Archivado',
+      ARCHIVADO: 'Archivado',
+    };
+    return labels[status];
+  }
+
+  private backendStatus(label: string): EstadoCaso {
+    const statuses: Record<string, EstadoCaso> = {
+      'Evaluación': 'EN_EVALUACION',
+      'En Proceso': 'EN_ATENCION',
+      'Medidas de Protección': 'DERIVADO',
+      Archivado: 'ARCHIVADO',
+    };
+    return statuses[label] ?? 'EN_EVALUACION';
+  }
+
+  private riskLabel(priority: PrioridadCaso): string {
+    const labels: Record<PrioridadCaso, string> = {
+      BAJA: 'Leve',
+      MEDIA: 'Moderado',
+      ALTA: 'Severo',
+      CRITICA: 'Severo',
+    };
+    return labels[priority];
+  }
+
+  private tipoFromSummary(summary: string): string {
+    const match = summary.match(/Violencia\s+([^.\n]+)/i);
+    return match?.[1]?.trim() || 'No especificado';
   }
 }

@@ -14,7 +14,7 @@
         <div class="form-upload-icon">📁</div>
         <p class="form-upload-title">Arrastre archivos multimedia de prueba aquí</p>
         <p class="form-upload-description">Los archivos se almacenan en servidores seguros con cifrado de grado judicial (AES-256).</p>
-        <input #evidenceInput type="file" style="display: none;" (change)="evidenceService.simulateFileUpload($event)">
+        <input #evidenceInput class="sr-only" type="file" (change)="evidenceService.simulateFileUpload($event)">
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@
     @for (file of evidenceService.evidencias(); track file.id) {
       <div class="card p-4 border-all rounded-lg flex flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <div class="btn btn-outline" style="width: 44px; height: 44px; padding: 0;" (click)="evidenceService.showEvidenceModal.set(true)">
+          <div class="btn btn-outline icon-square-44" (click)="evidenceService.showEvidenceModal.set(true)">
             @if (file.type === 'PDF') { 📄 } @else if (file.type === 'Audio') { 🔊 } @else { 🖼 }
           </div>
           <div>
@@ -57,10 +57,10 @@
         
         <!-- Mock de Visor de Audio / Documento -->
         <div class="p-6 bg-brand-soft border-all rounded-lg flex flex-col items-center justify-center gap-4">
-          <span style="font-size: 3rem;">🎵</span>
+          <span class="sz-audio-icon">🎵</span>
           <p class="font-bold">grabacion_audio_amenaza.mp3</p>
-          <div class="w-full bg-border-subtle rounded-full" style="height: 8px; max-width: 320px;">
-            <div class="bg-brand-light rounded-full" style="height: 100%; width: 45%;"></div>
+          <div class="w-full bg-border-subtle rounded-full sz-audio-progress">
+            <div class="bg-brand-light rounded-full sz-audio-progress-fill"></div>
           </div>
           <div class="flex gap-4 text-xs text-muted">
             <span>01:12</span>
