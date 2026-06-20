@@ -19,7 +19,7 @@
   <!-- Filtros -->
   <div class="sz-table-filters mt-6 mb-2">
     <div class="sz-table-filters-left">
-      <div class="form-group m-0" style="min-width: 280px;">
+      <div class="form-group m-0 sz-field-min-md">
         <input class="form-input" type="text" placeholder="Buscar usuario o detalle..."
                [ngModel]="auditService.searchQuery()" (ngModelChange)="auditService.searchQuery.set($event)">
       </div>

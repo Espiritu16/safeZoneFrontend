@@ -116,7 +116,7 @@ import { CommonModule } from '@angular/common';
     .header-section h1 {
       font-size: var(--text-5xl);
       margin: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -124,7 +124,7 @@ import { CommonModule } from '@angular/common';
       font-size: var(--text-lg);
       margin: var(--space-4) 0 0 0;
       opacity: 0.9;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .container {
@@ -155,14 +155,14 @@ import { CommonModule } from '@angular/common';
     .card h2 {
       margin-top: 0;
       font-size: var(--text-2xl);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
     .card p {
       margin: 0;
       line-height: var(--leading-relaxed);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .values-section h2,
@@ -171,7 +171,7 @@ import { CommonModule } from '@angular/common';
       color: var(--color-foreground);
       text-align: center;
       margin-bottom: var(--space-8);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -200,14 +200,14 @@ import { CommonModule } from '@angular/common';
     .value-card h3 {
       margin-top: 0;
       color: var(--color-primary);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-size: var(--text-lg);
       font-weight: var(--font-semibold);
     }
 
     .value-card p {
       color: var(--color-muted-foreground);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .team-section {
@@ -224,7 +224,7 @@ import { CommonModule } from '@angular/common';
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .team-members {
@@ -259,13 +259,13 @@ import { CommonModule } from '@angular/common';
       font-weight: var(--font-bold);
       font-size: var(--text-lg);
       margin: 0 auto var(--space-4);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .team-member h4 {
       margin: 0 0 var(--space-2) 0;
       color: var(--color-foreground);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-size: var(--text-base);
       font-weight: var(--font-semibold);
     }
@@ -274,7 +274,7 @@ import { CommonModule } from '@angular/common';
       margin: 0;
       color: var(--color-primary);
       font-size: var(--text-sm);
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-weight: var(--font-medium);
     }
 

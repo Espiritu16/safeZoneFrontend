@@ -14,7 +14,7 @@
   </div>
 
   <div class="sz-table-filters mt-6 mb-2">
-    <div class="form-group m-0" style="min-width: 300px;">
+    <div class="form-group m-0 sz-field-min-lg">
       <input class="form-input" type="text" placeholder="Buscar por DNI, Nombres, Código, Alias..."
              [ngModel]="victimsService.searchQuery()" (ngModelChange)="victimsService.searchQuery.set($event)">
     </div>
@@ -24,7 +24,7 @@
   <div class="sz-split-layout mt-4">
     
     <!-- Izquierda: Listado -->
-    <div class="flex flex-col gap-3" style="max-height: calc(100vh - 240px); overflow-y: auto; padding-right: 8px;">
+    <div class="flex flex-col gap-3 sz-scroll-panel">
       @for (v of victimsService.filteredVictims(); track v.id) {
         <div class="card card-interactive p-4" [ngClass]="{'border-brand-light bg-brand-soft': victimsService.selectedVictim()?.id === v.id}" (click)="victimsService.selectVictim(v)">
           <div class="flex items-center justify-between">
@@ -53,7 +53,7 @@
           <div class="profile-avatar">
             {{ selected.anonimo ? '🔒' : selected.nombre.charAt(0) }}
           </div>
-          <div class="profile-details" style="flex: 1;">
+          <div class="profile-details flex-1">
             <div class="flex justify-between items-start">
               <div>
                 <h2 class="name text-lg font-bold">
@@ -81,7 +81,7 @@
             <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'citas'}" (click)="activeTab.set('citas')">Citas</button>
           </div>
 
-          <div class="p-4 pt-0 overflow-y-auto" style="max-height: 400px;">
+          <div class="p-4 pt-0 sz-scroll-panel-md">
             
             @if (activeTab() === 'perfil') {
               <div class="animate-fade-in sz-grid-2">
@@ -145,7 +145,7 @@
 <!-- MODAL: Crear/Editar Víctima -->
 @if (victimsService.showModal()) {
   <div class="sz-modal-overlay">
-    <div class="sz-modal" style="max-width: 600px;">
+    <div class="sz-modal sz-modal-md">
       <div class="sz-modal-header">
         <h3 class="sz-modal-header-title">{{ victimsService.editingVictim() ? 'Editar Expediente' : 'Registrar Nueva Víctima' }}</h3>
         <button class="sz-modal-header-close" (click)="victimsService.closeModal()">
@@ -153,7 +153,7 @@
         </button>
       </div>
       
-      <div class="sz-modal-body" style="max-height: 65vh; overflow-y: auto;">
+      <div class="sz-modal-body sz-modal-body-scroll">
         
         <form #vForm="ngForm" id="victimForm">
           <div class="form-group p-3 bg-brand-soft border-brand-light border rounded-md mb-4 flex items-center gap-3">

@@ -126,7 +126,7 @@ interface FaqItem {
     .header-section h1 {
       font-size: var(--text-5xl);
       margin: 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -134,7 +134,7 @@ interface FaqItem {
       font-size: var(--text-lg);
       margin: var(--space-4) 0 0 0;
       opacity: 0.9;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .container {
@@ -161,7 +161,7 @@ interface FaqItem {
       margin-bottom: var(--space-6);
       padding-bottom: var(--space-4);
       border-bottom: 2px solid var(--color-primary);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -191,7 +191,7 @@ interface FaqItem {
       justify-content: space-between;
       align-items: center;
       transition: all var(--duration-base) var(--ease-in-out);
-      font-family: var(--font-sans);
+      font-family: inherit;
       min-height: 44px;
     }
 
@@ -238,7 +238,7 @@ interface FaqItem {
       margin: 0;
       color: var(--color-muted-foreground);
       line-height: var(--leading-relaxed);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .cta-section {
@@ -252,7 +252,7 @@ interface FaqItem {
     .cta-section h2 {
       margin-top: 0;
       margin-bottom: var(--space-4);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
       font-size: var(--text-2xl);
     }
@@ -260,7 +260,7 @@ interface FaqItem {
     .cta-section p {
       margin-bottom: var(--space-8);
       font-size: var(--text-lg);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .btn {
@@ -272,7 +272,7 @@ interface FaqItem {
       transition: all var(--duration-base) var(--ease-in-out);
       cursor: pointer;
       border: none;
-      font-family: var(--font-sans);
+      font-family: inherit;
       min-height: 44px;
       display: inline-flex;
       align-items: center;

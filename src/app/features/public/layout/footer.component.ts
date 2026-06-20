@@ -145,13 +145,13 @@ import { RouterLink } from '@angular/router';
       box-shadow: 0 4px 12px -3px rgba(180, 83, 9, 0.55);
     }
     .brand-text {
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
       font-size: var(--text-xl);
       letter-spacing: var(--tracking-tight);
     }
     .brand-desc {
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: var(--text-sm);
       line-height: var(--leading-relaxed);
       color: rgba(255, 255, 255, 0.72);
@@ -196,7 +196,7 @@ import { RouterLink } from '@angular/router';
     /* ─── Section headers ────────────────────────────────────────── */
     .footer-section h5 {
       color: #fff;
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: 0.8rem;
       font-weight: var(--font-bold);
       letter-spacing: 0.08em;
@@ -216,7 +216,7 @@ import { RouterLink } from '@angular/router';
     .footer-section a:not(.brand-link):not(.help-line):not(.help-email):not(.social-links a) {
       color: rgba(255, 255, 255, 0.72);
       text-decoration: none;
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: var(--text-sm);
       padding: var(--space-1) 0;
       display: inline-block;
@@ -262,7 +262,7 @@ import { RouterLink } from '@angular/router';
     }
     .help-line .icon { color: var(--color-accent-lighter); }
     .help-number {
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-weight: var(--font-bold);
       font-size: var(--text-base);
       letter-spacing: 0.02em;
@@ -272,7 +272,7 @@ import { RouterLink } from '@angular/router';
       align-items: center;
       gap: var(--space-2);
       margin: 0 0 var(--space-3) 0;
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: var(--text-xs);
       color: rgba(255, 255, 255, 0.72);
     }
@@ -283,7 +283,7 @@ import { RouterLink } from '@angular/router';
       gap: var(--space-2);
       color: rgba(255, 255, 255, 0.72);
       text-decoration: none;
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: var(--text-sm);
       transition: color var(--duration-fast) var(--ease-in-out);
     }
@@ -303,7 +303,7 @@ import { RouterLink } from '@angular/router';
       align-items: center;
       flex-wrap: wrap;
       gap: var(--space-3);
-      font-family: var(--font-sans);
+      font-family: inherit;
       font-size: var(--text-xs);
       color: rgba(255, 255, 255, 0.58);
     }

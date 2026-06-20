@@ -34,6 +34,7 @@
 .form-input, .form-select, .form-textarea {
   width: 100%;
   padding: 10px 14px;
+  font-family: inherit;
   font-size: 0.875rem;
   color: colors.$color-text-primary;
   background-color: colors.$color-white;

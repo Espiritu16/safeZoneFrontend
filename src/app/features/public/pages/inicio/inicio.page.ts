@@ -154,7 +154,7 @@ import { RouterLink } from '@angular/router';
       font-size: var(--text-5xl);
       font-weight: var(--font-bold);
       margin: 0 0 var(--space-2) 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
     }
 
     .hero-text h2 {
@@ -162,7 +162,7 @@ import { RouterLink } from '@angular/router';
       font-weight: var(--font-semibold);
       margin: 0 0 var(--space-6) 0;
       opacity: 0.95;
-      font-family: var(--font-serif);
+      font-family: inherit;
     }
 
     .hero-text p {
@@ -170,7 +170,7 @@ import { RouterLink } from '@angular/router';
       margin-bottom: var(--space-8);
       line-height: var(--leading-relaxed);
       opacity: 0.9;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .hero-actions {
@@ -205,7 +205,7 @@ import { RouterLink } from '@angular/router';
       transition: all var(--duration-base) var(--ease-in-out);
       cursor: pointer;
       border: none;
-      font-family: var(--font-sans);
+      font-family: inherit;
       min-height: 44px;
       display: inline-flex;
       align-items: center;
@@ -261,7 +261,7 @@ import { RouterLink } from '@angular/router';
       font-size: var(--text-4xl);
       margin-bottom: var(--space-12);
       color: var(--color-foreground);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -296,14 +296,14 @@ import { RouterLink } from '@angular/router';
       font-size: var(--text-xl);
       margin-bottom: var(--space-4);
       color: var(--color-foreground);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-semibold);
     }
 
     .feature-card p {
       color: var(--color-muted-foreground);
       line-height: var(--leading-relaxed);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .cta-section {
@@ -316,7 +316,7 @@ import { RouterLink } from '@angular/router';
     .cta-section h2 {
       font-size: var(--text-4xl);
       margin-bottom: var(--space-4);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -324,7 +324,7 @@ import { RouterLink } from '@angular/router';
       font-size: var(--text-lg);
       margin-bottom: var(--space-8);
       opacity: 0.95;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .emergency-contact {
@@ -338,7 +338,7 @@ import { RouterLink } from '@angular/router';
     .emergency-contact h3 {
       font-size: var(--text-3xl);
       margin: 0 0 var(--space-2) 0;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
       color: var(--color-accent);
     }
@@ -346,7 +346,7 @@ import { RouterLink } from '@angular/router';
     .emergency-contact p {
       margin: 0;
       font-size: var(--text-base);
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .info-section {
@@ -358,7 +358,7 @@ import { RouterLink } from '@angular/router';
       font-size: var(--text-4xl);
       margin-bottom: var(--space-12);
       color: var(--color-foreground);
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-bold);
     }
 
@@ -412,7 +412,7 @@ import { RouterLink } from '@angular/router';
       margin-bottom: var(--space-4);
       position: relative;
       z-index: 1;
-      font-family: var(--font-serif);
+      font-family: inherit;
       font-weight: var(--font-semibold);
     }
 
@@ -420,7 +420,7 @@ import { RouterLink } from '@angular/router';
       margin: 0;
       position: relative;
       z-index: 1;
-      font-family: var(--font-sans);
+      font-family: inherit;
     }
 
     .arrow {

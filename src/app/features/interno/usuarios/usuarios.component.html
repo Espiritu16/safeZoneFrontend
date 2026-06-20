@@ -48,7 +48,7 @@
   <!-- Filtros -->
   <div class="sz-table-filters mt-6">
     <div class="sz-table-filters-left">
-      <div class="form-group m-0" style="min-width: 250px;">
+      <div class="form-group m-0 sz-field-min-sm">
         <input class="form-input" type="text" placeholder="Buscar por nombre o email..."
                [ngModel]="usersService.searchQuery()" (ngModelChange)="usersService.searchQuery.set($event)">
       </div>
