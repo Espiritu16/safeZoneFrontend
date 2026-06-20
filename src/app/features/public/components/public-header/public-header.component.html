@@ -12,6 +12,13 @@
 
   <div class="public-actions">
     @if (authService.isLoggedIn()) {
+      <a class="public-user-summary" [routerLink]="authService.homeUrl()" aria-label="Ir al panel del usuario">
+        <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
+        <span class="public-user-copy">
+          <strong>{{ authService.nombre() || authService.correo() || 'Usuario' }}</strong>
+          <small>{{ authService.currentRole() }}</small>
+        </span>
+      </a>
       <a class="public-action-secondary" [routerLink]="authService.homeUrl()">Mi Panel</a>
       <button class="public-login-trigger" type="button" (click)="logout()">Cerrar Sesión</button>
     } @else {
@@ -37,7 +44,7 @@
     <div class="mobile-menu-head">
       <span>Menú Público</span>
       @if (authService.isLoggedIn()) {
-        <small>Sesión activa</small>
+        <small>{{ authService.nombre() || authService.correo() || 'Sesión activa' }}</small>
       } @else {
         <small>Acceso ciudadano</small>
       }

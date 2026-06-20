@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { publicFlowGuard } from './core/guards/public-flow.guard';
 import { roleGuard } from './core/guards/role.guard';
-import { PUBLIC_ROUTES } from './features/public/public.routes';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
@@ -37,11 +37,13 @@ export const routes: Routes = [
   },
   {
     path: 'denuncia',
+    canActivate: [publicFlowGuard],
     loadComponent: () =>
       import('./features/public/denuncia/denuncia.page').then((m) => m.DenunciaPage),
   },
   {
     path: 'mis-casos',
+    canActivate: [publicFlowGuard],
     loadComponent: () =>
       import('./features/public/mis-casos/mis-casos.page').then((m) => m.MisCasosPage),
   },

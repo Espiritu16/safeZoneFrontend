@@ -22,7 +22,7 @@
 
 .public-brand {
   color: #00288e;
-  font-family: "Manrope", sans-serif;
+  font-family: inherit;
   font-size: 24px;
   font-weight: 800;
   line-height: 32px;
@@ -42,7 +42,7 @@
   align-items: center;
   color: #444653;
   display: inline-flex;
-  font-family: "JetBrains Mono", monospace;
+  font-family: inherit;
   font-size: 12px;
   font-weight: 500;
   gap: 4px;
@@ -77,6 +77,63 @@
   justify-content: flex-end;
 }
 
+.public-user-summary {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  color: #0f172a;
+  display: inline-flex;
+  gap: 0.5rem;
+  max-width: 260px;
+  min-height: 40px;
+  padding: 6px 12px 6px 8px;
+  text-decoration: none;
+  transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.public-user-summary:hover {
+  background: #f8fafc;
+  border-color: #b8c4ff;
+  box-shadow: 0 8px 18px rgba(30, 64, 175, 0.08);
+}
+
+.public-user-summary .material-symbols-outlined {
+  color: #1e40af;
+  flex: 0 0 auto;
+  font-size: 28px;
+}
+
+.public-user-copy {
+  display: grid;
+  min-width: 0;
+  row-gap: 1px;
+}
+
+.public-user-copy strong,
+.public-user-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.public-user-copy strong {
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 15px;
+}
+
+.public-user-copy small {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 12px;
+  text-transform: uppercase;
+}
+
 .public-action-primary,
 .public-action-secondary,
 .public-login-trigger {
@@ -84,7 +141,7 @@
   border-radius: 8px;
   cursor: pointer;
   display: inline-flex;
-  font-family: "JetBrains Mono", monospace;
+  font-family: inherit;
   font-size: 14px;
   font-weight: 500;
   justify-content: center;
@@ -177,7 +234,7 @@
 
 .mobile-menu-head span {
   color: #00288e;
-  font-family: "Manrope", sans-serif;
+  font-family: inherit;
   font-size: 24px;
   font-weight: 800;
   line-height: 30px;
@@ -185,7 +242,7 @@
 
 .mobile-menu-head small {
   color: #757684;
-  font-family: "JetBrains Mono", monospace;
+  font-family: inherit;
   font-size: 12px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -201,7 +258,7 @@
   border: 1px solid transparent;
   border-radius: 12px;
   color: #444653;
-  font-family: "JetBrains Mono", monospace;
+  font-family: inherit;
   font-size: 14px;
   letter-spacing: 0.05em;
   padding: 12px 14px;
@@ -222,7 +279,7 @@
 }
 
 .mobile-actions button.public-action-secondary {
-  font-family: "JetBrains Mono", monospace;
+  font-family: inherit;
 }
 
 @media (max-width: 1180px) {
@@ -234,6 +291,10 @@
 
   .public-actions {
     gap: 0.5rem;
+  }
+
+  .public-user-summary {
+    max-width: 190px;
   }
 
   .public-action-primary,

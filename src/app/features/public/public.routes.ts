@@ -8,6 +8,7 @@ import { PublicFaqPage } from './pages/faq/faq.page';
 import { PublicNuevaDenunciaPage } from './pages/denuncias/nueva-denuncia/nueva-denuncia.page';
 import { PublicConsultarCasoPage } from './pages/denuncias/consultar-caso/consultar-caso.page';
 import { PublicPoliticasPage } from './pages/politicas/politicas.page';
+import { publicFlowGuard } from '../../core/guards/public-flow.guard';
 
 export const PUBLIC_ROUTES: Routes = [
   {
@@ -62,11 +63,13 @@ export const PUBLIC_ROUTES: Routes = [
         children: [
           {
             path: 'nueva',
+            canActivate: [publicFlowGuard],
             component: PublicNuevaDenunciaPage,
             data: { title: 'Enviar Denuncia - SafeZone' }
           },
           {
             path: 'consultar',
+            canActivate: [publicFlowGuard],
             component: PublicConsultarCasoPage,
             data: { title: 'Consultar Mi Caso - SafeZone' }
           }
