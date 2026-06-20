@@ -19,6 +19,12 @@
   }
 }
 
+@media (min-width: bp.$breakpoint-desktop) and (max-width: (bp.$breakpoint-large - 1px)) {
+  .sz-grid-4 {
+    @include mixins.grid(2, 20px);
+  }
+}
+
 // Layout de dos columnas asimétrico (ej. Perfil o Detalles con Sidebar interno)
 .sz-split-layout {
   display: grid;

@@ -89,6 +89,14 @@
   @include bp.mobile {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  @include bp.tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: bp.$breakpoint-desktop) and (max-width: (bp.$breakpoint-large - 1px)) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 // Lista de distritos con mayor índice de casos

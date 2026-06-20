@@ -1,29 +1,15 @@
 <app-global-loader />
-<div class="sz-dashboard-layout animate-fade-in">
-  
+<div class="sz-dashboard-layout">
   <app-sidebar />
 
-  <!-- Overlay Sidebar móvil -->
   <div class="sz-sidebar-overlay" [ngClass]="{'is-open': layoutService.isMobileSidebarOpen()}" (click)="layoutService.toggleMobileSidebar()"></div>
 
-  <!-- CONTENEDOR PRINCIPAL DERECHA -->
   <div class="sz-main-layout-right">
-    
     <app-topbar />
 
-    <!-- ÁREA DE CONTENIDO DINÁMICA -->
-    <main class="sz-main-content" [ngClass]="{'is-collapsed': layoutService.isSidebarCollapsed()}">
-      
-      <div class="sz-breadcrumbs">
-        <a href="javascript:void(0)">SafeZone</a>
-        <span class="separator">/</span>
-        <span class="active">Portal</span>
-      </div>
-
+    <main class="sz-main-content">
       <router-outlet />
-
     </main>
-
   </div>
 </div>
 <app-toast-container />

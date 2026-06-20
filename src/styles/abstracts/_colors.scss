@@ -25,3 +25,15 @@ $color-danger: #EF4444;          // Rojo Crítico / Riesgo Alto
 $color-danger-bg: #FEE2E2;
 $color-info: #3B82F6;            // Azul Información
 $color-info-bg: #EFF6FF;
+
+:root {
+  --ts-mint: #bfecdd;
+  --ts-sky: #afcff4;
+  --ts-pink: #f3a9c2;
+  --ts-ink: #1d2430;
+  --ts-primary: #6b9de6;
+  --ts-primary-dark: #4f83d4;
+  --ts-sidebar: rgba(255, 255, 255, 0.72);
+  --ts-shadow: 0 10px 28px rgba(28, 50, 89, 0.11);
+  --ts-border: #dde7f2;
+}
