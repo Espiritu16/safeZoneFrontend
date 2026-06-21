@@ -43,6 +43,8 @@
               type="email"
               autocomplete="username"
               placeholder="ejemplo@empresa.com"
+              [attr.aria-invalid]="errorMessage ? 'true' : null"
+              aria-describedby="login-error"
               [(ngModel)]="email"
             />
           </span>
@@ -57,6 +59,8 @@
               [type]="showPassword ? 'text' : 'password'"
               autocomplete="current-password"
               placeholder="••••••••"
+              [attr.aria-invalid]="errorMessage ? 'true' : null"
+              aria-describedby="login-error"
               [(ngModel)]="password"
             />
             <button
@@ -78,8 +82,12 @@
           <button class="login-inline-action" type="button">Recuperar contraseña</button>
         </div>
 
-        <button class="login-submit" type="submit" [disabled]="isLoggingIn">
-          <span>{{ isLoggingIn ? 'Ingresando...' : 'Ingresar' }}</span>
+        @if (errorMessage) {
+          <p id="login-error" class="login-error-message" role="alert">{{ errorMessage }}</p>
+        }
+
+        <button class="login-submit" type="submit" [disabled]="authService.isLoading()">
+          <span>{{ authService.isLoading() ? 'Ingresando...' : 'Ingresar' }}</span>
           <span class="material-symbols-outlined">arrow_forward</span>
         </button>
 

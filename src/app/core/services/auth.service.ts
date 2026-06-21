@@ -57,8 +57,9 @@ export class AuthService {
       tap(() => this.toastService.show('Sesión iniciada con éxito. Bienvenido al portal SafeZone.', 'success')),
       tap(() => void this.router.navigateByUrl(this.homeUrl())),
       catchError((error) => {
-        this.toastService.show(this.errorMessage(error), 'error');
-        return throwError(() => error);
+        const message = this.errorMessage(error);
+        this.toastService.show(message, 'error');
+        return throwError(() => new Error(message));
       }),
       finalize(() => this.isLoadingSignal.set(false)),
     );

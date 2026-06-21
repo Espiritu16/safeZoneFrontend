@@ -6,13 +6,14 @@ import { ToastService } from '../services/toast.service';
 import { publicFlowGuard } from './public-flow.guard';
 
 describe('publicFlowGuard', () => {
-  let authService: { isLoggedIn: ReturnType<typeof vi.fn> };
+  let authService: { isLoggedIn: ReturnType<typeof vi.fn>; homeUrl: ReturnType<typeof vi.fn> };
   let router: { parseUrl: ReturnType<typeof vi.fn> };
   let toastService: { show: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
     authService = {
       isLoggedIn: vi.fn(),
+      homeUrl: vi.fn(),
     };
     router = {
       parseUrl: vi.fn((url: string) => ({ url })),
@@ -30,13 +31,14 @@ describe('publicFlowGuard', () => {
     });
   });
 
-  it('redirects logged users from public report flows to their victim panel', () => {
+  it('redirects logged users from public report flows to their role home', () => {
     authService.isLoggedIn.mockReturnValue(true);
+    authService.homeUrl.mockReturnValue('/dashboard');
 
     const result = TestBed.runInInjectionContext(() => publicFlowGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot));
 
-    expect(router.parseUrl).toHaveBeenCalledWith('/usuario/denuncias');
-    expect(result).toEqual({ url: '/usuario/denuncias' });
+    expect(router.parseUrl).toHaveBeenCalledWith('/dashboard');
+    expect(result).toEqual({ url: '/dashboard' });
     expect(toastService.show).not.toHaveBeenCalled();
   });
 
