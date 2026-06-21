@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { finalize } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuditService } from '../../../core/services/audit.service';
@@ -20,25 +19,28 @@ export class LoginComponent {
 
   username = '';
   password = '';
-  isLoggingIn = false;
+  errorMessage = '';
 
   login() {
+    this.errorMessage = '';
+
     if (!this.username || !this.username.trim() || !this.password || !this.password.trim()) {
-      this.toastService.show('Por favor, ingrese sus credenciales completas.', 'error');
+      this.errorMessage = 'Por favor, ingrese sus credenciales completas.';
+      this.toastService.show(this.errorMessage, 'error');
       return;
     }
 
-    this.isLoggingIn = true;
+    if (this.authService.isLoading()) {
+      return;
+    }
 
-    this.authService.login(this.username, this.password).pipe(
-      finalize(() => {
-        this.isLoggingIn = false;
-      }),
-    ).subscribe({
+    this.authService.login(this.username, this.password).subscribe({
       next: () => {
         this.auditService.logAction('Inicio de Sesión', `Autenticación exitosa con usuario: ${this.username}`, 'Auth');
       },
-      error: () => undefined,
+      error: (error: unknown) => {
+        this.errorMessage = error instanceof Error ? error.message : 'No se pudo iniciar sesión. Verifique sus credenciales.';
+      },
     });
   }
 

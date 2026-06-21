@@ -193,6 +193,11 @@
   box-shadow: 0 0 0 4px rgba(0, 40, 142, 0.16);
 }
 
+.login-input-wrap input[aria-invalid='true'] {
+  border-color: #9f1d1d;
+  box-shadow: 0 0 0 4px rgba(159, 29, 29, 0.12);
+}
+
 .login-input-icon {
   color: #757684;
   font-size: 22px;
@@ -269,6 +274,18 @@
 .login-options-row a:hover,
 .login-options-row .login-inline-action:hover {
   text-decoration: underline;
+}
+
+.login-error-message {
+  background: rgba(159, 29, 29, 0.08);
+  border: 1px solid rgba(159, 29, 29, 0.22);
+  border-radius: 8px;
+  color: #7f1d1d;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  margin: -8px 0 0;
+  padding: 10px 12px;
 }
 
 .login-submit {

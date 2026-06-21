@@ -3,7 +3,8 @@ import { provideHttpClientTesting, HttpTestingController } from '@angular/common
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { describe, expect, it, beforeEach, afterEach } from 'vitest';
+import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
+import { ToastService } from './toast.service';
 import { AuthService } from './auth.service';
 
 @Component({
@@ -16,9 +17,13 @@ class RouteStubComponent {}
 describe('AuthService', () => {
   let service: AuthService;
   let http: HttpTestingController;
+  let toastService: { show: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
     localStorage.clear();
+    toastService = {
+      show: vi.fn(),
+    };
     TestBed.configureTestingModule({
       providers: [
         provideRouter([
@@ -27,6 +32,7 @@ describe('AuthService', () => {
         ]),
         provideHttpClient(),
         provideHttpClientTesting(),
+        { provide: ToastService, useValue: toastService },
       ],
     });
     service = TestBed.inject(AuthService);
@@ -66,6 +72,27 @@ describe('AuthService', () => {
     expect(service.usuarioId()).toBe('user-1');
     expect(localStorage.getItem('safezone_access_token')).toBe('access-token');
     expect(localStorage.getItem('safezone_refresh_token')).toBe('refresh-token');
+  });
+
+  it('normalizes backend login errors for the caller and toast', () => {
+    let receivedError: unknown;
+
+    service.login('victima@gmail.com', 'bad-password').subscribe({
+      error: (error) => {
+        receivedError = error;
+      },
+    });
+
+    const request = http.expectOne('http://localhost:8080/api/auth/iniciar-sesion');
+    request.flush(
+      { success: false, message: 'Correo o contraseña incorrectos.' },
+      { status: 401, statusText: 'Unauthorized' },
+    );
+
+    expect(receivedError).toBeInstanceOf(Error);
+    expect((receivedError as Error).message).toBe('Correo o contraseña incorrectos.');
+    expect(toastService.show).toHaveBeenCalledWith('Correo o contraseña incorrectos.', 'error');
+    expect(service.isLoading()).toBe(false);
   });
 
   it('logs out locally and clears session values', () => {

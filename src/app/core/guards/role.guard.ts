@@ -13,6 +13,11 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const router = inject(Router);
   const toastService = inject(ToastService);
 
+  if (!authService.isLoggedIn()) {
+    void router.navigateByUrl('/inicio');
+    return false;
+  }
+
   const allowedRoles: string[] = route.data?.['roles'] ?? [];
 
   // Si no se especifican roles, la ruta es accesible para todos los autenticados

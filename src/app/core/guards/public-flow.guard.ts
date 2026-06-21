@@ -9,7 +9,7 @@ export const publicFlowGuard: CanActivateFn = () => {
   const toastService = inject(ToastService);
 
   if (authService.isLoggedIn()) {
-    return router.parseUrl('/usuario/denuncias');
+    return router.parseUrl(authService.homeUrl());
   }
 
   toastService.show('Inicia sesión para registrar o consultar tus denuncias desde el panel.', 'warning');

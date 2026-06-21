@@ -2,7 +2,6 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, EventEmitter, HostListener, Inject, Input, OnChanges, OnDestroy, Output, SimpleChanges, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
 import { AuditService } from '../../../../core/services/audit.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -18,7 +17,7 @@ export class LoginModalComponent implements OnChanges, OnDestroy {
   @Input() open = false;
   @Output() readonly closed = new EventEmitter<void>();
 
-  private readonly authService = inject(AuthService);
+  protected readonly authService = inject(AuthService);
   private readonly toastService = inject(ToastService);
   private readonly auditService = inject(AuditService);
 
@@ -26,7 +25,7 @@ export class LoginModalComponent implements OnChanges, OnDestroy {
   password = '';
   rememberMe = false;
   showPassword = false;
-  isLoggingIn = false;
+  errorMessage = '';
 
   constructor(@Inject(DOCUMENT) private readonly document: Document) {}
 
@@ -42,7 +41,7 @@ export class LoginModalComponent implements OnChanges, OnDestroy {
 
   @HostListener('document:keydown.escape')
   handleEscape(): void {
-    if (this.open && !this.isLoggingIn) {
+    if (this.open && !this.authService.isLoading()) {
       this.close();
     }
   }
@@ -52,22 +51,26 @@ export class LoginModalComponent implements OnChanges, OnDestroy {
   }
 
   login(): void {
+    this.errorMessage = '';
+
     if (!this.email.trim() || !this.password.trim()) {
-      this.toastService.show('Por favor, ingrese sus credenciales completas.', 'error');
+      this.errorMessage = 'Por favor, ingrese sus credenciales completas.';
+      this.toastService.show(this.errorMessage, 'error');
       return;
     }
 
-    this.isLoggingIn = true;
-    this.authService.login(this.email, this.password).pipe(
-      finalize(() => {
-        this.isLoggingIn = false;
-      }),
-    ).subscribe({
+    if (this.authService.isLoading()) {
+      return;
+    }
+
+    this.authService.login(this.email, this.password).subscribe({
       next: () => {
         this.closed.emit();
         this.auditService.logAction('Inicio de Sesión', `Autenticación exitosa con usuario: ${this.email}`, 'Auth');
       },
-      error: () => undefined,
+      error: (error: unknown) => {
+        this.errorMessage = error instanceof Error ? error.message : 'No se pudo iniciar sesión. Verifique sus credenciales.';
+      },
     });
   }
 

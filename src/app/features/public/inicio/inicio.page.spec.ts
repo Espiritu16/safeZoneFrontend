@@ -9,13 +9,14 @@ import { InicioPage } from './inicio.page';
 describe('InicioPage', () => {
   let fixture: ComponentFixture<InicioPage>;
   let queryParamMap: BehaviorSubject<ReturnType<typeof convertToParamMap>>;
-  let authService: { isLoggedIn: ReturnType<typeof vi.fn>; homeUrl: ReturnType<typeof vi.fn>; nombre: ReturnType<typeof vi.fn>; correo: ReturnType<typeof vi.fn>; currentRole: ReturnType<typeof vi.fn> };
+  let authService: { isLoggedIn: ReturnType<typeof vi.fn>; isLoading: ReturnType<typeof vi.fn>; homeUrl: ReturnType<typeof vi.fn>; nombre: ReturnType<typeof vi.fn>; correo: ReturnType<typeof vi.fn>; currentRole: ReturnType<typeof vi.fn> };
   let toastService: { show: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     queryParamMap = new BehaviorSubject(convertToParamMap({}));
     authService = {
       isLoggedIn: vi.fn().mockReturnValue(false),
+      isLoading: vi.fn().mockReturnValue(false),
       homeUrl: vi.fn().mockReturnValue('/usuario/denuncias'),
       nombre: vi.fn().mockReturnValue('Maria Victima'),
       correo: vi.fn().mockReturnValue('victima@gmail.com'),
