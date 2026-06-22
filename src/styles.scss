@@ -42,6 +42,12 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --public-header-height: calc(64px + var(--safe-area-top));
+}
+
 body .inicio-main > section,
 body .informacion-main > section,
 body .faq-main > section,
@@ -92,12 +98,12 @@ body .nosotros-page main > section {
   body .politicas-main.politicas-main,
   body .contacto-main.contacto-main,
   body .nosotros-page.nosotros-page main {
-    padding-top: 4rem !important;
+    padding-top: calc(4rem + var(--safe-area-top)) !important;
   }
 
   body .case-tracker-main.case-tracker-main,
   body .public-denuncia-main.public-denuncia-main {
-    padding-top: 4.5rem !important;
+    padding-top: calc(4.5rem + var(--safe-area-top)) !important;
   }
 
   body .inicio-main.inicio-main {
@@ -105,7 +111,7 @@ body .nosotros-page main > section {
   }
 
   body .inicio-main.inicio-main .hero-section.hero-section {
-    padding-top: 4.25rem !important;
+    padding-top: calc(4.25rem + var(--safe-area-top)) !important;
   }
 
   body .informacion-main.informacion-main > section:first-child,
@@ -120,7 +126,7 @@ body .nosotros-page main > section {
 
 @media (max-width: 767px) {
   body .inicio-main.inicio-main .hero-section.hero-section {
-    padding-top: 4.75rem !important;
+    padding-top: calc(4.75rem + var(--safe-area-top)) !important;
   }
 
   body .informacion-main.informacion-main > section:first-child,
@@ -135,7 +141,7 @@ body .nosotros-page main > section {
 
 @media (max-width: 480px) {
   body .inicio-main.inicio-main .hero-section.hero-section {
-    padding-top: 4.75rem !important;
+    padding-top: calc(4.75rem + var(--safe-area-top)) !important;
   }
 
   body .informacion-main.informacion-main > section:first-child,
