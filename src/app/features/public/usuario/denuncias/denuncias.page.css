@@ -664,6 +664,7 @@
 
 .case-security-card h4 {
   margin: 1.5rem 0 0.5rem;
+  color: #ffffff;
   font-size: 1.05rem;
   font-weight: 900;
 }
@@ -738,6 +739,13 @@
 @media (max-width: 720px) {
   .victim-actions {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .victim-action-card {
+    justify-content: flex-start;
+    min-height: 88px;
+    padding: 0.875rem;
   }
 
   .embedded-report-panel,
@@ -745,10 +753,41 @@
     padding: 1rem;
   }
 
+  .embedded-report-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .embedded-report-header .icon-button {
+    align-self: flex-end;
+  }
+
   .compact-report-layout,
   .compact-case-layout,
   .case-summary-grid {
     grid-template-columns: 1fr;
+  }
+
+  .compact-progress {
+    padding: 0.875rem;
+  }
+
+  .compact-support-note,
+  .compact-emergency {
+    display: none;
+  }
+
+  .compact-report-card {
+    min-height: 0;
+    padding: 0.875rem;
+  }
+
+  .wizard-step {
+    gap: 0.75rem;
+  }
+
+  .wizard-step h4 {
+    font-size: 0.98rem;
   }
 
   .case-facts {
@@ -773,7 +812,31 @@
   }
 
   .situation-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .situation-card {
+    min-height: 100px;
+    padding: 0.625rem;
+    gap: 0.25rem;
+  }
+
+  .situation-card .material-symbols-outlined {
+    font-size: 1.125rem;
+  }
+
+  .situation-card strong {
+    font-size: 0.82rem;
+  }
+
+  .situation-card small {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 0.72rem;
+    line-height: 1.25;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
   .review-grid {
@@ -781,20 +844,59 @@
   }
 
   .form-actions {
+    position: sticky;
+    bottom: max(0.5rem, var(--safe-area-bottom, env(safe-area-inset-bottom)));
     flex-direction: column-reverse;
+    gap: 0.75rem;
+    margin: 0 -0.25rem -0.25rem;
+    padding: 0.5rem 0.25rem 0.25rem;
+    background: #ffffff;
   }
 
   .primary-button,
   .secondary-button {
+    justify-content: center;
+    min-height: 48px;
     width: 100%;
   }
 
   .victim-record-card {
     flex-direction: column;
+    gap: 0.875rem;
   }
 
   .record-meta {
     flex-direction: row;
     align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .compact-progress nav {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-step {
+    min-height: 44px;
+  }
+
+  .victim-action-card {
+    align-items: flex-start;
+  }
+
+  .situation-card {
+    min-height: 86px;
+  }
+
+  .situation-card small {
+    display: none;
+  }
+
+  .victim-alert,
+  .empty-state {
+    align-items: flex-start;
+    text-align: left;
   }
 }

@@ -228,10 +228,20 @@
     display: grid;
     gap: 0.875rem;
     grid-template-columns: 1fr;
+    justify-items: stretch;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 360px;
+    width: 100%;
   }
 
+  .hero-section .flex.flex-wrap.gap-md button,
   .hero-section .flex.flex-wrap.gap-md a {
+    align-items: center;
+    box-sizing: border-box;
+    display: inline-flex;
     justify-content: center;
+    min-height: 48px;
     width: 100%;
   }
 
@@ -361,7 +371,7 @@
 
 @media (max-width: 420px) {
   .hero-section {
-    padding-top: 4.5rem;
+    padding-top: calc(4.5rem + var(--safe-area-top));
   }
 
   .hero-section h1 {
@@ -427,6 +437,7 @@
     overflow-wrap: anywhere;
   }
 
+  .hero-section .flex.flex-wrap.gap-md button,
   .hero-section .flex.flex-wrap.gap-md a {
     box-sizing: border-box;
     min-width: 0;

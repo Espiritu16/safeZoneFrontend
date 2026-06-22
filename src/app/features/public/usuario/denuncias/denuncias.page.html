@@ -99,7 +99,7 @@
 
       <form class="compact-report-card" [formGroup]="newPredenunciaForm" (ngSubmit)="submitNewPredenuncia()">
         @if (currentReportStep() === 1) {
-          <section class="wizard-step">
+          <section class="wizard-step situation-step">
             <h4>Seleccione el tipo de situacion</h4>
             <div class="situation-grid">
               @for (type of situationTypes; track type.value) {
