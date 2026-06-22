@@ -1,9 +1,28 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../http/api-endpoints';
 import { ApiClientService } from '../http/api-client.service';
-import type { ActualizarCasoRequest, CasoResponse, EstadoCaso, PrioridadCaso } from '../models/api.models';
+import type {
+  ActualizarCasoRequest,
+  CasoResponse,
+  DenunciaResponse,
+  EstadoCaso,
+  PrioridadCaso,
+  UsuarioResponse,
+} from '../models/api.models';
+import { DenunciasService } from './denuncias.service';
 import { ToastService } from './toast.service';
+import { UsuariosService } from './usuarios.service';
+
+const TIPO_VIOLENCIA_LABELS: Record<string, string> = {
+  FISICA: 'Violencia Física',
+  PSICOLOGICA: 'Violencia Psicológica',
+  SEXUAL: 'Violencia Sexual',
+  ECONOMICA: 'Violencia Económica',
+  PATRIMONIAL: 'Violencia Patrimonial',
+  DIGITAL: 'Violencia Digital',
+  OTRA: 'Otra',
+};
 
 export interface Caso {
   id: string;
@@ -26,6 +45,11 @@ export interface Caso {
 export class CasesService {
   private readonly toastService = inject(ToastService);
   private readonly api = inject(ApiClientService);
+  private readonly denunciasService = inject(DenunciasService);
+  private readonly usuariosService = inject(UsuariosService);
+
+  private denunciasByCasoId = new Map<string, DenunciaResponse>();
+  private usuariosById = new Map<string, UsuarioResponse>();
 
   public readonly casos = signal<Caso[]>([]);
   public readonly isLoading = signal<boolean>(false);
@@ -63,8 +87,13 @@ export class CasesService {
   loadCasos(): Observable<Caso[]> {
     this.isLoading.set(true);
     this.loadError.set('');
-    return this.api.get<CasoResponse[]>(API_ENDPOINTS.casos).pipe(
-      map((response) => response.map((caso) => this.toViewModel(caso))),
+    return forkJoin({
+      casos: this.api.get<CasoResponse[]>(API_ENDPOINTS.casos),
+      denuncias: this.denunciasService.list().pipe(catchError(() => of([] as DenunciaResponse[]))),
+      usuarios: this.usuariosService.list().pipe(catchError(() => of([] as UsuarioResponse[]))),
+    }).pipe(
+      tap(({ denuncias, usuarios }) => this.syncLookupMaps(denuncias, usuarios)),
+      map(({ casos }) => casos.map((caso) => this.toViewModel(caso))),
       tap((casos) => this.casos.set(casos)),
       catchError(() => {
         this.loadError.set('No se pudieron cargar los casos desde el backend.');
@@ -105,21 +134,66 @@ export class CasesService {
     this.selectedCase.set(null);
   }
 
+  private syncLookupMaps(denuncias: DenunciaResponse[], usuarios: UsuarioResponse[]): void {
+    this.denunciasByCasoId = new Map(
+      denuncias
+        .filter((denuncia) => denuncia.casoId)
+        .map((denuncia) => [denuncia.casoId, denuncia]),
+    );
+    this.usuariosById = new Map(usuarios.map((usuario) => [usuario.id, usuario]));
+  }
+
   private toViewModel(caso: CasoResponse): Caso {
+    const denuncia = this.denunciasByCasoId.get(caso.id);
+    const usuario = this.usuariosById.get(caso.victimaId);
+
     return {
       id: caso.id,
       codigo: `Caso #${caso.id.slice(0, 8).toUpperCase()}`,
-      victim: `Víctima ${caso.victimaId.slice(0, 8)}`,
-      anonimo: true,
+      victim: this.victimLabel(usuario, denuncia, caso.victimaId),
+      anonimo: denuncia?.anonima ?? false,
       edad: 0,
       distrito: caso.distrito,
-      tipo: this.tipoFromSummary(caso.resumen),
+      tipo: this.tipoViolenciaLabel(denuncia?.tipoViolencia, caso.resumen),
       estado: this.statusLabel(caso.estado),
       riesgo: this.riskLabel(caso.prioridad),
       asignado: 'Pendiente de asignación',
       fecha: caso.fechaCreacion.split('T')[0] ?? caso.fechaCreacion,
       emocion: 'Seguimiento pendiente',
     };
+  }
+
+  private victimLabel(
+    usuario: UsuarioResponse | undefined,
+    denuncia: DenunciaResponse | undefined,
+    victimaId: string,
+  ): string {
+    if (denuncia?.anonima) {
+      return 'Víctima protegida';
+    }
+
+    if (usuario) {
+      const nombre = `${usuario.nombres} ${usuario.apellidos}`.trim();
+      if (nombre) {
+        return nombre;
+      }
+    }
+
+    return `Víctima ${victimaId.slice(0, 8)}`;
+  }
+
+  private tipoViolenciaLabel(rawTipo?: string, resumen?: string): string {
+    if (rawTipo) {
+      const normalized = rawTipo
+        .trim()
+        .toUpperCase()
+        .normalize('NFD')
+        .replace(/\p{M}/gu, '');
+
+      return TIPO_VIOLENCIA_LABELS[normalized] ?? rawTipo;
+    }
+
+    return this.tipoFromSummary(resumen ?? '');
   }
 
   private statusLabel(status: EstadoCaso): string {
