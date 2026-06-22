@@ -56,4 +56,15 @@ describe('InicioPage', () => {
     expect(fixture.componentInstance.isLoginModalOpen).toBe(false);
     expect(toastService.show).toHaveBeenCalledWith('Ya tienes una sesión activa. Puedes continuar desde Mi Panel.', 'info');
   });
+
+  it('opens and closes the mobile download modal from documentation action', () => {
+    fixture = TestBed.createComponent(InicioPage);
+    fixture.detectChanges();
+
+    fixture.componentInstance.openDownloadModal();
+    expect(fixture.componentInstance.isDownloadModalOpen).toBe(true);
+
+    fixture.componentInstance.closeDownloadModal();
+    expect(fixture.componentInstance.isDownloadModalOpen).toBe(false);
+  });
 });

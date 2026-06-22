@@ -1,0 +1,55 @@
+@if (open) {
+  <div class="download-modal-shell" role="presentation" (click)="close()">
+    <div class="download-modal-backdrop" aria-hidden="true"></div>
+
+    <section
+      class="download-modal-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="download-modal-title"
+      (click)="$event.stopPropagation()"
+    >
+      <button class="download-modal-close" type="button" aria-label="Cerrar modal" (click)="close()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <header class="download-modal-header">
+        <span class="material-symbols-outlined download-modal-icon" aria-hidden="true">download_for_offline</span>
+        <p class="download-modal-kicker">Aplicación móvil SafeZone</p>
+        <h2 id="download-modal-title">Descarga la app para tu dispositivo</h2>
+        <p>Selecciona tu sistema operativo. Android está disponible como APK de prueba; iPhone requiere distribución por Xcode o TestFlight.</p>
+      </header>
+
+      <div class="download-options" aria-label="Opciones de descarga móvil">
+        <article class="download-option is-available">
+          <div class="download-option-head">
+            <span class="material-symbols-outlined platform-icon android-icon" aria-hidden="true">android</span>
+            <div>
+              <h3>Android</h3>
+              <p>Instala el APK directamente en tu celular Android.</p>
+            </div>
+          </div>
+          <a class="download-action" [href]="androidApkUrl" download="safezone-android.apk">
+            Descargar APK
+            <span class="material-symbols-outlined" aria-hidden="true">download</span>
+          </a>
+        </article>
+
+        <article class="download-option is-disabled" aria-disabled="true">
+          <div class="download-option-head">
+            <span class="material-symbols-outlined platform-icon ios-icon" aria-hidden="true">phone_iphone</span>
+            <div>
+              <h3>iPhone</h3>
+              <p>La instalación directa no está disponible en iOS.</p>
+            </div>
+          </div>
+          <button class="download-action" type="button" disabled>
+            No disponible
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+          </button>
+          <p class="ios-note">Para iPhone se debe probar desde Xcode o distribuir por TestFlight.</p>
+        </article>
+      </div>
+    </section>
+  </div>
+}

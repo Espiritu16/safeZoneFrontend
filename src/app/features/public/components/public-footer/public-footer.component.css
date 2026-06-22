@@ -2,6 +2,15 @@
   display: block;
 }
 
+.footer-link-button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  text-align: left;
+}
+
 @media (max-width: 640px) {
   footer {
     padding-left: 16px;
