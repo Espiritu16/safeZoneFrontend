@@ -7,7 +7,7 @@
 .usuario-main {
   width: min(100% - 48px, 1200px);
   margin: 0 auto;
-  padding: 7rem 0 2rem;
+  padding: calc(7rem + var(--safe-area-top)) 0 calc(2rem + var(--safe-area-bottom));
 }
 
 .usuario-heading {
@@ -80,7 +80,7 @@
 @media (max-width: 720px) {
   .usuario-main {
     width: min(100% - 32px, 1200px);
-    padding-top: 5.75rem;
+    padding-top: calc(5.75rem + var(--safe-area-top));
   }
 
   .usuario-heading h1 {
@@ -88,6 +88,22 @@
   }
 
   .usuario-content-card {
-    padding: 1rem;
+    padding: 0.875rem;
+  }
+
+  .usuario-tabs {
+    flex-wrap: nowrap;
+    margin-left: -16px;
+    margin-right: -16px;
+    overflow-x: auto;
+    padding: 0 16px 0.25rem;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .portal-tab {
+    flex: 0 0 auto;
+    min-height: 44px;
+    scroll-snap-align: start;
   }
 }

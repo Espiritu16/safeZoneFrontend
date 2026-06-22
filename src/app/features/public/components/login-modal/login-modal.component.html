@@ -6,34 +6,24 @@
       class="login-modal-card"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="login-modal-title"
+      [attr.aria-labelledby]="recoveryStep === 'login' ? 'login-modal-title' : 'login-modal-step-title'"
       (click)="$event.stopPropagation()"
     >
       <button class="login-modal-close" type="button" aria-label="Cerrar modal" (click)="close()">
         <span class="material-symbols-outlined">close</span>
       </button>
 
+      @if (recoveryStep === 'login') {
       <header class="login-modal-header">
         <div class="login-modal-icon" aria-hidden="true">
           <span class="material-symbols-outlined">security</span>
         </div>
         <h2 id="login-modal-title">SafeZone</h2>
-        <p class="login-modal-subtitle">Iniciar Sesión</p>
+        <p class="login-modal-subtitle">Iniciar sesión</p>
         <p class="login-modal-copy">Bienvenido de nuevo. Acceda a su panel de seguridad.</p>
       </header>
 
-      <form class="login-modal-form" (ngSubmit)="login()">
-        <div class="login-trust-row" aria-label="Indicadores de seguridad">
-          <span class="login-trust-chip">
-            <span class="material-symbols-outlined trust-filled">verified_user</span>
-            Conexión Segura
-          </span>
-          <span class="login-trust-chip">
-            <span class="material-symbols-outlined trust-filled">lock</span>
-            Acceso Protegido
-          </span>
-        </div>
-
+      <form class="login-modal-form login-form-primary" (ngSubmit)="login()">
         <label class="login-field">
           <span>Email</span>
           <span class="login-input-wrap">
@@ -79,7 +69,7 @@
             <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" />
             <span>Recordarme</span>
           </label>
-          <button class="login-inline-action" type="button">Recuperar contraseña</button>
+          <button class="login-inline-action" type="button" (click)="startRecovery()">Recuperar contraseña</button>
         </div>
 
         @if (errorMessage) {
@@ -93,16 +83,229 @@
 
         <div class="login-create-account">
           <span>¿Aún no tienes cuenta?</span>
-          <button class="login-create-button" type="button">Crear cuenta</button>
+          <button class="login-create-button" type="button" (click)="startRegister()">Crear cuenta</button>
         </div>
       </form>
+      } @else if (recoveryStep === 'register') {
+      <form class="login-modal-form recovery-form" (ngSubmit)="registerAccount()">
+        <div class="recovery-copy">
+          <h3 id="login-modal-step-title">Crear cuenta</h3>
+          <p>Registre una cuenta personal para crear y consultar sus predenuncias desde el panel de seguimiento.</p>
+        </div>
+
+        <label class="login-field">
+          <span>Nombre completo</span>
+          <span class="login-input-wrap">
+            <span class="material-symbols-outlined login-input-icon">person</span>
+            <input
+              name="registerName"
+              type="text"
+              autocomplete="name"
+              placeholder="Nombre y apellido"
+              [attr.aria-invalid]="errorMessage ? 'true' : null"
+              aria-describedby="login-error"
+              [(ngModel)]="registerName"
+            />
+          </span>
+        </label>
+
+        <label class="login-field">
+          <span>Email</span>
+          <span class="login-input-wrap">
+            <span class="material-symbols-outlined login-input-icon">mail</span>
+            <input
+              name="registerEmail"
+              type="email"
+              autocomplete="email"
+              placeholder="correo@ejemplo.com"
+              [attr.aria-invalid]="errorMessage ? 'true' : null"
+              aria-describedby="login-error"
+              [(ngModel)]="registerEmail"
+            />
+          </span>
+        </label>
+
+        <label class="login-field">
+          <span>Contraseña</span>
+          <span class="login-input-wrap">
+            <span class="material-symbols-outlined login-input-icon">lock</span>
+            <input
+              name="registerPassword"
+              [type]="showRegisterPassword ? 'text' : 'password'"
+              autocomplete="new-password"
+              placeholder="Mín. 8, mayúscula y número"
+              [attr.aria-invalid]="errorMessage ? 'true' : null"
+              aria-describedby="login-error"
+              [(ngModel)]="registerPassword"
+            />
+            <button
+              class="login-password-toggle"
+              type="button"
+              [attr.aria-label]="showRegisterPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              (click)="showRegisterPassword = !showRegisterPassword"
+            >
+              <span class="material-symbols-outlined">{{ showRegisterPassword ? 'visibility_off' : 'visibility' }}</span>
+            </button>
+          </span>
+        </label>
+
+        <label class="login-field">
+          <span>Confirmar contraseña</span>
+          <span class="login-input-wrap">
+            <span class="material-symbols-outlined login-input-icon">lock</span>
+            <input
+              name="registerConfirmPassword"
+              [type]="showRegisterPassword ? 'text' : 'password'"
+              autocomplete="new-password"
+              placeholder="Repita la contraseña"
+              [attr.aria-invalid]="errorMessage ? 'true' : null"
+              aria-describedby="login-error"
+              [(ngModel)]="registerConfirmPassword"
+            />
+          </span>
+        </label>
+
+        @if (errorMessage) {
+          <p id="login-error" class="login-error-message" role="alert">{{ errorMessage }}</p>
+        }
+
+        <button class="login-submit" type="submit" [disabled]="authService.isLoading()">
+          <span>{{ authService.isLoading() ? 'Creando cuenta...' : 'Crear cuenta' }}</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+
+        <button class="login-secondary-submit" type="button" [disabled]="authService.isLoading()" (click)="backToLogin()">
+          Ya tengo cuenta
+        </button>
+      </form>
+      } @else {
+      <form class="login-modal-form recovery-form" (ngSubmit)="recoveryStep === 'email' ? requestRecoveryCode() : recoveryStep === 'code' ? verifyRecoveryCode() : resetPassword()">
+        @if (recoveryStep === 'email') {
+          <div class="recovery-copy">
+            <h3 id="login-modal-step-title">Recuperar contraseña</h3>
+            <p>Ingrese el correo vinculado a su cuenta. Si existe, recibirá un código de verificación.</p>
+          </div>
+
+          <label class="login-field">
+            <span>Email</span>
+            <span class="login-input-wrap">
+              <span class="material-symbols-outlined login-input-icon">mail</span>
+              <input
+                name="recoveryEmail"
+                type="email"
+                autocomplete="username"
+                placeholder="correo@empresa.com"
+                [attr.aria-invalid]="errorMessage ? 'true' : null"
+                aria-describedby="login-error"
+                [(ngModel)]="recoveryEmail"
+              />
+            </span>
+          </label>
+        }
+
+        @if (recoveryStep === 'code') {
+          <div class="recovery-copy">
+            <h3 id="login-modal-step-title">Verificar código</h3>
+            <p>Revise el correo <strong>{{ recoveryEmail }}</strong> e ingrese el código de 6 dígitos.</p>
+          </div>
+
+          <label class="login-field">
+            <span>Código de recuperación</span>
+            <span class="login-input-wrap">
+              <span class="material-symbols-outlined login-input-icon">pin</span>
+              <input
+                name="recoveryCode"
+                type="text"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                maxlength="6"
+                placeholder="123456"
+                [attr.aria-invalid]="errorMessage ? 'true' : null"
+                aria-describedby="login-error"
+                [(ngModel)]="recoveryCode"
+              />
+            </span>
+          </label>
+        }
+
+        @if (recoveryStep === 'reset') {
+          <div class="recovery-copy">
+            <h3 id="login-modal-step-title">Nueva contraseña</h3>
+            <p>La contraseña se actualizará únicamente para la cuenta <strong>{{ recoveryEmail }}</strong>.</p>
+          </div>
+
+          <label class="login-field">
+            <span>Nueva contraseña</span>
+            <span class="login-input-wrap">
+              <span class="material-symbols-outlined login-input-icon">lock</span>
+              <input
+                name="newPassword"
+                [type]="showNewPassword ? 'text' : 'password'"
+                autocomplete="new-password"
+                placeholder="Mín. 8, mayúscula y número"
+                [attr.aria-invalid]="errorMessage ? 'true' : null"
+                aria-describedby="login-error"
+                [(ngModel)]="newPassword"
+              />
+              <button
+                class="login-password-toggle"
+                type="button"
+                [attr.aria-label]="showNewPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                (click)="showNewPassword = !showNewPassword"
+              >
+                <span class="material-symbols-outlined">{{ showNewPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </span>
+          </label>
+
+          <label class="login-field">
+            <span>Confirmar contraseña</span>
+            <span class="login-input-wrap">
+              <span class="material-symbols-outlined login-input-icon">lock</span>
+              <input
+                name="confirmPassword"
+                [type]="showNewPassword ? 'text' : 'password'"
+                autocomplete="new-password"
+                placeholder="Repita la nueva contraseña"
+                [attr.aria-invalid]="errorMessage ? 'true' : null"
+                aria-describedby="login-error"
+                [(ngModel)]="confirmPassword"
+              />
+            </span>
+          </label>
+        }
+
+        @if (errorMessage) {
+          <p id="login-error" class="login-error-message" role="alert">{{ errorMessage }}</p>
+        }
+
+        <button class="login-submit" type="submit" [disabled]="authService.isLoading()">
+          <span>
+            @if (authService.isLoading()) {
+              Procesando...
+            } @else if (recoveryStep === 'email') {
+              Enviar código
+            } @else if (recoveryStep === 'code') {
+              Verificar código
+            } @else {
+              Cambiar contraseña
+            }
+          </span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+
+        <button class="login-secondary-submit" type="button" [disabled]="authService.isLoading()" (click)="backToLogin()">
+          Volver al inicio de sesión
+        </button>
+      </form>
+      }
 
       <footer class="login-modal-footer">
         <div>
-          <a routerLink="/politicas">Política de Privacidad</a>
-          <button class="login-inline-action" type="button">Seguridad de Acceso</button>
+          <a routerLink="/politicas">Política de privacidad</a>
+          <button class="login-inline-action" type="button">Seguridad de acceso</button>
         </div>
-        <p>© 2024 SafeZone. All rights reserved.</p>
+        <p>© 2026 SafeZone. Todos los derechos reservados.</p>
       </footer>
     </section>
   </div>

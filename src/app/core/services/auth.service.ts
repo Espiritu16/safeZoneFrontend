@@ -15,6 +15,17 @@ interface StoredUser {
   rol: BackendRole;
 }
 
+interface BasicResponse {
+  success: boolean;
+  message: string;
+}
+
+interface RegisterAccountRequest {
+  nombre: string;
+  correo: string;
+  contrasena: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -58,6 +69,71 @@ export class AuthService {
       tap(() => void this.router.navigateByUrl(this.homeUrl())),
       catchError((error) => {
         const message = this.errorMessage(error);
+        this.toastService.show(message, 'error');
+        return throwError(() => new Error(message));
+      }),
+      finalize(() => this.isLoadingSignal.set(false)),
+    );
+  }
+
+  registerAccount(nombre: string, correo: string, contrasena: string): Observable<BasicResponse> {
+    this.isLoadingSignal.set(true);
+    const request: RegisterAccountRequest = {
+      nombre: nombre.trim(),
+      correo: this.normalizeEmail(correo),
+      contrasena,
+    };
+
+    return this.api.post<BasicResponse>(API_ENDPOINTS.auth.register, request).pipe(
+      tap((response) => this.toastService.show(response.message || 'Cuenta creada correctamente', 'success')),
+      catchError((error) => {
+        const message = this.errorMessage(error, 'No se pudo crear la cuenta.');
+        this.toastService.show(message, 'error');
+        return throwError(() => new Error(message));
+      }),
+      finalize(() => this.isLoadingSignal.set(false)),
+    );
+  }
+
+  requestPasswordRecovery(correo: string): Observable<BasicResponse> {
+    this.isLoadingSignal.set(true);
+    return this.api.post<BasicResponse>(API_ENDPOINTS.auth.recoverPassword, { correo: this.normalizeEmail(correo) }).pipe(
+      tap((response) => this.toastService.show(response.message || 'Codigo enviado correctamente', 'success')),
+      catchError((error) => {
+        const message = this.errorMessage(error, 'No se pudo solicitar el codigo de recuperacion.');
+        this.toastService.show(message, 'error');
+        return throwError(() => new Error(message));
+      }),
+      finalize(() => this.isLoadingSignal.set(false)),
+    );
+  }
+
+  verifyRecoveryCode(correo: string, codigo: string): Observable<BasicResponse> {
+    this.isLoadingSignal.set(true);
+    return this.api.post<BasicResponse>(API_ENDPOINTS.auth.verifyCode, {
+      correo: this.normalizeEmail(correo),
+      codigo: codigo.trim(),
+    }).pipe(
+      tap((response) => this.toastService.show(response.message || 'Codigo verificado correctamente', 'success')),
+      catchError((error) => {
+        const message = this.errorMessage(error, 'No se pudo verificar el codigo de recuperacion.');
+        this.toastService.show(message, 'error');
+        return throwError(() => new Error(message));
+      }),
+      finalize(() => this.isLoadingSignal.set(false)),
+    );
+  }
+
+  resetPassword(correo: string, codigo: string, nuevaPassword: string): Observable<BasicResponse> {
+    this.isLoadingSignal.set(true);
+    return this.api.post<BasicResponse>(API_ENDPOINTS.auth.resetPassword, {
+      correo: this.normalizeEmail(correo),
+      codigo: codigo.trim(),
+      nuevaPassword,
+    }).pipe(
+      tap((response) => this.toastService.show(response.message || 'Contrasena restablecida correctamente', 'success')),
+      catchError((error) => {
+        const message = this.errorMessage(error, 'No se pudo restablecer la contrasena.');
         this.toastService.show(message, 'error');
         return throwError(() => new Error(message));
       }),
@@ -122,6 +198,10 @@ export class AuthService {
     this.isLoggedInSignal.set(true);
   }
 
+  private normalizeEmail(correo: string): string {
+    return correo.trim().toLowerCase();
+  }
+
   private restoreSession(): void {
     const token = localStorage.getItem(ACCESS_TOKEN_KEY);
     const storedUser = localStorage.getItem(USER_KEY);
@@ -163,11 +243,11 @@ export class AuthService {
     }
   }
 
-  private errorMessage(error: unknown): string {
+  private errorMessage(error: unknown, fallback = 'No se pudo iniciar sesión. Verifique sus credenciales.'): string {
     if (typeof error === 'object' && error !== null && 'error' in error) {
       const payload = (error as { error?: { message?: string; mensaje?: string } }).error;
-      return payload?.message ?? payload?.mensaje ?? 'No se pudo iniciar sesión. Verifique sus credenciales.';
+      return payload?.message ?? payload?.mensaje ?? fallback;
     }
-    return 'No se pudo iniciar sesión. Verifique sus credenciales.';
+    return fallback;
   }
 }

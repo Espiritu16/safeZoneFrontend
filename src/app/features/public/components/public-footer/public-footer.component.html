@@ -11,21 +11,21 @@
     </div>
 
     <div>
-      <h5 class="font-label-md text-label-md text-on-surface font-bold mb-md uppercase tracking-wider">Product</h5>
+      <h5 class="font-label-md text-label-md text-on-surface font-bold mb-md uppercase tracking-wider">Producto</h5>
       <ul class="flex flex-col gap-sm m-0 p-0 list-none">
         <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Seguimiento de Casos</a></li>
-        <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Panel Admin</a></li>
+        <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Panel administrativo</a></li>
         <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Seguridad</a></li>
         <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">API</a></li>
       </ul>
     </div>
 
     <div>
-      <h5 class="font-label-md text-label-md text-on-surface font-bold mb-md uppercase tracking-wider">Resources</h5>
+      <h5 class="font-label-md text-label-md text-on-surface font-bold mb-md uppercase tracking-wider">Recursos</h5>
       <ul class="flex flex-col gap-sm m-0 p-0 list-none">
-        <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Documentación</a></li>
+        <li><button class="footer-link-button font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" type="button" (click)="openDownloadModal()">Documentación</button></li>
         <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Blog</a></li>
-        <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Whitepapers</a></li>
+        <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Informes técnicos</a></li>
         <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Soporte</a></li>
       </ul>
     </div>
@@ -35,17 +35,18 @@
       <ul class="flex flex-col gap-sm m-0 p-0 list-none">
         <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Privacidad</a></li>
         <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Términos</a></li>
-        <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Cookies</a></li>
-        <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Compliance</a></li>
+        <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Política de cookies</a></li>
+        <li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors no-underline" href="#">Cumplimiento normativo</a></li>
       </ul>
     </div>
   </div>
 
   <div class="max-w-max-width mx-auto w-full pt-lg border-t border-outline-variant/30 mt-md flex flex-col md:flex-row justify-between items-center gap-md">
-    <p class="font-body-sm text-body-sm text-on-surface-variant">© 2024 SafeZone. Todos los derechos reservados.</p>
+    <p class="font-body-sm text-body-sm text-on-surface-variant">© 2026 SafeZone. Todos los derechos reservados.</p>
     <div class="flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-      <span class="font-label-sm text-label-sm text-on-surface-variant">Sistemas Operativos: Estado Nominal</span>
+      <span class="font-label-sm text-label-sm text-on-surface-variant">Sistemas operativos: estado nominal</span>
     </div>
   </div>
+  <app-mobile-download-modal [open]="isDownloadModalOpen" (closed)="closeDownloadModal()" />
 </footer>

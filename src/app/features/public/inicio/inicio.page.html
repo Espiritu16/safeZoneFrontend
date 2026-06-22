@@ -20,9 +20,9 @@
 
           <div class="flex flex-wrap gap-md">
             <button type="button" (click)="openLoginModal()" class="bg-primary-container text-white px-xl py-4 rounded-xl font-label-md text-label-md hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95 border-0 cursor-pointer">Comenzar</button>
-            <a href="#seguridad" class="border border-outline-variant text-on-surface px-xl py-4 rounded-xl font-label-md text-label-md hover:bg-white hover:border-primary/50 transition-all flex items-center gap-2 no-underline">
+            <button type="button" (click)="openDownloadModal()" class="border border-outline-variant text-on-surface px-xl py-4 rounded-xl font-label-md text-label-md hover:bg-white hover:border-primary/50 transition-all flex items-center gap-2 no-underline bg-transparent cursor-pointer">
               Ver Documentación <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -170,5 +170,6 @@
   </main>
 
   <app-login-modal [open]="isLoginModalOpen" (closed)="closeLoginModal()" />
+  <app-mobile-download-modal [open]="isDownloadModalOpen" (closed)="closeDownloadModal()" />
   <app-public-footer />
 </div>

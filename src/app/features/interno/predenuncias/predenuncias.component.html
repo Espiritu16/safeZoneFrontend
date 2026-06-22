@@ -55,24 +55,24 @@
         <tbody>
           @for (predenuncia of predenuncias(); track predenuncia.id) {
             <tr>
-              <td>
+              <td data-label="Contacto">
                 <div class="font-semibold">{{ predenuncia.nombresContacto || 'Sin nombre' }}</div>
                 <div class="text-xs text-muted">
                   {{ predenuncia.telefonoContacto || predenuncia.correoContacto || 'Sin dato de contacto' }}
                 </div>
               </td>
-              <td>{{ predenuncia.tipoViolencia || 'No especificado' }}</td>
-              <td>
+              <td data-label="Tipo">{{ predenuncia.tipoViolencia || 'No especificado' }}</td>
+              <td data-label="Fecha y distrito">
                 <div>{{ predenuncia.fechaIncidente | date: 'dd/MM/yyyy' }}</div>
                 <div class="text-xs text-muted">{{ predenuncia.distrito || 'Sin distrito' }}</div>
               </td>
-              <td class="predenuncia-description">{{ predenuncia.descripcionHecho }}</td>
-              <td>
+              <td class="predenuncia-description" data-label="Descripción">{{ predenuncia.descripcionHecho }}</td>
+              <td data-label="Estado">
                 <span class="badge" [ngClass]="badgeClass(predenuncia.estado)">
                   <span class="badge-dot"></span>{{ predenuncia.estado }}
                 </span>
               </td>
-              <td class="col-actions">
+              <td class="col-actions" data-label="Acciones">
                 @if (predenuncia.estado === 'PENDIENTE') {
                   <button
                     class="btn btn-primary btn-sm"

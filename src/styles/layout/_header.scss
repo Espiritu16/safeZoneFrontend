@@ -23,10 +23,13 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 0;
   }
 }
 
 .sz-header-title-block {
+  min-width: 0;
+
   h5 {
     margin: 0 0 4px;
     color: #334155;
@@ -37,6 +40,11 @@
   small {
     color: #64748b;
     font-size: 0.875rem;
+  }
+
+  h5,
+  small {
+    overflow-wrap: anywhere;
   }
 }
 
@@ -53,6 +61,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
 
 .sz-header-safe-badge {
@@ -79,6 +88,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
   padding: 6px 12px;
   border: 1px solid #e2e8f0;
   border-radius: vars.$radius-full;
@@ -96,6 +106,7 @@
 .sz-header-profile-info {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   line-height: 1.1;
 
   strong {
@@ -107,5 +118,39 @@
   small {
     color: #64748b;
     font-size: 0.6875rem;
+  }
+
+  strong,
+  small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 640px) {
+  .sz-header {
+    border-radius: 18px;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .sz-header-title-block {
+    h5 {
+      font-size: 0.95rem;
+    }
+
+    small {
+      font-size: 0.75rem;
+    }
+  }
+
+  .sz-header-actions {
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .sz-header-profile {
+    max-width: min(100%, 240px);
   }
 }
