@@ -7,7 +7,9 @@
   display: flex;
   inset: 0;
   justify-content: center;
-  padding: 16px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: calc(16px + var(--safe-area-top, 0px)) 16px calc(16px + var(--safe-area-bottom, 0px));
   position: fixed;
   z-index: 1000;
 }
@@ -30,14 +32,25 @@
   box-shadow: 0 20px 50px rgba(0, 40, 142, 0.15);
   color: #1a1b22;
   font-family: inherit;
-  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - var(--safe-area-top, 0px) - var(--safe-area-bottom, 0px) - 32px);
   max-width: 480px;
-  overflow: hidden;
+  overscroll-behavior: contain;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: relative;
+  scrollbar-width: none;
   width: 100%;
   z-index: 1;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   backdrop-filter: blur(24px) saturate(180%);
+}
+
+.login-modal-card::-webkit-scrollbar {
+  display: none;
+  height: 0;
+  width: 0;
 }
 
 .login-modal-close {
@@ -71,14 +84,14 @@
 
 .login-modal-header {
   border-bottom: 1px solid rgba(196, 197, 213, 0.28);
-  padding: 48px 48px 24px;
+  padding: 44px 48px 20px;
   text-align: center;
 }
 
 .login-modal-icon {
   color: #00288e;
   line-height: 0;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .login-modal-icon .material-symbols-outlined {
@@ -118,36 +131,33 @@
   padding: 48px;
 }
 
-.login-trust-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 0;
+.login-form-primary {
+  padding-top: 28px;
 }
 
-.login-trust-chip {
-  align-items: center;
-  background: rgba(124, 249, 148, 0.1);
-  border: 1px solid rgba(124, 249, 148, 0.22);
-  border-radius: 999px;
-  color: #007230;
-  display: inline-flex;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
+.recovery-form {
+  gap: 20px;
+}
+
+.recovery-copy {
+  display: grid;
   gap: 6px;
-  letter-spacing: 0.05em;
-  line-height: 16px;
-  padding: 4px 12px;
+  text-align: center;
 }
 
-.login-trust-chip .material-symbols-outlined {
-  font-size: 16px;
+.recovery-copy h3 {
+  color: #1a1b22;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  margin: 0;
 }
 
-.trust-filled {
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 16;
+.recovery-copy p {
+  color: #444653;
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
 }
 
 .login-field {
@@ -325,6 +335,30 @@
   font-size: 24px;
 }
 
+.login-secondary-submit {
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(196, 197, 213, 0.64);
+  border-radius: 8px;
+  color: #444653;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  padding: 12px 16px;
+  width: 100%;
+}
+
+.login-secondary-submit:hover:not(:disabled) {
+  border-color: #00288e;
+  color: #00288e;
+}
+
+.login-secondary-submit:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
 .login-create-account {
   align-items: center;
   background: rgba(255, 255, 255, 0.52);
@@ -430,8 +464,7 @@
 
 @media (max-width: 560px) {
   .login-modal-card {
-    max-height: calc(100vh - 20px);
-    overflow-y: auto;
+    max-height: calc(100dvh - var(--safe-area-top, 0px) - var(--safe-area-bottom, 0px) - 20px);
   }
 
   .login-modal-header,

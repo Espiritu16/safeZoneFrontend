@@ -1,3 +1,4 @@
+import '@angular/compiler';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
@@ -93,6 +94,77 @@ describe('AuthService', () => {
     expect((receivedError as Error).message).toBe('Correo o contraseña incorrectos.');
     expect(toastService.show).toHaveBeenCalledWith('Correo o contraseña incorrectos.', 'error');
     expect(service.isLoading()).toBe(false);
+  });
+
+  it('registers a public victim account with normalized email', () => {
+    let completed = false;
+
+    service.registerAccount('  Victima de Prueba  ', ' VICTIMA@gmail.com ', 'Nueva123').subscribe(() => {
+      completed = true;
+    });
+
+    const request = http.expectOne('http://localhost:8080/api/auth/registrar');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({
+      nombre: 'Victima de Prueba',
+      correo: 'victima@gmail.com',
+      contrasena: 'Nueva123',
+    });
+    request.flush({ success: true, message: 'Cuenta creada correctamente' });
+
+    expect(completed).toBe(true);
+    expect(toastService.show).toHaveBeenCalledWith('Cuenta creada correctamente', 'success');
+  });
+
+  it('requests a password recovery code for the normalized email', () => {
+    let completed = false;
+
+    service.requestPasswordRecovery(' VICTIMA@gmail.com ').subscribe(() => {
+      completed = true;
+    });
+
+    const request = http.expectOne('http://localhost:8080/api/auth/recuperar-contrasena');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ correo: 'victima@gmail.com' });
+    request.flush({ success: true, message: 'Codigo enviado correctamente' });
+
+    expect(completed).toBe(true);
+    expect(toastService.show).toHaveBeenCalledWith('Codigo enviado correctamente', 'success');
+  });
+
+  it('verifies a recovery code using the same normalized email', () => {
+    let completed = false;
+
+    service.verifyRecoveryCode(' VICTIMA@gmail.com ', '123456').subscribe(() => {
+      completed = true;
+    });
+
+    const request = http.expectOne('http://localhost:8080/api/auth/verificar-codigo');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ correo: 'victima@gmail.com', codigo: '123456' });
+    request.flush({ success: true, message: 'Codigo verificado correctamente' });
+
+    expect(completed).toBe(true);
+  });
+
+  it('resets password for the email tied to the verified recovery code', () => {
+    let completed = false;
+
+    service.resetPassword(' VICTIMA@gmail.com ', '123456', 'Nueva123').subscribe(() => {
+      completed = true;
+    });
+
+    const request = http.expectOne('http://localhost:8080/api/auth/restablecer-contrasena');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({
+      correo: 'victima@gmail.com',
+      codigo: '123456',
+      nuevaPassword: 'Nueva123',
+    });
+    request.flush({ success: true, message: 'Contrasena restablecida correctamente' });
+
+    expect(completed).toBe(true);
+    expect(toastService.show).toHaveBeenCalledWith('Contrasena restablecida correctamente', 'success');
   });
 
   it('logs out locally and clears session values', () => {
