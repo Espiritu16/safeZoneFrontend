@@ -32,6 +32,7 @@
         <select class="form-select" [ngModel]="casesService.casesRiskFilter()" (ngModelChange)="casesService.casesRiskFilter.set($event)">
           <option value="all">Todos los Riesgos</option>
           <option value="severo">Riesgo Severo</option>
+          <option value="alto">Riesgo Alto</option>
           <option value="moderado">Riesgo Moderado</option>
           <option value="leve">Riesgo Leve</option>
         </select>
@@ -75,7 +76,7 @@
               <td>{{ caso.tipo }}</td>
               <td>
                 <span class="badge" [ngClass]="{
-                  'badge-risk-severe': caso.riesgo === 'Severo',
+                  'badge-risk-severe': caso.riesgo === 'Severo' || caso.riesgo === 'Alto',
                   'badge-risk-moderate': caso.riesgo === 'Moderado',
                   'badge-risk-low': caso.riesgo === 'Leve'
                 }">
@@ -89,6 +90,8 @@
               </td>
               <td class="col-actions">
                 <button class="btn btn-outline btn-sm" (click)="casesService.viewCaseDetails(caso)">Ficha Digital</button>
+                <button class="btn btn-outline-blue-700 btn-sm">Editar</button>
+                <button class="btn btn-outline-red-700 btn-sm">Cerrar caso</button>
               </td>
             </tr>
           }
@@ -120,7 +123,7 @@
             <div class="sz-kanban-card">
               <div class="flex justify-between items-center">
                 <span class="badge" [ngClass]="{
-                  'badge-risk-severe': c.riesgo === 'Severo',
+                  'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
                   'badge-risk-moderate': c.riesgo === 'Moderado',
                   'badge-risk-low': c.riesgo === 'Leve'
                 }">{{ c.riesgo }}</span>
@@ -148,7 +151,7 @@
               <div class="flex justify-between items-center">
                 <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'Evaluación')" title="Retroceder a Evaluación">←</button>
                 <span class="badge" [ngClass]="{
-                  'badge-risk-severe': c.riesgo === 'Severo',
+                  'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
                   'badge-risk-moderate': c.riesgo === 'Moderado',
                   'badge-risk-low': c.riesgo === 'Leve'
                 }">{{ c.riesgo }}</span>
@@ -176,7 +179,7 @@
               <div class="flex justify-between items-center">
                 <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En Proceso')" title="Retroceder a En Proceso">←</button>
                 <span class="badge" [ngClass]="{
-                  'badge-risk-severe': c.riesgo === 'Severo',
+                  'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
                   'badge-risk-moderate': c.riesgo === 'Moderado',
                   'badge-risk-low': c.riesgo === 'Leve'
                 }">{{ c.riesgo }}</span>

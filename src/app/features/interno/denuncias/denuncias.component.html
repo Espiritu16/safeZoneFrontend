@@ -84,6 +84,8 @@
               <select class="form-select" [(ngModel)]="denunciaForm.distrito">
                 <option value="Lima Cercado">Lima Cercado</option>
                 <option value="Comas">Comas</option>
+                <option value="Los Olivos">Los Olivos</option>
+                <option value="Puente Piedra">Puente Piedra</option>
                 <option value="Villa El Salvador">Villa El Salvador</option>
                 <option value="San Juan de Lurigancho">San Juan de Lurigancho</option>
                 <option value="San Martín de Porres">San Martín de Porres</option>
@@ -106,10 +108,13 @@
             <div class="form-group">
               <label class="form-label">Tipo Principal de Violencia</label>
               <select class="form-select" [(ngModel)]="denunciaForm.tipoViolencia">
-                <option value="Física">Física</option>
-                <option value="Psicológica">Psicológica</option>
-                <option value="Económica">Económica / Patrimonial</option>
-                <option value="Física y Psicológica">Física y Psicológica Combinada</option>
+                <option value="Violencia Física">Física</option>
+                <option value="Violencia Psicológica">Psicológica</option>
+                <option value="Violencia Económica">Económica </option>
+                <option value="Violencia Patrimonial">Patrimonial</option>
+                <option value="Violencia Digital">Digital</option>
+                <option value="Violencia Sexual">Sexual</option>
+                <option value="Otra">Otra</option>
               </select>
             </div>
             <div class="form-group">

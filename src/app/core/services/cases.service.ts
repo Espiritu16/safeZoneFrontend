@@ -1,9 +1,28 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../http/api-endpoints';
 import { ApiClientService } from '../http/api-client.service';
-import type { ActualizarCasoRequest, CasoResponse, EstadoCaso, PrioridadCaso } from '../models/api.models';
+import type {
+  ActualizarCasoRequest,
+  CasoResponse,
+  DenunciaResponse,
+  EstadoCaso,
+  PrioridadCaso,
+  UsuarioResponse,
+} from '../models/api.models';
+import { DenunciasService } from './denuncias.service';
 import { ToastService } from './toast.service';
+import { UsuariosService } from './usuarios.service';
+
+const TIPO_VIOLENCIA_LABELS: Record<string, string> = {
+  FISICA: 'Violencia Física',
+  PSICOLOGICA: 'Violencia Psicológica',
+  SEXUAL: 'Violencia Sexual',
+  ECONOMICA: 'Violencia Económica',
+  PATRIMONIAL:'Violencia Patrimonial',
+  DIGITAL: 'Violencia Digital',
+  OTRA: 'Otra',
+};
 
 export interface Caso {
   id: string;
@@ -26,6 +45,11 @@ export interface Caso {
 export class CasesService {
   private readonly toastService = inject(ToastService);
   private readonly api = inject(ApiClientService);
+  private readonly denunciasService = inject(DenunciasService);
+  private readonly usuariosService = inject(UsuariosService);
+
+  private denunciasByCasoId = new Map<string, DenunciaResponse>();
+  private usuariosById = new Map<string, UsuarioResponse>();
 
   public readonly casos = signal<Caso[]>([]);
   public readonly isLoading = signal<boolean>(false);
@@ -54,6 +78,7 @@ export class CasesService {
   public readonly totalCasos = computed(() => this.casos().length);
   public readonly casosSeveros = computed(() => this.casos().filter(c => c.riesgo === 'Severo').length);
   public readonly casosModerados = computed(() => this.casos().filter(c => c.riesgo === 'Moderado').length);
+  public readonly casosAltos=computed(()=>this.casos().filter(c=>c.riesgo ==='Alto').length);
   public readonly casosLeves = computed(() => this.casos().filter(c => c.riesgo === 'Leve').length);
 
   constructor() {
@@ -63,8 +88,13 @@ export class CasesService {
   loadCasos(): Observable<Caso[]> {
     this.isLoading.set(true);
     this.loadError.set('');
-    return this.api.get<CasoResponse[]>(API_ENDPOINTS.casos).pipe(
-      map((response) => response.map((caso) => this.toViewModel(caso))),
+    return forkJoin({
+      casos: this.api.get<CasoResponse[]>(API_ENDPOINTS.casos),
+      denuncias: this.denunciasService.list().pipe(catchError(() => of([] as DenunciaResponse[]))),
+      usuarios: this.usuariosService.list().pipe(catchError(() => of([] as UsuarioResponse[]))),
+    }).pipe(
+      tap(({ denuncias, usuarios }) => this.syncLookupMaps(denuncias, usuarios)),
+      map(({ casos }) => casos.map((caso) => this.toViewModel(caso))),
       tap((casos) => this.casos.set(casos)),
       catchError(() => {
         this.loadError.set('No se pudieron cargar los casos desde el backend.');
@@ -80,22 +110,49 @@ export class CasesService {
 
   moveCase(caseId: string, newStatus: string) {
     const estado = this.backendStatus(newStatus);
-    const request: ActualizarCasoRequest = { estado };
-    this.api.put<CasoResponse>(`${API_ENDPOINTS.casos}/${caseId}`, request).subscribe({
-      next: (response) => {
-        const updated = this.toViewModel(response);
-        this.casos.update((casosList) => casosList.map((caso) => caso.id === caseId ? updated : caso));
-        this.toastService.show(`${updated.codigo} movido a estado: ${updated.estado}`, 'success');
-      },
-      error: () => this.toastService.show('No se pudo actualizar el estado del caso.', 'error'),
-    });
+    this.editCase(caseId, { estado });
   }
 
   addCase(newCase: Omit<Caso, 'id'>) {
     const id = (this.casos().length + 1).toString();
     this.casos.update(list => [...list, { ...newCase, id }]);
   }
+  editCase(caseId:string,request:ActualizarCasoRequest){
+    this.api.put<CasoResponse>(`${API_ENDPOINTS.casos}/${caseId}`,request).subscribe({
+        next:(response)=>{
+          const updated=this.toViewModel(response)
+          this.casos.update(casos =>
+          casos.map(caso =>
+            caso.id === caseId ? updated : caso
+          )
+          );
+          this.toastService.show(
+            'Caso actualizado correctamente.',
+            'success'
+          );
+        },
+        error: () => {
+          this.toastService.show(
+            'No se pudo actualizar el caso.',
+            'error'
+          );
+        }
+    })
 
+  }
+  closedCase(caseId: string) {
+    this.api.patch<void>(`${API_ENDPOINTS.casos}/${caseId}/inhabilitar`).subscribe({
+      next: () => {
+        this.casos.update(casos =>
+          casos.filter(caso => caso.id !== caseId)
+        );
+        this.toastService.show('Caso cerrado correctamente', 'success');
+      },
+      error: () => {
+        this.toastService.show('No se pudo eliminar el caso.', 'error');
+      }
+    });
+  }
   viewCaseDetails(caso: Caso) {
     this.selectedCase.set(caso);
     this.activeCaseTab.set('detalles');
@@ -105,15 +162,27 @@ export class CasesService {
     this.selectedCase.set(null);
   }
 
+  private syncLookupMaps(denuncias: DenunciaResponse[], usuarios: UsuarioResponse[]): void {
+    this.denunciasByCasoId = new Map(
+      denuncias
+        .filter((denuncia) => denuncia.casoId)
+        .map((denuncia) => [denuncia.casoId, denuncia]),
+    );
+    this.usuariosById = new Map(usuarios.map((usuario) => [usuario.id, usuario]));
+  }
+
   private toViewModel(caso: CasoResponse): Caso {
+    const denuncia = this.denunciasByCasoId.get(caso.id);
+    const usuario = this.usuariosById.get(caso.victimaId);
+
     return {
       id: caso.id,
       codigo: `Caso #${caso.id.slice(0, 8).toUpperCase()}`,
-      victim: `Víctima ${caso.victimaId.slice(0, 8)}`,
-      anonimo: true,
+      victim: this.victimLabel(usuario, denuncia, caso.victimaId),
+      anonimo: denuncia?.anonima ?? false,
       edad: 0,
       distrito: caso.distrito,
-      tipo: this.tipoFromSummary(caso.resumen),
+      tipo: this.tipoViolenciaLabel(denuncia?.tipoViolencia, caso.resumen),
       estado: this.statusLabel(caso.estado),
       riesgo: this.riskLabel(caso.prioridad),
       asignado: 'Pendiente de asignación',
@@ -122,13 +191,46 @@ export class CasesService {
     };
   }
 
+  private victimLabel(
+    usuario: UsuarioResponse | undefined,
+    denuncia: DenunciaResponse | undefined,
+    victimaId: string,
+  ): string {
+    if (denuncia?.anonima) {
+      return 'Víctima protegida';
+    }
+
+    if (usuario) {
+      const nombre = `${usuario.nombres} ${usuario.apellidos}`.trim();
+      if (nombre) {
+        return nombre;
+      }
+    }
+
+    return `Víctima ${victimaId.slice(0, 8)}`;
+  }
+
+  private tipoViolenciaLabel(rawTipo?: string, resumen?: string): string {
+    if (rawTipo) {
+      const normalized = rawTipo
+        .trim()
+        .toUpperCase()
+        .normalize('NFD')
+        .replace(/\p{M}/gu, '');
+
+      return TIPO_VIOLENCIA_LABELS[normalized] ?? rawTipo;
+    }
+
+    return this.tipoFromSummary(resumen ?? '');
+  }
+
   private statusLabel(status: EstadoCaso): string {
     const labels: Record<EstadoCaso, string> = {
-      REGISTRADO: 'Evaluación',
-      EN_EVALUACION: 'Evaluación',
-      EN_ATENCION: 'En Proceso',
-      DERIVADO: 'Medidas de Protección',
-      CERRADO: 'Archivado',
+      REGISTRADO: 'Registrado',
+      EN_EVALUACION: 'En evaluación',
+      EN_ATENCION: 'En atención',
+      DERIVADO: 'Derivado',
+      CERRADO: 'Cerrado',
       ARCHIVADO: 'Archivado',
     };
     return labels[status];
@@ -139,7 +241,7 @@ export class CasesService {
       'Evaluación': 'EN_EVALUACION',
       'En Proceso': 'EN_ATENCION',
       'Medidas de Protección': 'DERIVADO',
-      Archivado: 'ARCHIVADO',
+      'Archivado': 'ARCHIVADO',
     };
     return statuses[label] ?? 'EN_EVALUACION';
   }
@@ -148,7 +250,7 @@ export class CasesService {
     const labels: Record<PrioridadCaso, string> = {
       BAJA: 'Leve',
       MEDIA: 'Moderado',
-      ALTA: 'Severo',
+      ALTA: 'Alto',
       CRITICA: 'Severo',
     };
     return labels[priority];

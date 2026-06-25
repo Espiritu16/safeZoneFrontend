@@ -20,26 +20,70 @@ describe('CasesService', () => {
     http.verify();
   });
 
-  it('loads and maps backend cases to dashboard view models', () => {
-    const request = http.expectOne('http://localhost:8080/api/casos');
-    request.flush([
-      {
-        id: '12345678-0000-0000-0000-000000000000',
-        victimaId: '87654321-0000-0000-0000-000000000000',
-        estado: 'EN_ATENCION',
-        prioridad: 'ALTA',
-        resumen: 'Violencia Fisica. Registro formalizado.',
-        distrito: 'Comas',
-        activo: true,
-        fechaCreacion: '2026-06-16T10:00:00',
-        fechaActualizacion: '2026-06-16T10:00:00',
-      },
-    ]);
+  function flushInitialLoad(
+    casos: unknown[] = [],
+    denuncias: unknown[] = [],
+    usuarios: unknown[] = [],
+  ): void {
+    http.expectOne('http://localhost:8080/api/casos').flush(casos);
+    http.expectOne('http://localhost:8080/api/denuncias').flush(denuncias);
+    http.expectOne('http://localhost:8080/api/usuarios').flush(usuarios);
+  }
+
+  it('loads and enriches backend cases with denuncia and usuario data', () => {
+    flushInitialLoad(
+      [
+        {
+          id: '12345678-0000-0000-0000-000000000000',
+          victimaId: '87654321-0000-0000-0000-000000000000',
+          estado: 'EN_ATENCION',
+          prioridad: 'ALTA',
+          resumen: 'Descripcion de los hechos.',
+          distrito: 'Comas',
+          activo: true,
+          fechaCreacion: '2026-06-16T10:00:00',
+          fechaActualizacion: '2026-06-16T10:00:00',
+        },
+      ],
+      [
+        {
+          id: 'denuncia-1',
+          casoId: '12345678-0000-0000-0000-000000000000',
+          victimaId: '87654321-0000-0000-0000-000000000000',
+          descripcion: 'Descripcion de los hechos.',
+          tipoViolencia: 'FISICA',
+          fechaIncidente: '2026-06-15T10:00:00',
+          distrito: 'Comas',
+          direccionReferencia: 'Referencia',
+          nivelRiesgo: 'ALTO',
+          anonima: false,
+          adjuntos: [],
+          activo: true,
+          fechaCreacion: '2026-06-16T10:00:00',
+          fechaActualizacion: '2026-06-16T10:00:00',
+        },
+      ],
+      [
+        {
+          id: '87654321-0000-0000-0000-000000000000',
+          correo: 'maria@example.com',
+          nombres: 'Ana Maria',
+          apellidos: 'Lopez',
+          dni: '45678912',
+          telefono: '999888777',
+          distrito: 'Comas',
+          rol: 'VICTIMA',
+          activo: true,
+        },
+      ],
+    );
 
     expect(service.casos()).toEqual([
       expect.objectContaining({
         codigo: 'Caso #12345678',
-        victim: 'Víctima 87654321',
+        victim: 'Ana Maria Lopez',
+        tipo: 'Violencia Física',
+        anonimo: false,
         estado: 'En Proceso',
         riesgo: 'Severo',
         distrito: 'Comas',
@@ -48,7 +92,7 @@ describe('CasesService', () => {
   });
 
   it('persists a case state transition through the backend', () => {
-    http.expectOne('http://localhost:8080/api/casos').flush([]);
+    flushInitialLoad();
 
     service.casos.set([
       {
