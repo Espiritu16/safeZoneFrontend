@@ -98,6 +98,7 @@ export interface FormalizarPreDenunciaRequest {
   casoId?: string;
   nivelRiesgo: NivelRiesgo;
   formalizarAnonima?: boolean;
+  edad?:string;
 }
 
 export interface CasoResponse {
@@ -140,6 +141,7 @@ export interface ActualizarCasoRequest {
 export interface CrearDenunciaRequest {
   casoId?: string;
   victimaId: string;
+  edad: number;
   descripcion: string;
   tipoViolencia: string;
   fechaIncidente?: string;
@@ -156,6 +158,8 @@ export interface DenunciaResponse extends CrearDenunciaRequest {
   id: string;
   casoId: string;
   activo: boolean;
+  edad: number;
+  tipoViolencia:string;
   fechaCreacion: string;
   fechaActualizacion: string;
 }

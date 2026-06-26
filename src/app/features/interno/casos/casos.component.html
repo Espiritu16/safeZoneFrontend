@@ -55,6 +55,7 @@
             <th>Riesgo</th>
             <th>Encargado</th>
             <th>Fecha de Ingreso</th>
+            <th>Estado de la denuncia</th>
             <th>Estado Emocional</th>
             <th class="col-actions">Acciones</th>
           </tr>
@@ -85,13 +86,14 @@
               </td>
               <td>{{ caso.asignado }}</td>
               <td>{{ caso.fecha }}</td>
+              <td>{{ caso.estado }}</td>
               <td>
                 <span class="text-xs text-secondary font-medium">{{ caso.emocion }}</span>
               </td>
               <td class="col-actions">
-                <button class="btn btn-outline btn-sm" (click)="casesService.viewCaseDetails(caso)">Ficha Digital</button>
-                <button class="btn btn-outline-blue-700 btn-sm">Editar</button>
-                <button class="btn btn-outline-red-700 btn-sm">Cerrar caso</button>
+                <button class="btn btn-outline btn-sm my-2" (click)="casesService.viewCaseDetails(caso)">Ficha Digital</button>
+                <button class="btn btn-sm border border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white my-2">Editar</button>
+                <button class="btn btn-sm border border-red-700 text-red-700 hover:bg-red-700 hover:text-white my-2">Cerrar caso</button>
               </td>
             </tr>
           }
