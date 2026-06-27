@@ -37,6 +37,7 @@ export interface Caso {
   asignado: string;
   fecha: string;
   emocion: string;
+  resumen?: string;
 }
 
 @Injectable({
@@ -195,6 +196,7 @@ export class CasesService {
       asignado: 'Pendiente de asignación',
       fecha: caso.fechaCreacion.split('T')[0] ?? caso.fechaCreacion,
       emocion: 'Seguimiento pendiente',
+      resumen: caso.resumen,
     };
   }
 

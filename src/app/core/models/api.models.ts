@@ -98,7 +98,7 @@ export interface FormalizarPreDenunciaRequest {
   casoId?: string;
   nivelRiesgo: NivelRiesgo;
   formalizarAnonima?: boolean;
-  edad?:string;
+  edad?: number;
 }
 
 export interface CasoResponse {

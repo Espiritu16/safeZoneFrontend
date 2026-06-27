@@ -92,8 +92,8 @@
               </td>
               <td class="col-actions">
                 <button class="btn btn-outline btn-sm my-2" (click)="casesService.viewCaseDetails(caso)">Ficha Digital</button>
-                <button class="btn btn-sm border border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white my-2">Editar</button>
-                <button class="btn btn-sm border border-red-700 text-red-700 hover:bg-red-700 hover:text-white my-2">Cerrar caso</button>
+                <button class="btn btn-sm border border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white my-2" (click)="casesService.openEditModal(caso)">Editar</button>
+                <button class="btn btn-sm border border-red-700 text-red-700 hover:bg-red-700 hover:text-white my-2" (click)="openDeleteModal(caso)">Cerrar caso</button>
               </td>
             </tr>
           }
@@ -197,6 +197,93 @@
       </div>
 
     </div>
+  }
+
+  <!-- MODAL: EDITAR CASO -->
+  @if (casesService.showModal()) {
+    @if (casesService.editingCase(); as caseItem) {
+      <div class="sz-modal-overlay">
+        <div class="sz-modal">
+          <div class="sz-modal-header">
+            <h3 class="sz-modal-header-title">Editar Caso: {{ caseItem.codigo }}</h3>
+            <button class="sz-modal-header-close" (click)="casesService.closeModal()">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div class="sz-modal-body">
+            <form #editForm="ngForm" id="caseEditForm">
+              <!-- Riesgo -->
+              <div class="form-group">
+                <label class="form-label">Riesgo del Caso *</label>
+                <select class="form-select" name="riesgo" [(ngModel)]="caseItem.riesgo" required>
+                  <option value="Leve">Leve</option>
+                  <option value="Moderado">Moderado</option>
+                  <option value="Alto">Alto</option>
+                  <option value="Severo">Severo</option>
+                </select>
+              </div>
+
+              <!-- Estado -->
+              <div class="form-group">
+                <label class="form-label">Estado de la Denuncia *</label>
+                <select class="form-select" name="estado" [(ngModel)]="caseItem.estado" required>
+                  <option value="Registrado">Registrado</option>
+                  <option value="En evaluación">En evaluación</option>
+                  <option value="En atención">En atención</option>
+                  <option value="Derivado">Derivado</option>
+                  <option value="Cerrado">Cerrado</option>
+                  <option value="Archivado">Archivado</option>
+                </select>
+              </div>
+
+              <!-- Distrito -->
+              <div class="form-group">
+                <label class="form-label">Distrito *</label>
+                <select class="form-select" name="distrito" [(ngModel)]="caseItem.distrito" required>
+                  @for (distrito of distritos; track distrito) {
+                    <option [value]="distrito">{{ distrito }}</option>
+                  }
+                </select>
+              </div>
+
+              <!-- Resumen -->
+              <div class="form-group">
+                <label class="form-label">Resumen / Descripción del Caso *</label>
+                <textarea class="form-input" name="resumen" [(ngModel)]="caseItem.resumen" rows="4" placeholder="Ingrese el resumen del caso..." required minlength="10" maxlength="1000"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="sz-modal-footer">
+            <button class="btn btn-outline" (click)="casesService.closeModal()">Cancelar</button>
+            <button class="btn btn-primary" (click)="saveEdit()" [disabled]="editForm.invalid || !caseItem.resumen">Guardar Cambios</button>
+          </div>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- MODAL: CONFIRMACIÓN DE ELIMINACIÓN -->
+  @if (showDeleteModal()) {
+    @if (caseToDelete(); as caseItem) {
+      <div class="sz-modal-overlay">
+        <div class="sz-modal sz-modal-sm">
+          <div class="sz-modal-header">
+            <h3 class="sz-modal-header-title">Confirmar cierre del caso</h3>
+            <button class="sz-modal-header-close" (click)="closeDeleteModal()">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div class="sz-modal-body text-center">
+            <p class="mb-4">¿Estás seguro de que deseas cerrar el caso <strong>{{ caseItem.codigo }}</strong>?</p>
+            <p class="text-xs text-muted">Esta acción inhabilitará el caso permanentemente.</p>
+          </div>
+          <div class="sz-modal-footer">
+            <button class="btn btn-outline" (click)="closeDeleteModal()">Cancelar</button>
+            <button class="btn btn-danger" (click)="confirmDelete()">Cerrar caso</button>
+          </div>
+        </div>
+      </div>
+    }
   }
 
 </div>
