@@ -29,7 +29,7 @@ export interface Caso {
   codigo: string;
   victim: string;
   anonimo: boolean;
-  edad: number;
+  edad: string;
   distrito: string;
   tipo: string;
   estado: string;
@@ -37,6 +37,7 @@ export interface Caso {
   asignado: string;
   fecha: string;
   emocion: string;
+  resumen?: string;
 }
 
 @Injectable({
@@ -47,14 +48,14 @@ export class CasesService {
   private readonly api = inject(ApiClientService);
   private readonly denunciasService = inject(DenunciasService);
   private readonly usuariosService = inject(UsuariosService);
-
+  public readonly showModal = signal<boolean>(false);
   private denunciasByCasoId = new Map<string, DenunciaResponse>();
   private usuariosById = new Map<string, UsuarioResponse>();
 
   public readonly casos = signal<Caso[]>([]);
   public readonly isLoading = signal<boolean>(false);
   public readonly loadError = signal<string>('');
-
+  public readonly editingCase = signal<Caso | null>(null);
   public readonly casesSearchQuery = signal<string>('');
   public readonly casesRiskFilter = signal<string>('all');
   
@@ -84,7 +85,14 @@ export class CasesService {
   constructor() {
     this.loadCasos().subscribe();
   }
-
+  openEditModal(caso: Caso) {
+      this.editingCase.set({...caso})
+      this.showModal.set(true);
+  }
+  closeModal() {
+    this.showModal.set(false);
+    this.editingCase.set(null);
+  }
   loadCasos(): Observable<Caso[]> {
     this.isLoading.set(true);
     this.loadError.set('');
@@ -180,7 +188,7 @@ export class CasesService {
       codigo: `Caso #${caso.id.slice(0, 8).toUpperCase()}`,
       victim: this.victimLabel(usuario, denuncia, caso.victimaId),
       anonimo: denuncia?.anonima ?? false,
-      edad: 0,
+      edad: denuncia?.edad != null ? String(denuncia.edad+" años") : '',
       distrito: caso.distrito,
       tipo: this.tipoViolenciaLabel(denuncia?.tipoViolencia, caso.resumen),
       estado: this.statusLabel(caso.estado),
@@ -188,6 +196,7 @@ export class CasesService {
       asignado: 'Pendiente de asignación',
       fecha: caso.fechaCreacion.split('T')[0] ?? caso.fechaCreacion,
       emocion: 'Seguimiento pendiente',
+      resumen: caso.resumen,
     };
   }
 

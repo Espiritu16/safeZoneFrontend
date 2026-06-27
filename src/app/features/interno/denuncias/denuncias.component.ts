@@ -73,6 +73,7 @@ export class DenunciasComponent {
     this.resolveVictima().pipe(
       switchMap((victima) => this.denunciasService.create({
         victimaId: victima.id,
+        edad:Number(this.denunciaForm.edad),
         descripcion: this.denunciaForm.detalleHechos,
         tipoViolencia: this.denunciaForm.tipoViolencia,
         fechaIncidente: new Date().toISOString(),
