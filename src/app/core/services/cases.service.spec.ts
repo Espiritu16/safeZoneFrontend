@@ -197,4 +197,88 @@ describe('CasesService', () => {
     expect(service.getFilteredCasosByStatus('En atención')).toHaveLength(1);
     expect(service.getFilteredCasosByStatus('En evaluación')).toHaveLength(0);
   });
+
+  it('filters cases by date range, district and assignment status', () => {
+    flushInitialLoad();
+
+    service.casos.set([
+      {
+        id: 'case-1',
+        codigo: 'Caso #CASE-1',
+        victim: 'Víctima uno',
+        anonimo: false,
+        edad: '30',
+        distrito: 'Comas',
+        tipo: 'Violencia Física',
+        estado: 'En evaluación',
+        riesgo: 'Moderado',
+        asignado: 'Pendiente de asignación',
+        fecha: '2026-06-10',
+      },
+      {
+        id: 'case-2',
+        codigo: 'Caso #CASE-2',
+        victim: 'Víctima dos',
+        anonimo: false,
+        edad: '25',
+        distrito: 'Lima Cercado',
+        tipo: 'Violencia Psicológica',
+        estado: 'En atención',
+        riesgo: 'Alto',
+        asignado: 'Psic.: Rosa Salas',
+        fecha: '2026-06-18',
+      },
+      {
+        id: 'case-3',
+        codigo: 'Caso #CASE-3',
+        victim: 'Víctima tres',
+        anonimo: false,
+        edad: '28',
+        distrito: 'Lima Cercado',
+        tipo: 'Violencia Digital',
+        estado: 'Derivado',
+        riesgo: 'Leve',
+        asignado: 'Pendiente de asignación',
+        fecha: '2026-06-25',
+      },
+    ]);
+
+    service.casesDateFromFilter.set('2026-06-15');
+    service.casesDateToFilter.set('2026-06-20');
+    service.casesDistrictFilter.set('Lima Cercado');
+    service.casesAssignmentFilter.set('assigned');
+
+    expect(service.filteredCasos()).toEqual([
+      expect.objectContaining({
+        id: 'case-2',
+        distrito: 'Lima Cercado',
+        fecha: '2026-06-18',
+      }),
+    ]);
+  });
+
+  it('clears all active case filters', () => {
+    flushInitialLoad();
+
+    service.casesSearchQuery.set('caso');
+    service.casesRiskFilter.set('alto');
+    service.casesStatusFilter.set('En atención');
+    service.casesDateFromFilter.set('2026-06-01');
+    service.casesDateToFilter.set('2026-06-30');
+    service.casesDistrictFilter.set('Comas');
+    service.casesAssignmentFilter.set('assigned');
+
+    expect(service.hasActiveCaseFilters()).toBe(true);
+
+    service.clearCaseFilters();
+
+    expect(service.casesSearchQuery()).toBe('');
+    expect(service.casesRiskFilter()).toBe('all');
+    expect(service.casesStatusFilter()).toBe('all');
+    expect(service.casesDateFromFilter()).toBe('');
+    expect(service.casesDateToFilter()).toBe('');
+    expect(service.casesDistrictFilter()).toBe('all');
+    expect(service.casesAssignmentFilter()).toBe('all');
+    expect(service.hasActiveCaseFilters()).toBe(false);
+  });
 });

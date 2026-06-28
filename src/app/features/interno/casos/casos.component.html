@@ -25,7 +25,7 @@
   <div class="sz-table-filters mt-6">
     <div class="sz-table-filters-left">
       <div class="form-group m-0 sz-field-min-sm">
-        <input class="form-input" type="text" placeholder="Buscar por código, víctima, encargado..." 
+        <input class="form-input" type="text" aria-label="Buscar casos" placeholder="Buscar por código, víctima, encargado..." 
                [ngModel]="casesService.casesSearchQuery()" (ngModelChange)="casesService.casesSearchQuery.set($event)">
       </div>
       <div class="form-group m-0">
@@ -44,6 +44,30 @@
           }
         </select>
       </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por distrito" [ngModel]="casesService.casesDistrictFilter()" (ngModelChange)="casesService.casesDistrictFilter.set($event)">
+          <option value="all">Todos los distritos</option>
+          @for (distrito of distritos; track distrito) {
+            <option [value]="distrito">{{ distrito }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por asignación" [ngModel]="casesService.casesAssignmentFilter()" (ngModelChange)="casesService.casesAssignmentFilter.set($event)">
+          <option value="all">Todas las asignaciones</option>
+          <option value="assigned">Con profesional asignado</option>
+          <option value="unassigned">Pendiente de asignación</option>
+        </select>
+      </div>
+      <div class="form-group m-0 sz-date-filter">
+        <input class="form-input" type="date" aria-label="Fecha de ingreso desde" name="fechaDesde" [value]="casesService.casesDateFromFilter()" (input)="casesService.casesDateFromFilter.set($any($event.target).value)">
+      </div>
+      <div class="form-group m-0 sz-date-filter">
+        <input class="form-input" type="date" aria-label="Fecha de ingreso hasta" name="fechaHasta" [value]="casesService.casesDateToFilter()" (input)="casesService.casesDateToFilter.set($any($event.target).value)">
+      </div>
+      <button class="btn btn-outline btn-sm" type="button" [disabled]="!casesService.hasActiveCaseFilters()" (click)="casesService.clearCaseFilters()">
+        Limpiar filtros
+      </button>
     </div>
     <div class="sz-table-filters-right">
       <span class="text-xs text-muted font-medium">Resultados encontrados: {{ casesService.filteredCasos().length }}</span>

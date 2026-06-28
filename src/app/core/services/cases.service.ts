@@ -67,6 +67,10 @@ export class CasesService {
   public readonly casesSearchQuery = signal<string>('');
   public readonly casesRiskFilter = signal<string>('all');
   public readonly casesStatusFilter = signal<string>('all');
+  public readonly casesDateFromFilter = signal<string>('');
+  public readonly casesDateToFilter = signal<string>('');
+  public readonly casesDistrictFilter = signal<string>('all');
+  public readonly casesAssignmentFilter = signal<string>('all');
   
   // Expediente Seleccionado
   public readonly selectedCase = signal<Caso | null>(null);
@@ -83,10 +87,34 @@ export class CasesService {
 
       const matchStatus = this.casesStatusFilter() === 'all' ||
                           c.estado === this.casesStatusFilter();
+
+      const matchDateFrom = !this.casesDateFromFilter() ||
+                            c.fecha >= this.casesDateFromFilter();
+
+      const matchDateTo = !this.casesDateToFilter() ||
+                          c.fecha <= this.casesDateToFilter();
+
+      const matchDistrict = this.casesDistrictFilter() === 'all' ||
+                            c.distrito === this.casesDistrictFilter();
+
+      const hasAssignment = c.asignado !== 'Pendiente de asignación' && c.asignado !== 'Pendiente';
+      const matchAssignment = this.casesAssignmentFilter() === 'all' ||
+                              (this.casesAssignmentFilter() === 'assigned' && hasAssignment) ||
+                              (this.casesAssignmentFilter() === 'unassigned' && !hasAssignment);
       
-      return matchSearch && matchRisk && matchStatus;
+      return matchSearch && matchRisk && matchStatus && matchDateFrom && matchDateTo && matchDistrict && matchAssignment;
     });
   });
+
+  public readonly hasActiveCaseFilters = computed(() =>
+    this.casesSearchQuery().trim() !== '' ||
+    this.casesRiskFilter() !== 'all' ||
+    this.casesStatusFilter() !== 'all' ||
+    this.casesDateFromFilter() !== '' ||
+    this.casesDateToFilter() !== '' ||
+    this.casesDistrictFilter() !== 'all' ||
+    this.casesAssignmentFilter() !== 'all'
+  );
 
   public readonly totalCasos = computed(() => this.casos().length);
   public readonly casosSeveros = computed(() => this.casos().filter(c => c.riesgo === 'Severo').length);
@@ -131,6 +159,16 @@ export class CasesService {
 
   getFilteredCasosByStatus(status: string) {
     return this.filteredCasos().filter(c => c.estado === status);
+  }
+
+  clearCaseFilters(): void {
+    this.casesSearchQuery.set('');
+    this.casesRiskFilter.set('all');
+    this.casesStatusFilter.set('all');
+    this.casesDateFromFilter.set('');
+    this.casesDateToFilter.set('');
+    this.casesDistrictFilter.set('all');
+    this.casesAssignmentFilter.set('all');
   }
 
   moveCase(caseId: string, newStatus: string) {
