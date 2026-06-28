@@ -33,15 +33,42 @@
 }
 
 .sz-kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
   flex: 1;
+  gap: 14px;
   min-height: 0;
   overflow: auto;
 }
 
 .sz-kanban-column {
-  height: 100%;
+  min-width: 0;
+  height: auto;
   max-height: none;
   min-height: 0;
+  padding: 12px 10px;
+}
+
+.sz-kanban-column-list {
+  min-height: 180px;
+  max-height: 320px;
+}
+
+@media (max-width: 1180px) {
+  .sz-kanban-board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .sz-kanban-board {
+    grid-template-columns: 1fr;
+  }
+
+  .sz-kanban-column-list {
+    max-height: 280px;
+  }
 }
 
 .sz-kanban-card {
