@@ -108,90 +108,49 @@
 
   <!-- MODO 2: VISTA KANBAN -->
   @if (casesViewMode() === 'kanban') {
-    <div class="sz-kanban-board mt-4">
-      
-      <!-- Columna 1: Evaluación -->
-      <div class="sz-kanban-column">
-        <div class="sz-kanban-column-header">
-          <span class="column-title"><span class="badge-dot sz-dot-warning"></span>Evaluación</span>
-          <span class="column-count">{{ casesService.getCasosByStatus('En evaluación').length }}</span>
-        </div>
-        <div class="sz-kanban-column-list">
-          @for (c of casesService.getCasosByStatus('En evaluación'); track c.id) {
-            <div class="sz-kanban-card">
-              <div class="flex justify-between items-center">
-                <span class="badge" [ngClass]="{
-                  'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
-                  'badge-risk-moderate': c.riesgo === 'Moderado',
-                  'badge-risk-low': c.riesgo === 'Leve'
-                }">{{ c.riesgo }}</span>
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En atención')" title="Avanzar a En atención">→</button>
+    <div class="sz-kanban-board mt-4" cdkDropListGroup>
+      @for (column of kanbanColumns; track column.status) {
+        <div class="sz-kanban-column">
+          <div class="sz-kanban-column-header">
+            <span class="column-title"><span class="badge-dot" [ngClass]="column.dotClass"></span>{{ column.title }}</span>
+            <span class="column-count">{{ casesService.getCasosByStatus(column.status).length }}</span>
+          </div>
+          <div
+            class="sz-kanban-column-list"
+            cdkDropList
+            [id]="'casos-' + column.status"
+            [cdkDropListData]="column.status"
+            (cdkDropListDropped)="dropCase($event)"
+          >
+            @for (c of casesService.getCasosByStatus(column.status); track c.id) {
+              <div class="sz-kanban-card" cdkDrag [cdkDragData]="c">
+                <div class="flex justify-between items-center">
+                  @if (previousStatus(column.status); as previous) {
+                    <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, previous)" [title]="'Retroceder a ' + previous">←</button>
+                  } @else {
+                    <span></span>
+                  }
+                  <span class="badge" [ngClass]="{
+                    'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
+                    'badge-risk-moderate': c.riesgo === 'Moderado',
+                    'badge-risk-low': c.riesgo === 'Leve'
+                  }">{{ c.riesgo }}</span>
+                  @if (nextStatus(column.status); as next) {
+                    <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, next)" [title]="'Avanzar a ' + next">→</button>
+                  } @else {
+                    <span></span>
+                  }
+                </div>
+                <p class="sz-kanban-card-title">{{ c.victim }}</p>
+                <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
+                <div class="sz-kanban-card-footer">
+                  <span>Asignado: {{ c.asignado }}</span>
+                </div>
               </div>
-              <p class="sz-kanban-card-title">{{ c.victim }}</p>
-              <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
-              <div class="sz-kanban-card-footer">
-                <span>Asignado: {{ c.asignado }}</span>
-              </div>
-            </div>
-          }
+            }
+          </div>
         </div>
-      </div>
-
-      <!-- Columna 2: En Proceso -->
-      <div class="sz-kanban-column">
-        <div class="sz-kanban-column-header">
-          <span class="column-title"><span class="badge-dot sz-dot-info"></span>En atención</span>
-          <span class="column-count">{{ casesService.getCasosByStatus('En atención').length }}</span>
-        </div>
-        <div class="sz-kanban-column-list">
-          @for (c of casesService.getCasosByStatus('En atención'); track c.id) {
-            <div class="sz-kanban-card">
-              <div class="flex justify-between items-center">
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En evaluación')" title="Retroceder a En evaluación">←</button>
-                <span class="badge" [ngClass]="{
-                  'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
-                  'badge-risk-moderate': c.riesgo === 'Moderado',
-                  'badge-risk-low': c.riesgo === 'Leve'
-                }">{{ c.riesgo }}</span>
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'Derivado')" title="Avanzar a derivación">→</button>
-              </div>
-              <p class="sz-kanban-card-title">{{ c.victim }}</p>
-              <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
-              <div class="sz-kanban-card-footer">
-                <span>Asignado: {{ c.asignado }}</span>
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-
-      <!-- Columna 3: Medidas de Protección -->
-      <div class="sz-kanban-column">
-        <div class="sz-kanban-column-header">
-          <span class="column-title"><span class="badge-dot sz-dot-success"></span>Derivado</span>
-          <span class="column-count">{{ casesService.getCasosByStatus('Derivado').length }}</span>
-        </div>
-        <div class="sz-kanban-column-list">
-          @for (c of casesService.getCasosByStatus('Derivado'); track c.id) {
-            <div class="sz-kanban-card">
-              <div class="flex justify-between items-center">
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En atención')" title="Retroceder a En atención">←</button>
-                <span class="badge" [ngClass]="{
-                  'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
-                  'badge-risk-moderate': c.riesgo === 'Moderado',
-                  'badge-risk-low': c.riesgo === 'Leve'
-                }">{{ c.riesgo }}</span>
-              </div>
-              <p class="sz-kanban-card-title">{{ c.victim }}</p>
-              <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
-              <div class="sz-kanban-card-footer">
-                <span>Asignado: {{ c.asignado }}</span>
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-
+      }
     </div>
   }
 </div>

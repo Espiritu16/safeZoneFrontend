@@ -2,8 +2,15 @@ import { Component, ViewChild, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CasesService, Caso } from '../../../core/services/cases.service';
 import type { PrioridadCaso, EstadoCaso, ActualizarCasoRequest } from '../../../core/models/api.models';
+
+interface KanbanColumn {
+  title: string;
+  status: string;
+  dotClass: string;
+}
 
 interface CaseEditFormValue {
   riesgo?: string;
@@ -17,7 +24,7 @@ interface CaseEditFormValue {
 @Component({
   selector: 'app-casos',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, DragDropModule],
   templateUrl: './casos.component.html',
   styleUrl: './casos.component.scss'
 })
@@ -25,6 +32,12 @@ export class CasosComponent {
   protected readonly casesService = inject(CasesService);
   protected readonly casesViewMode = signal<string>('table');
   @ViewChild('editForm') private editForm?: NgForm;
+  protected readonly kanbanColumns: KanbanColumn[] = [
+    { title: 'Registrado', status: 'Registrado', dotClass: 'sz-dot-warning' },
+    { title: 'Evaluación', status: 'En evaluación', dotClass: 'sz-dot-warning' },
+    { title: 'En atención', status: 'En atención', dotClass: 'sz-dot-info' },
+    { title: 'Derivado', status: 'Derivado', dotClass: 'sz-dot-success' },
+  ];
   protected readonly psicologos = computed(() =>
     this.casesService.profesionales().filter((usuario) => usuario.rol === 'PSICOLOGO'),
   );
@@ -55,6 +68,26 @@ export class CasosComponent {
   closeDeleteModal() {
     this.showDeleteModal.set(false);
     this.caseToDelete.set(null);
+  }
+
+  protected dropCase(event: CdkDragDrop<string>) {
+    const caso = event.item.data as Caso | undefined;
+    const targetStatus = event.container.data;
+    if (!caso || !targetStatus || caso.estado === targetStatus) {
+      return;
+    }
+
+    this.casesService.moveCase(caso.id, targetStatus);
+  }
+
+  protected previousStatus(status: string): string | null {
+    const index = this.kanbanColumns.findIndex((column) => column.status === status);
+    return index > 0 ? this.kanbanColumns[index - 1].status : null;
+  }
+
+  protected nextStatus(status: string): string | null {
+    const index = this.kanbanColumns.findIndex((column) => column.status === status);
+    return index >= 0 && index < this.kanbanColumns.length - 1 ? this.kanbanColumns[index + 1].status : null;
   }
 
   protected updateEditingCase<K extends keyof Caso>(field: K, value: Caso[K]) {
