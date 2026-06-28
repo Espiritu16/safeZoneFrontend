@@ -10,6 +10,8 @@ interface KanbanColumn {
   title: string;
   status: string;
   dotClass: string;
+  previousStatus?: string;
+  nextStatus?: string;
 }
 
 interface CaseEditFormValue {
@@ -33,11 +35,25 @@ export class CasosComponent {
   protected readonly casesViewMode = signal<string>('table');
   @ViewChild('editForm') private editForm?: NgForm;
   protected readonly kanbanColumns: KanbanColumn[] = [
-    { title: 'Registrado', status: 'Registrado', dotClass: 'sz-dot-warning' },
-    { title: 'Evaluación', status: 'En evaluación', dotClass: 'sz-dot-warning' },
-    { title: 'En atención', status: 'En atención', dotClass: 'sz-dot-info' },
-    { title: 'Derivado', status: 'Derivado', dotClass: 'sz-dot-success' },
+    { title: 'Registrado', status: 'Registrado', dotClass: 'sz-dot-warning', nextStatus: 'En evaluación' },
+    { title: 'Evaluación', status: 'En evaluación', dotClass: 'sz-dot-warning', nextStatus: 'En atención' },
+    { title: 'En atención', status: 'En atención', dotClass: 'sz-dot-info', previousStatus: 'En evaluación', nextStatus: 'Derivado' },
+    { title: 'Derivado', status: 'Derivado', dotClass: 'sz-dot-success', previousStatus: 'En atención' },
+    { title: 'Cerrado', status: 'Cerrado', dotClass: 'sz-dot-muted', nextStatus: 'Archivado' },
+    { title: 'Archivado', status: 'Archivado', dotClass: 'sz-dot-muted' },
   ];
+  protected readonly statusFilterOptions = [
+    { label: 'Todos los estados', value: 'all' },
+    ...this.kanbanColumns.map((column) => ({ label: column.title, value: column.status })),
+  ];
+  private readonly allowedStatusTransitions = new Map<string, string[]>([
+    ['Registrado', ['En evaluación']],
+    ['En evaluación', ['En atención']],
+    ['En atención', ['En evaluación', 'Derivado', 'Cerrado']],
+    ['Derivado', ['En atención']],
+    ['Cerrado', ['Archivado']],
+    ['Archivado', []],
+  ]);
   protected readonly psicologos = computed(() =>
     this.casesService.profesionales().filter((usuario) => usuario.rol === 'PSICOLOGO'),
   );
@@ -73,21 +89,23 @@ export class CasosComponent {
   protected dropCase(event: CdkDragDrop<string>) {
     const caso = event.item.data as Caso | undefined;
     const targetStatus = event.container.data;
-    if (!caso || !targetStatus || caso.estado === targetStatus) {
+    if (!caso || !targetStatus || caso.estado === targetStatus || !this.canMoveStatus(caso.estado, targetStatus)) {
       return;
     }
 
     this.casesService.moveCase(caso.id, targetStatus);
   }
 
-  protected previousStatus(status: string): string | null {
-    const index = this.kanbanColumns.findIndex((column) => column.status === status);
-    return index > 0 ? this.kanbanColumns[index - 1].status : null;
+  protected previousStatus(column: KanbanColumn): string | null {
+    return column.previousStatus ?? null;
   }
 
-  protected nextStatus(status: string): string | null {
-    const index = this.kanbanColumns.findIndex((column) => column.status === status);
-    return index >= 0 && index < this.kanbanColumns.length - 1 ? this.kanbanColumns[index + 1].status : null;
+  protected nextStatus(column: KanbanColumn): string | null {
+    return column.nextStatus ?? null;
+  }
+
+  private canMoveStatus(currentStatus: string, targetStatus: string): boolean {
+    return this.allowedStatusTransitions.get(currentStatus)?.includes(targetStatus) ?? false;
   }
 
   protected updateEditingCase<K extends keyof Caso>(field: K, value: Caso[K]) {

@@ -29,12 +29,19 @@
                [ngModel]="casesService.casesSearchQuery()" (ngModelChange)="casesService.casesSearchQuery.set($event)">
       </div>
       <div class="form-group m-0">
-        <select class="form-select" [ngModel]="casesService.casesRiskFilter()" (ngModelChange)="casesService.casesRiskFilter.set($event)">
+        <select class="form-select" aria-label="Filtrar por riesgo" [ngModel]="casesService.casesRiskFilter()" (ngModelChange)="casesService.casesRiskFilter.set($event)">
           <option value="all">Todos los Riesgos</option>
           <option value="severo">Riesgo Severo</option>
           <option value="alto">Riesgo Alto</option>
           <option value="moderado">Riesgo Moderado</option>
           <option value="leve">Riesgo Leve</option>
+        </select>
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por estado del caso" [ngModel]="casesService.casesStatusFilter()" (ngModelChange)="casesService.casesStatusFilter.set($event)">
+          @for (option of statusFilterOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
         </select>
       </div>
     </div>
@@ -113,7 +120,7 @@
         <div class="sz-kanban-column">
           <div class="sz-kanban-column-header">
             <span class="column-title"><span class="badge-dot" [ngClass]="column.dotClass"></span>{{ column.title }}</span>
-            <span class="column-count">{{ casesService.getCasosByStatus(column.status).length }}</span>
+            <span class="column-count">{{ casesService.getFilteredCasosByStatus(column.status).length }}</span>
           </div>
           <div
             class="sz-kanban-column-list"
@@ -122,10 +129,10 @@
             [cdkDropListData]="column.status"
             (cdkDropListDropped)="dropCase($event)"
           >
-            @for (c of casesService.getCasosByStatus(column.status); track c.id) {
+            @for (c of casesService.getFilteredCasosByStatus(column.status); track c.id) {
               <div class="sz-kanban-card" cdkDrag [cdkDragData]="c">
                 <div class="flex justify-between items-center">
-                  @if (previousStatus(column.status); as previous) {
+                  @if (previousStatus(column); as previous) {
                     <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, previous)" [title]="'Retroceder a ' + previous">←</button>
                   } @else {
                     <span></span>
@@ -135,7 +142,7 @@
                     'badge-risk-moderate': c.riesgo === 'Moderado',
                     'badge-risk-low': c.riesgo === 'Leve'
                   }">{{ c.riesgo }}</span>
-                  @if (nextStatus(column.status); as next) {
+                  @if (nextStatus(column); as next) {
                     <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, next)" [title]="'Avanzar a ' + next">→</button>
                   } @else {
                     <span></span>

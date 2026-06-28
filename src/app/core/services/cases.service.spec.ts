@@ -153,4 +153,48 @@ describe('CasesService', () => {
 
     expect(service.casos()[0].estado).toBe('En atención');
   });
+
+  it('filters cases by case status', () => {
+    flushInitialLoad();
+
+    service.casos.set([
+      {
+        id: 'case-1',
+        codigo: 'Caso #CASE-1',
+        victim: 'Víctima uno',
+        anonimo: false,
+        edad: '30',
+        distrito: 'Comas',
+        tipo: 'Violencia Física',
+        estado: 'En evaluación',
+        riesgo: 'Moderado',
+        asignado: 'Pendiente',
+        fecha: '2026-06-16',
+      },
+      {
+        id: 'case-2',
+        codigo: 'Caso #CASE-2',
+        victim: 'Víctima dos',
+        anonimo: false,
+        edad: '25',
+        distrito: 'Lima',
+        tipo: 'Violencia Psicológica',
+        estado: 'En atención',
+        riesgo: 'Alto',
+        asignado: 'Psic.: Rosa Salas',
+        fecha: '2026-06-17',
+      },
+    ]);
+
+    service.casesStatusFilter.set('En atención');
+
+    expect(service.filteredCasos()).toEqual([
+      expect.objectContaining({
+        id: 'case-2',
+        estado: 'En atención',
+      }),
+    ]);
+    expect(service.getFilteredCasosByStatus('En atención')).toHaveLength(1);
+    expect(service.getFilteredCasosByStatus('En evaluación')).toHaveLength(0);
+  });
 });

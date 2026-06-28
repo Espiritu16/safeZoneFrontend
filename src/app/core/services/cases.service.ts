@@ -66,6 +66,7 @@ export class CasesService {
   public readonly editingCase = signal<Caso | null>(null);
   public readonly casesSearchQuery = signal<string>('');
   public readonly casesRiskFilter = signal<string>('all');
+  public readonly casesStatusFilter = signal<string>('all');
   
   // Expediente Seleccionado
   public readonly selectedCase = signal<Caso | null>(null);
@@ -79,8 +80,11 @@ export class CasesService {
       
       const matchRisk = this.casesRiskFilter() === 'all' || 
                         c.riesgo.toLowerCase() === this.casesRiskFilter().toLowerCase();
+
+      const matchStatus = this.casesStatusFilter() === 'all' ||
+                          c.estado === this.casesStatusFilter();
       
-      return matchSearch && matchRisk;
+      return matchSearch && matchRisk && matchStatus;
     });
   });
 
@@ -123,6 +127,10 @@ export class CasesService {
 
   getCasosByStatus(status: string) {
     return this.casos().filter(c => c.estado === status);
+  }
+
+  getFilteredCasosByStatus(status: string) {
+    return this.filteredCasos().filter(c => c.estado === status);
   }
 
   moveCase(caseId: string, newStatus: string) {
@@ -346,12 +354,14 @@ export class CasesService {
 
   private backendStatus(label: string): EstadoCaso {
     const statuses: Record<string, EstadoCaso> = {
+      'Registrado': 'REGISTRADO',
       'Evaluación': 'EN_EVALUACION',
       'En evaluación': 'EN_EVALUACION',
       'En Proceso': 'EN_ATENCION',
       'En atención': 'EN_ATENCION',
       'Medidas de Protección': 'DERIVADO',
       'Derivado': 'DERIVADO',
+      'Cerrado': 'CERRADO',
       'Archivado': 'ARCHIVADO',
     };
     return statuses[label] ?? 'EN_EVALUACION';
