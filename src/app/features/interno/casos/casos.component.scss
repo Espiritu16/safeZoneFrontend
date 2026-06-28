@@ -44,6 +44,59 @@
   min-height: 0;
 }
 
+.sz-kanban-card {
+  position: relative;
+  cursor: default;
+  padding-top: 26px;
+
+  &:active {
+    cursor: default;
+  }
+}
+
+.sz-kanban-drag-handle {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  width: 34px;
+  height: 20px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0;
+  border: 1px solid rgba(100, 116, 139, 0.28);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.94);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+  cursor: grab;
+  touch-action: none;
+  transform: translateX(-50%);
+
+  span {
+    width: 14px;
+    height: 2px;
+    border-radius: 999px;
+    background: #64748B;
+  }
+
+  &:hover,
+  &:focus-visible {
+    border-color: rgba(29, 78, 216, 0.48);
+    background: #FFFFFF;
+    outline: none;
+
+    span {
+      background: #1D4ED8;
+    }
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
 .sz-date-filter {
   width: 150px;
 }

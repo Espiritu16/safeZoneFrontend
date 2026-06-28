@@ -165,6 +165,17 @@
           >
             @for (c of casesService.getFilteredCasosByStatus(column.status); track c.id) {
               <div class="sz-kanban-card" cdkDrag [cdkDragData]="c">
+                <button
+                  class="sz-kanban-drag-handle"
+                  type="button"
+                  cdkDragHandle
+                  title="Arrastrar caso"
+                  aria-label="Arrastrar caso"
+                >
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </button>
                 <div class="flex justify-between items-center">
                   @if (previousStatus(column); as previous) {
                     <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, previous)" [title]="'Retroceder a ' + previous">←</button>
