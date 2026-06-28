@@ -53,13 +53,58 @@
   }
 }
 
+@media (max-width: 1024px) {
+  :host {
+    display: block;
+    flex: none;
+    min-height: auto;
+  }
+
+  .sz-cases-page {
+    display: block;
+    min-height: auto;
+    overflow: visible;
+    touch-action: pan-y;
+  }
+
+  .sz-table-container {
+    max-width: 100%;
+    min-height: auto;
+    overflow-x: auto;
+    overflow-y: visible;
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sz-table {
+    min-width: 920px;
+  }
+
+  .sz-kanban-board {
+    display: grid;
+    min-height: auto;
+    overflow: visible;
+    touch-action: pan-y;
+  }
+
+  .sz-kanban-column-list {
+    max-height: none;
+    overflow: visible;
+    touch-action: pan-y;
+  }
+
+  .sz-kanban-card {
+    touch-action: pan-y;
+  }
+}
+
 @media (max-width: 640px) {
   .sz-kanban-board {
     grid-template-columns: 1fr;
   }
 
   .sz-kanban-column-list {
-    max-height: 280px;
+    max-height: none;
   }
 }
 

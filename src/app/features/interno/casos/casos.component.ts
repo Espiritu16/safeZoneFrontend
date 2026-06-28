@@ -23,6 +23,11 @@ interface CaseEditFormValue {
   resumen?: string;
 }
 
+interface PendingStatusMove {
+  caso: Caso;
+  targetStatus: string;
+}
+
 @Component({
   selector: 'app-casos',
   standalone: true,
@@ -66,6 +71,7 @@ export class CasosComponent {
   // Delete modal state
   protected readonly showDeleteModal = signal<boolean>(false);
   protected readonly caseToDelete = signal<Caso | null>(null);
+  protected readonly pendingStatusMove = signal<PendingStatusMove | null>(null);
 
   // Available districts
   protected readonly distritos = [
@@ -91,11 +97,33 @@ export class CasosComponent {
   protected dropCase(event: CdkDragDrop<string>) {
     const caso = event.item.data as Caso | undefined;
     const targetStatus = event.container.data;
-    if (!caso || !targetStatus || caso.estado === targetStatus || !this.canMoveStatus(caso.estado, targetStatus)) {
+    if (!caso || !targetStatus) {
       return;
     }
 
-    this.casesService.moveCase(caso.id, targetStatus);
+    this.requestCaseMove(caso, targetStatus);
+  }
+
+  protected requestCaseMove(caso: Caso, targetStatus: string): void {
+    if (caso.estado === targetStatus || !this.canMoveStatus(caso.estado, targetStatus)) {
+      return;
+    }
+
+    this.pendingStatusMove.set({ caso, targetStatus });
+  }
+
+  protected closeStatusMoveModal(): void {
+    this.pendingStatusMove.set(null);
+  }
+
+  protected confirmStatusMove(): void {
+    const move = this.pendingStatusMove();
+    if (!move) {
+      return;
+    }
+
+    this.casesService.moveCase(move.caso.id, move.targetStatus);
+    this.closeStatusMoveModal();
   }
 
   protected previousStatus(column: KanbanColumn): string | null {

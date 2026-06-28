@@ -190,7 +190,7 @@
                 </button>
                 <div class="flex justify-between items-center">
                   @if (previousStatus(column); as previous) {
-                    <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, previous)" [title]="'Retroceder a ' + previous">←</button>
+                    <button class="btn btn-ghost p-1" (click)="requestCaseMove(c, previous)" [title]="'Retroceder a ' + previous">←</button>
                   } @else {
                     <span></span>
                   }
@@ -200,7 +200,7 @@
                     'badge-risk-low': c.riesgo === 'Leve'
                   }">{{ c.riesgo }}</span>
                   @if (nextStatus(column); as next) {
-                    <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, next)" [title]="'Avanzar a ' + next">→</button>
+                    <button class="btn btn-ghost p-1" (click)="requestCaseMove(c, next)" [title]="'Avanzar a ' + next">→</button>
                   } @else {
                     <span></span>
                   }
@@ -313,6 +313,28 @@
         </div>
       </div>
     }
+  }
+
+  <!-- MODAL: CONFIRMACIÓN DE CAMBIO DE ESTADO -->
+  @if (pendingStatusMove(); as move) {
+    <div class="sz-modal-overlay">
+      <div class="sz-modal sz-modal-sm">
+        <div class="sz-modal-header">
+          <h3 class="sz-modal-header-title">Confirmar cambio de estado</h3>
+          <button class="sz-modal-header-close" type="button" (click)="closeStatusMoveModal()" aria-label="Cerrar confirmación">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="sz-modal-body text-center">
+          <p class="mb-4">¿Deseas mover el caso <strong>{{ move.caso.codigo }}</strong> de <strong>{{ move.caso.estado }}</strong> a <strong>{{ move.targetStatus }}</strong>?</p>
+          <p class="text-xs text-muted">El cambio se guardará en el backend solo si confirmas esta acción.</p>
+        </div>
+        <div class="sz-modal-footer">
+          <button class="btn btn-outline" type="button" (click)="closeStatusMoveModal()">Cancelar</button>
+          <button class="btn btn-primary" type="button" (click)="confirmStatusMove()">Confirmar cambio</button>
+        </div>
+      </div>
+    </div>
   }
 
   <!-- MODAL: CONFIRMACIÓN DE ELIMINACIÓN -->
