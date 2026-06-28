@@ -31,7 +31,7 @@
   box-shadow: 0 24px 60px rgba(0, 40, 142, 0.18);
   color: #1a1b22;
   max-height: calc(100dvh - var(--safe-area-top, 0px) - var(--safe-area-bottom, 0px) - 36px);
-  max-width: 760px;
+  max-width: 560px;
   overflow-x: hidden;
   overflow-y: auto;
   padding: 34px;
@@ -111,7 +111,7 @@
 .download-options {
   display: grid;
   gap: 18px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   margin-top: 28px;
 }
 
@@ -125,11 +125,6 @@
 
 .download-option.is-available {
   background: rgba(255, 255, 255, 0.72);
-}
-
-.download-option.is-disabled {
-  background: rgba(244, 246, 250, 0.72);
-  opacity: 0.82;
 }
 
 .download-option-head {
@@ -152,11 +147,6 @@
 .android-icon {
   background: rgba(22, 163, 74, 0.12);
   color: #15803d;
-}
-
-.ios-icon {
-  background: rgba(30, 64, 175, 0.1);
-  color: #1e40af;
 }
 
 .download-option h3 {
@@ -197,19 +187,6 @@ a.download-action {
 
 a.download-action:hover {
   background: #00288e;
-}
-
-button.download-action {
-  background: #e5e7eb;
-  color: #6b7280;
-  cursor: not-allowed;
-}
-
-.ios-note {
-  background: rgba(30, 64, 175, 0.08);
-  border-radius: 10px;
-  color: #334155 !important;
-  padding: 10px 12px;
 }
 
 @media (max-width: 680px) {

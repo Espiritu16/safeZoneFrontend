@@ -63,6 +63,17 @@ export interface CrearUsuarioRequest {
   rol: BackendRole;
 }
 
+export interface ActualizarUsuarioRequest {
+  correo?: string;
+  nombres?: string;
+  apellidos?: string;
+  dni?: string;
+  telefono?: string;
+  distrito?: string;
+  rol?: BackendRole;
+  activo?: boolean;
+}
+
 export interface CrearPreDenunciaRequest {
   nombresContacto?: string;
   apellidosContacto?: string;
@@ -136,6 +147,33 @@ export interface ActualizarCasoRequest {
   prioridad?: PrioridadCaso;
   activo?: boolean;
   estado?: EstadoCaso;
+}
+
+export interface AsignacionCasoResponse {
+  id: string;
+  casoId: string;
+  profesionalId: string;
+  rolProfesional: Extract<BackendRole, 'PSICOLOGO' | 'DEFENSOR'>;
+  activo: boolean;
+  fechaAsignacion: string;
+  fechaFin?: string | null;
+  asignadoPor: string;
+  fechaActualizacion?: string | null;
+  actualizadoPor?: string | null;
+  inactivadoPor?: string | null;
+  fechaInactivacion?: string | null;
+}
+
+export interface CrearAsignacionCasoRequest {
+  casoId: string;
+  profesionalId: string;
+  rolProfesional: Extract<BackendRole, 'PSICOLOGO' | 'DEFENSOR'>;
+}
+
+export interface ActualizarAsignacionCasoRequest {
+  profesionalId?: string;
+  rolProfesional?: Extract<BackendRole, 'PSICOLOGO' | 'DEFENSOR'>;
+  activo?: boolean;
 }
 
 export interface CrearDenunciaRequest {

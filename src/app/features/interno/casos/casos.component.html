@@ -1,4 +1,4 @@
-<div class="animate-slide-up">
+<div class="animate-slide-up sz-cases-page">
   
   <div class="sz-page-header">
     <div class="sz-page-header-info">
@@ -25,11 +25,11 @@
   <div class="sz-table-filters mt-6">
     <div class="sz-table-filters-left">
       <div class="form-group m-0 sz-field-min-sm">
-        <input class="form-input" type="text" placeholder="Buscar por código, víctima, encargado..." 
+        <input class="form-input" type="text" aria-label="Buscar casos" placeholder="Buscar por código, víctima, encargado..." 
                [ngModel]="casesService.casesSearchQuery()" (ngModelChange)="casesService.casesSearchQuery.set($event)">
       </div>
       <div class="form-group m-0">
-        <select class="form-select" [ngModel]="casesService.casesRiskFilter()" (ngModelChange)="casesService.casesRiskFilter.set($event)">
+        <select class="form-select" aria-label="Filtrar por riesgo" [ngModel]="casesService.casesRiskFilter()" (ngModelChange)="casesService.casesRiskFilter.set($event)">
           <option value="all">Todos los Riesgos</option>
           <option value="severo">Riesgo Severo</option>
           <option value="alto">Riesgo Alto</option>
@@ -37,6 +37,37 @@
           <option value="leve">Riesgo Leve</option>
         </select>
       </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por estado del caso" [ngModel]="casesService.casesStatusFilter()" (ngModelChange)="casesService.casesStatusFilter.set($event)">
+          @for (option of statusFilterOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por distrito" [ngModel]="casesService.casesDistrictFilter()" (ngModelChange)="casesService.casesDistrictFilter.set($event)">
+          <option value="all">Todos los distritos</option>
+          @for (distrito of distritos; track distrito) {
+            <option [value]="distrito">{{ distrito }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por asignación" [ngModel]="casesService.casesAssignmentFilter()" (ngModelChange)="casesService.casesAssignmentFilter.set($event)">
+          <option value="all">Todas las asignaciones</option>
+          <option value="assigned">Con profesional asignado</option>
+          <option value="unassigned">Pendiente de asignación</option>
+        </select>
+      </div>
+      <div class="form-group m-0 sz-date-filter">
+        <input class="form-input" type="date" aria-label="Fecha de ingreso desde" name="fechaDesde" [value]="casesService.casesDateFromFilter()" (input)="casesService.casesDateFromFilter.set($any($event.target).value)">
+      </div>
+      <div class="form-group m-0 sz-date-filter">
+        <input class="form-input" type="date" aria-label="Fecha de ingreso hasta" name="fechaHasta" [value]="casesService.casesDateToFilter()" (input)="casesService.casesDateToFilter.set($any($event.target).value)">
+      </div>
+      <button class="btn btn-outline btn-sm" type="button" [disabled]="!casesService.hasActiveCaseFilters()" (click)="casesService.clearCaseFilters()">
+        Limpiar filtros
+      </button>
     </div>
     <div class="sz-table-filters-right">
       <span class="text-xs text-muted font-medium">Resultados encontrados: {{ casesService.filteredCasos().length }}</span>
@@ -55,8 +86,7 @@
             <th>Riesgo</th>
             <th>Encargado</th>
             <th>Fecha de Ingreso</th>
-            <th>Estado de la denuncia</th>
-            <th>Estado Emocional</th>
+            <th>Estado del caso</th>
             <th class="col-actions">Acciones</th>
           </tr>
         </thead>
@@ -71,7 +101,9 @@
                   } @else {
                     <span>{{ caso.victim }}</span>
                   }
-                  <span class="text-xs text-muted">({{ caso.edad }} años)</span>
+                  @if (caso.edad) {
+                    <span class="text-xs text-muted">({{ caso.edad }} años)</span>
+                  }
                 </div>
               </td>
               <td>{{ caso.tipo }}</td>
@@ -87,13 +119,20 @@
               <td>{{ caso.asignado }}</td>
               <td>{{ caso.fecha }}</td>
               <td>{{ caso.estado }}</td>
-              <td>
-                <span class="text-xs text-secondary font-medium">{{ caso.emocion }}</span>
-              </td>
               <td class="col-actions">
-                <button class="btn btn-outline btn-sm my-2" (click)="casesService.viewCaseDetails(caso)">Ficha Digital</button>
-                <button class="btn btn-sm border border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white my-2" (click)="casesService.openEditModal(caso)">Editar</button>
-                <button class="btn btn-sm border border-red-700 text-red-700 hover:bg-red-700 hover:text-white my-2" (click)="openDeleteModal(caso)">Cerrar caso</button>
+                <div class="sz-case-actions">
+                  <button class="btn btn-outline btn-sm" type="button" (click)="casesService.viewCaseDetails(caso)">Ficha</button>
+                  <button class="btn btn-sm sz-case-action-edit" type="button" (click)="casesService.openEditModal(caso)">Editar</button>
+                  <button
+                    class="btn btn-sm sz-case-action-close"
+                    type="button"
+                    [disabled]="!canCloseCase(caso)"
+                    [title]="canCloseCase(caso) ? 'Cerrar caso' : 'Este estado no permite cierre directo'"
+                    (click)="openDeleteModal(caso)"
+                  >
+                    Cerrar
+                  </button>
+                </div>
               </td>
             </tr>
           }
@@ -112,110 +151,91 @@
 
   <!-- MODO 2: VISTA KANBAN -->
   @if (casesViewMode() === 'kanban') {
-    <div class="sz-kanban-board mt-4">
-      
-      <!-- Columna 1: Evaluación -->
-      <div class="sz-kanban-column">
-        <div class="sz-kanban-column-header">
-          <span class="column-title"><span class="badge-dot sz-dot-warning"></span>Evaluación</span>
-          <span class="column-count">{{ casesService.getCasosByStatus('Evaluación').length }}</span>
-        </div>
-        <div class="sz-kanban-column-list">
-          @for (c of casesService.getCasosByStatus('Evaluación'); track c.id) {
-            <div class="sz-kanban-card">
-              <div class="flex justify-between items-center">
-                <span class="badge" [ngClass]="{
-                  'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
-                  'badge-risk-moderate': c.riesgo === 'Moderado',
-                  'badge-risk-low': c.riesgo === 'Leve'
-                }">{{ c.riesgo }}</span>
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En Proceso')" title="Avanzar a En Proceso">→</button>
+    <div class="sz-kanban-board mt-4" cdkDropListGroup>
+      @for (column of kanbanColumns; track column.status) {
+        <div class="sz-kanban-column">
+          <div class="sz-kanban-column-header">
+            <span class="column-title"><span class="badge-dot" [ngClass]="column.dotClass"></span>{{ column.title }}</span>
+            <span class="column-count">{{ casesService.getFilteredCasosByStatus(column.status).length }}</span>
+          </div>
+          <div
+            class="sz-kanban-column-list"
+            cdkDropList
+            [id]="'casos-' + column.status"
+            [cdkDropListData]="column.status"
+            [cdkDropListSortingDisabled]="true"
+            (cdkDropListDropped)="dropCase($event)"
+          >
+            @for (c of casesService.getFilteredCasosByStatus(column.status); track c.id) {
+              <div class="sz-kanban-card" cdkDrag [cdkDragData]="c" [cdkDragStartDelay]="dragStartDelay">
+                <ng-template cdkDragPreview>
+                  <div class="sz-kanban-drag-preview">
+                    <strong>{{ c.victim }}</strong>
+                    <span>{{ c.codigo }} - {{ c.estado }}</span>
+                  </div>
+                </ng-template>
+                <ng-template cdkDragPlaceholder>
+                  <div class="sz-kanban-drag-placeholder"></div>
+                </ng-template>
+                <button
+                  class="sz-kanban-drag-handle"
+                  type="button"
+                  cdkDragHandle
+                  title="Arrastrar caso"
+                  aria-label="Arrastrar caso"
+                >
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </button>
+                <div class="flex justify-between items-center">
+                  @if (previousStatus(column); as previous) {
+                    <button class="btn btn-ghost p-1" (click)="requestCaseMove(c, previous)" [title]="'Retroceder a ' + previous">←</button>
+                  } @else {
+                    <span></span>
+                  }
+                  <span class="badge" [ngClass]="{
+                    'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
+                    'badge-risk-moderate': c.riesgo === 'Moderado',
+                    'badge-risk-low': c.riesgo === 'Leve'
+                  }">{{ c.riesgo }}</span>
+                  @if (nextStatus(column); as next) {
+                    <button class="btn btn-ghost p-1" (click)="requestCaseMove(c, next)" [title]="'Avanzar a ' + next">→</button>
+                  } @else {
+                    <span></span>
+                  }
+                </div>
+                <p class="sz-kanban-card-title">{{ c.victim }}</p>
+                <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
+                <div class="sz-kanban-card-footer">
+                  <span>Asignado: {{ c.asignado }}</span>
+                </div>
               </div>
-              <p class="sz-kanban-card-title">{{ c.victim }}</p>
-              <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
-              <div class="sz-kanban-card-footer">
-                <span>Asignado: {{ c.asignado }}</span>
-              </div>
-            </div>
-          }
+            }
+          </div>
         </div>
-      </div>
-
-      <!-- Columna 2: En Proceso -->
-      <div class="sz-kanban-column">
-        <div class="sz-kanban-column-header">
-          <span class="column-title"><span class="badge-dot sz-dot-info"></span>En Proceso</span>
-          <span class="column-count">{{ casesService.getCasosByStatus('En Proceso').length }}</span>
-        </div>
-        <div class="sz-kanban-column-list">
-          @for (c of casesService.getCasosByStatus('En Proceso'); track c.id) {
-            <div class="sz-kanban-card">
-              <div class="flex justify-between items-center">
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'Evaluación')" title="Retroceder a Evaluación">←</button>
-                <span class="badge" [ngClass]="{
-                  'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
-                  'badge-risk-moderate': c.riesgo === 'Moderado',
-                  'badge-risk-low': c.riesgo === 'Leve'
-                }">{{ c.riesgo }}</span>
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'Medidas de Protección')" title="Avanzar a Medidas">→</button>
-              </div>
-              <p class="sz-kanban-card-title">{{ c.victim }}</p>
-              <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
-              <div class="sz-kanban-card-footer">
-                <span>Asignado: {{ c.asignado }}</span>
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-
-      <!-- Columna 3: Medidas de Protección -->
-      <div class="sz-kanban-column">
-        <div class="sz-kanban-column-header">
-          <span class="column-title"><span class="badge-dot sz-dot-success"></span>Medidas Judiciales</span>
-          <span class="column-count">{{ casesService.getCasosByStatus('Medidas de Protección').length }}</span>
-        </div>
-        <div class="sz-kanban-column-list">
-          @for (c of casesService.getCasosByStatus('Medidas de Protección'); track c.id) {
-            <div class="sz-kanban-card">
-              <div class="flex justify-between items-center">
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En Proceso')" title="Retroceder a En Proceso">←</button>
-                <span class="badge" [ngClass]="{
-                  'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
-                  'badge-risk-moderate': c.riesgo === 'Moderado',
-                  'badge-risk-low': c.riesgo === 'Leve'
-                }">{{ c.riesgo }}</span>
-              </div>
-              <p class="sz-kanban-card-title">{{ c.victim }}</p>
-              <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
-              <div class="sz-kanban-card-footer">
-                <span>Asignado: {{ c.asignado }}</span>
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-
+      }
     </div>
   }
+</div>
 
   <!-- MODAL: EDITAR CASO -->
   @if (casesService.showModal()) {
     @if (casesService.editingCase(); as caseItem) {
       <div class="sz-modal-overlay">
-        <div class="sz-modal">
+        <div class="sz-modal sz-modal-md">
           <div class="sz-modal-header">
             <h3 class="sz-modal-header-title">Editar Caso: {{ caseItem.codigo }}</h3>
             <button class="sz-modal-header-close" (click)="casesService.closeModal()">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
           </div>
-          <div class="sz-modal-body">
+          <div class="sz-modal-body sz-modal-body-scroll">
             <form #editForm="ngForm" id="caseEditForm">
               <!-- Riesgo -->
               <div class="form-group">
                 <label class="form-label">Riesgo del Caso *</label>
-                <select class="form-select" name="riesgo" [(ngModel)]="caseItem.riesgo" required>
+                <select #riesgoSelect class="form-select" name="riesgo" [ngModel]="caseItem.riesgo" (ngModelChange)="updateEditingCase('riesgo', $event)" required>
                   <option value="Leve">Leve</option>
                   <option value="Moderado">Moderado</option>
                   <option value="Alto">Alto</option>
@@ -225,21 +245,41 @@
 
               <!-- Estado -->
               <div class="form-group">
-                <label class="form-label">Estado de la Denuncia *</label>
-                <select class="form-select" name="estado" [(ngModel)]="caseItem.estado" required>
-                  <option value="Registrado">Registrado</option>
-                  <option value="En evaluación">En evaluación</option>
-                  <option value="En atención">En atención</option>
-                  <option value="Derivado">Derivado</option>
-                  <option value="Cerrado">Cerrado</option>
-                  <option value="Archivado">Archivado</option>
+                <label class="form-label">Estado del caso *</label>
+                <select #estadoSelect class="form-select" name="estado" [ngModel]="caseItem.estado" (ngModelChange)="updateEditingCase('estado', $event)" required>
+                  @for (estado of editableStatusOptions(caseItem); track estado) {
+                    <option [value]="estado">{{ estado }}</option>
+                  }
                 </select>
+                <p class="text-xs text-muted mt-1">Solo se muestran los cambios válidos desde el estado actual.</p>
+              </div>
+
+              <div class="sz-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Psicólogo asignado</label>
+                  <select #psicologoSelect class="form-select" name="psicologoId" [ngModel]="caseItem.psicologoId" (ngModelChange)="updateEditingCase('psicologoId', $event)">
+                    <option value="">Pendiente de asignación</option>
+                    @for (profesional of psicologos(); track profesional.id) {
+                      <option [value]="profesional.id">{{ profesional.nombres }} {{ profesional.apellidos }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Defensor legal asignado</label>
+                  <select #defensorSelect class="form-select" name="defensorId" [ngModel]="caseItem.defensorId" (ngModelChange)="updateEditingCase('defensorId', $event)">
+                    <option value="">Pendiente de asignación</option>
+                    @for (profesional of defensores(); track profesional.id) {
+                      <option [value]="profesional.id">{{ profesional.nombres }} {{ profesional.apellidos }}</option>
+                    }
+                  </select>
+                </div>
               </div>
 
               <!-- Distrito -->
               <div class="form-group">
                 <label class="form-label">Distrito *</label>
-                <select class="form-select" name="distrito" [(ngModel)]="caseItem.distrito" required>
+                <select #distritoSelect class="form-select" name="distrito" [ngModel]="caseItem.distrito" (ngModelChange)="updateEditingCase('distrito', $event)" required>
                   @for (distrito of distritos; track distrito) {
                     <option [value]="distrito">{{ distrito }}</option>
                   }
@@ -249,17 +289,52 @@
               <!-- Resumen -->
               <div class="form-group">
                 <label class="form-label">Resumen / Descripción del Caso *</label>
-                <textarea class="form-input" name="resumen" [(ngModel)]="caseItem.resumen" rows="4" placeholder="Ingrese el resumen del caso..." required minlength="10" maxlength="1000"></textarea>
+                <textarea #resumenInput class="form-input" name="resumen" [ngModel]="caseItem.resumen" (ngModelChange)="updateEditingCase('resumen', $event)" rows="4" placeholder="Ingrese el resumen del caso..." required minlength="10" maxlength="1000"></textarea>
               </div>
             </form>
           </div>
           <div class="sz-modal-footer">
             <button class="btn btn-outline" (click)="casesService.closeModal()">Cancelar</button>
-            <button class="btn btn-primary" (click)="saveEdit()" [disabled]="editForm.invalid || !caseItem.resumen">Guardar Cambios</button>
+            <button
+              class="btn btn-primary"
+              (click)="saveEdit({
+                riesgo: riesgoSelect.value,
+                estado: estadoSelect.value,
+                psicologoId: psicologoSelect.value,
+                defensorId: defensorSelect.value,
+                distrito: distritoSelect.value,
+                resumen: resumenInput.value
+              })"
+              [disabled]="editForm.invalid || !caseItem.resumen"
+            >
+              Guardar Cambios
+            </button>
           </div>
         </div>
       </div>
     }
+  }
+
+  <!-- MODAL: CONFIRMACIÓN DE CAMBIO DE ESTADO -->
+  @if (pendingStatusMove(); as move) {
+    <div class="sz-modal-overlay">
+      <div class="sz-modal sz-modal-sm">
+        <div class="sz-modal-header">
+          <h3 class="sz-modal-header-title">Confirmar cambio de estado</h3>
+          <button class="sz-modal-header-close" type="button" (click)="closeStatusMoveModal()" aria-label="Cerrar confirmación">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="sz-modal-body text-center">
+          <p class="mb-4">¿Deseas mover el caso <strong>{{ move.caso.codigo }}</strong> de <strong>{{ move.caso.estado }}</strong> a <strong>{{ move.targetStatus }}</strong>?</p>
+          <p class="text-xs text-muted">El cambio se guardará en el backend solo si confirmas esta acción.</p>
+        </div>
+        <div class="sz-modal-footer">
+          <button class="btn btn-outline" type="button" (click)="closeStatusMoveModal()">Cancelar</button>
+          <button class="btn btn-primary" type="button" (click)="confirmStatusMove()">Confirmar cambio</button>
+        </div>
+      </div>
+    </div>
   }
 
   <!-- MODAL: CONFIRMACIÓN DE ELIMINACIÓN -->
@@ -275,7 +350,7 @@
           </div>
           <div class="sz-modal-body text-center">
             <p class="mb-4">¿Estás seguro de que deseas cerrar el caso <strong>{{ caseItem.codigo }}</strong>?</p>
-            <p class="text-xs text-muted">Esta acción inhabilitará el caso permanentemente.</p>
+            <p class="text-xs text-muted">El registro se mantendrá visible y solo cambiará su estado a Cerrado.</p>
           </div>
           <div class="sz-modal-footer">
             <button class="btn btn-outline" (click)="closeDeleteModal()">Cancelar</button>
@@ -285,5 +360,3 @@
       </div>
     }
   }
-
-</div>

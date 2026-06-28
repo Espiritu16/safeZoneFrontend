@@ -15,12 +15,15 @@
 <app-toast-container />
 
 <!-- DRAWER: DETALLE DE EXPEDIENTE DIGITAL -->
-@if (casesService.selectedCase()) {
+@if (casesService.selectedCase(); as caseItem) {
   <div class="sz-drawer-overlay" (click)="casesService.closeCaseDrawer()"></div>
-  <div class="sz-drawer">
+  <div class="sz-drawer sz-case-drawer">
     <div class="sz-drawer-header">
-      <h3 class="sz-drawer-header-title">Expediente: {{ casesService.selectedCase()?.codigo }}</h3>
-      <button class="btn btn-outline btn-sm" (click)="casesService.closeCaseDrawer()">Cerrar</button>
+      <div>
+        <p class="sz-case-drawer-eyebrow">Ficha digital</p>
+        <h3 class="sz-drawer-header-title">{{ caseItem.codigo }}</h3>
+      </div>
+      <button class="btn btn-outline btn-sm" type="button" (click)="casesService.closeCaseDrawer()">Cerrar</button>
     </div>
     
     <div class="sz-drawer-body">
@@ -32,44 +35,69 @@
 
       <!-- Tab 1: Detalles -->
       @if (casesService.activeCaseTab() === 'detalles') {
-        <div class="animate-fade-in flex flex-col gap-4">
+        <div class="animate-fade-in sz-case-detail">
           
-          <div class="p-3 bg-brand-soft rounded-lg border-all">
-            <p class="text-xs text-secondary font-semibold">Víctima Registrada</p>
-            <p class="font-bold text-base mt-1">{{ casesService.selectedCase()?.victim }}</p>
-            <p class="text-xs text-muted mt-1">Clasificación de Riesgo: <strong>{{ casesService.selectedCase()?.riesgo }}</strong></p>
-          </div>
-
-          <div class="sz-expediente-ficha mt-2">
-            <div class="ficha-field">
-              <span class="label">Edad</span>
-              <span class="value">{{ casesService.selectedCase()?.edad }} años</span>
+          <section class="sz-case-summary">
+            <div>
+              <p class="sz-case-summary-label">Víctima registrada</p>
+              <p class="sz-case-summary-name">{{ caseItem.victim }}</p>
             </div>
-            <div class="ficha-field">
-              <span class="label">Distrito</span>
-              <span class="value">{{ casesService.selectedCase()?.distrito }}</span>
-            </div>
-            <div class="ficha-field">
-              <span class="label">Tipo Violencia</span>
-              <span class="value">{{ casesService.selectedCase()?.tipo }}</span>
-            </div>
-          </div>
+            <span class="badge" [ngClass]="{
+              'badge-risk-severe': caseItem.riesgo === 'Severo' || caseItem.riesgo === 'Alto',
+              'badge-risk-moderate': caseItem.riesgo === 'Moderado',
+              'badge-risk-low': caseItem.riesgo === 'Leve'
+            }">{{ caseItem.riesgo }}</span>
+          </section>
 
-          <div class="form-group">
-            <label class="form-label">Profesional Responsable Asignado</label>
-            <input class="form-input" type="text" [value]="casesService.selectedCase()?.asignado" disabled>
-          </div>
+          <section class="sz-case-section">
+            <h4>Datos del caso</h4>
+            <div class="sz-case-info-grid">
+              <div class="ficha-field">
+                <span class="label">Edad</span>
+                <span class="value">{{ caseItem.edad ? caseItem.edad + ' años' : 'No registrada' }}</span>
+              </div>
+              <div class="ficha-field">
+                <span class="label">Distrito</span>
+                <span class="value">{{ caseItem.distrito }}</span>
+              </div>
+              <div class="ficha-field">
+                <span class="label">Tipo de violencia</span>
+                <span class="value">{{ caseItem.tipo }}</span>
+              </div>
+              <div class="ficha-field">
+                <span class="label">Fecha de ingreso</span>
+                <span class="value">{{ caseItem.fecha }}</span>
+              </div>
+            </div>
+          </section>
 
-          <div class="form-group">
-            <label class="form-label">Estado del Trámite Judicial</label>
-            <div class="flex gap-2">
+          <section class="sz-case-section">
+            <h4>Atención asignada</h4>
+            <div class="sz-case-assignment">
+              <span class="label">Profesional responsable</span>
+              <strong>{{ caseItem.asignado }}</strong>
+            </div>
+          </section>
+
+          <section class="sz-case-section">
+            <h4>Estado operativo</h4>
+            <div class="sz-case-status-row">
               <span class="badge" [ngClass]="{
-                'badge-warning': casesService.selectedCase()?.estado === 'Evaluación',
-                'badge-info': casesService.selectedCase()?.estado === 'En Proceso',
-                'badge-success': casesService.selectedCase()?.estado === 'Medidas de Protección'
-              }">{{ casesService.selectedCase()?.estado }}</span>
+                'badge-warning': caseItem.estado === 'Registrado' || caseItem.estado === 'En evaluación',
+                'badge-info': caseItem.estado === 'En atención',
+                'badge-success': caseItem.estado === 'Derivado',
+                'badge-neutral': caseItem.estado === 'Cerrado' || caseItem.estado === 'Archivado'
+              }">{{ caseItem.estado }}</span>
+              <span class="text-xs text-muted">Último avance registrado en el expediente.</span>
             </div>
-          </div>
+          </section>
+
+          @if (caseItem.resumen) {
+            <section class="sz-case-section">
+              <h4>Resumen</h4>
+              <p class="sz-case-summary-text">{{ caseItem.resumen }}</p>
+            </section>
+          }
 
         </div>
       }
@@ -82,11 +110,11 @@
             <div class="sz-timeline-item">
               <div class="sz-timeline-item-node is-active"></div>
               <div class="sz-timeline-item-header">
-                <span class="time-title">Evaluación Psicológica Completada</span>
-                <span class="time-stamp">{{ casesService.selectedCase()?.fecha }}</span>
+                <span class="time-title">Seguimiento del caso registrado</span>
+                <span class="time-stamp">{{ caseItem.fecha }}</span>
               </div>
               <p class="sz-timeline-item-body">
-                Se completó el informe preliminar de estado emocional. Nivel registrado: {{ casesService.selectedCase()?.emocion }}.
+                Se registró el avance operativo del caso. Estado actual: {{ caseItem.estado }}.
               </p>
             </div>
 
@@ -108,7 +136,7 @@
     </div>
 
     <div class="sz-drawer-footer">
-      <button class="btn btn-outline" (click)="casesService.closeCaseDrawer()">Cerrar Expediente</button>
+      <button class="btn btn-outline" (click)="casesService.closeCaseDrawer()">Cerrar ficha</button>
       <button class="btn btn-primary" (click)="toastService.show('Medidas urgentes ratificadas en el Poder Judicial.', 'success')">Ratificar Medidas</button>
     </div>
   </div>
