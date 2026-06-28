@@ -118,9 +118,19 @@
               <td>{{ caso.fecha }}</td>
               <td>{{ caso.estado }}</td>
               <td class="col-actions">
-                <button class="btn btn-outline btn-sm my-2" (click)="casesService.viewCaseDetails(caso)">Ficha Digital</button>
-                <button class="btn btn-sm border border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white my-2" (click)="casesService.openEditModal(caso)">Editar</button>
-                <button class="btn btn-sm border border-red-700 text-red-700 hover:bg-red-700 hover:text-white my-2" (click)="openDeleteModal(caso)">Cerrar caso</button>
+                <div class="sz-case-actions">
+                  <button class="btn btn-outline btn-sm" type="button" (click)="casesService.viewCaseDetails(caso)">Ficha</button>
+                  <button class="btn btn-sm sz-case-action-edit" type="button" (click)="casesService.openEditModal(caso)">Editar</button>
+                  <button
+                    class="btn btn-sm sz-case-action-close"
+                    type="button"
+                    [disabled]="!canCloseCase(caso)"
+                    [title]="canCloseCase(caso) ? 'Cerrar caso' : 'Este estado no permite cierre directo'"
+                    (click)="openDeleteModal(caso)"
+                  >
+                    Cerrar
+                  </button>
+                </div>
               </td>
             </tr>
           }
@@ -297,7 +307,7 @@
           </div>
           <div class="sz-modal-body text-center">
             <p class="mb-4">¿Estás seguro de que deseas cerrar el caso <strong>{{ caseItem.codigo }}</strong>?</p>
-            <p class="text-xs text-muted">Esta acción inhabilitará el caso permanentemente.</p>
+            <p class="text-xs text-muted">El registro se mantendrá visible y solo cambiará su estado a Cerrado.</p>
           </div>
           <div class="sz-modal-footer">
             <button class="btn btn-outline" (click)="closeDeleteModal()">Cancelar</button>

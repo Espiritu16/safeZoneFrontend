@@ -104,6 +104,10 @@ export class CasosComponent {
     return column.nextStatus ?? null;
   }
 
+  protected canCloseCase(caso: Caso): boolean {
+    return ['En evaluación', 'En atención', 'Derivado'].includes(caso.estado);
+  }
+
   private canMoveStatus(currentStatus: string, targetStatus: string): boolean {
     return this.allowedStatusTransitions.get(currentStatus)?.includes(targetStatus) ?? false;
   }

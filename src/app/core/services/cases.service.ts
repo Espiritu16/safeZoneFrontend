@@ -228,11 +228,9 @@ export class CasesService {
   }
 
   closedCase(caseId: string) {
-    this.api.patch<void>(`${API_ENDPOINTS.casos}/${caseId}/inactivar`).subscribe({
+    this.api.put<CasoResponse>(`${API_ENDPOINTS.casos}/${caseId}`, { estado: 'CERRADO' }).subscribe({
       next: () => {
-        this.casos.update(casos =>
-          casos.filter(caso => caso.id !== caseId)
-        );
+        this.loadCasos().subscribe();
         this.toastService.show('Caso cerrado correctamente', 'success');
       },
       error: () => {

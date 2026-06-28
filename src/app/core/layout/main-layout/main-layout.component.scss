@@ -1,1 +1,120 @@
-/* Main layout component specific styles */
+.sz-case-drawer {
+  max-width: 520px;
+}
+
+.sz-case-drawer-eyebrow {
+  margin: 0 0 4px;
+  color: #4B6B88;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sz-case-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sz-case-summary,
+.sz-case-section {
+  border: 1px solid rgba(203, 213, 225, 0.86);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.sz-case-summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+}
+
+.sz-case-summary-label,
+.sz-case-section h4 {
+  margin: 0;
+  color: #4B6B88;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sz-case-summary-name {
+  margin: 5px 0 0;
+  color: #0F172A;
+  font-size: 1.05rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.sz-case-section {
+  padding: 15px;
+}
+
+.sz-case-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.sz-case-info-grid .ficha-field,
+.sz-case-assignment {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.82);
+}
+
+.sz-case-info-grid .label,
+.sz-case-assignment .label {
+  color: #64748B;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.sz-case-info-grid .value,
+.sz-case-assignment strong {
+  color: #0F172A;
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.sz-case-status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.sz-case-summary-text {
+  margin: 10px 0 0;
+  color: #475569;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.badge-neutral {
+  background: #E2E8F0;
+  color: #334155;
+}
+
+@media (max-width: 560px) {
+  .sz-case-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sz-case-summary,
+  .sz-case-status-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -154,6 +154,29 @@ describe('CasesService', () => {
     expect(service.casos()[0].estado).toBe('En atención');
   });
 
+  it('closes a case by updating its status instead of inactivating it', () => {
+    flushInitialLoad();
+
+    service.closedCase('case-1');
+
+    const updateRequest = http.expectOne('http://localhost:8080/api/casos/case-1');
+    expect(updateRequest.request.method).toBe('PUT');
+    expect(updateRequest.request.body).toEqual({ estado: 'CERRADO' });
+    updateRequest.flush({
+      id: 'case-1',
+      victimaId: 'victima-1',
+      estado: 'CERRADO',
+      prioridad: 'MEDIA',
+      resumen: 'Caso cerrado.',
+      distrito: 'Lima',
+      activo: true,
+      fechaCreacion: '2026-06-16T10:00:00',
+      fechaActualizacion: '2026-06-16T10:00:00',
+    });
+
+    flushInitialLoad();
+  });
+
   it('filters cases by case status', () => {
     flushInitialLoad();
 
