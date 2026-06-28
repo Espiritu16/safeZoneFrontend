@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
   },
   predenuncias: '/predenuncias',
   casos: '/casos',
+  asignaciones: '/asignaciones',
   denuncias: '/denuncias',
   seguimientos: '/seguimientos',
   usuarios: '/usuarios',
