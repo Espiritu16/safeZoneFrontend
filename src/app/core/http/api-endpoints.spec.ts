@@ -7,6 +7,7 @@ describe('API_ENDPOINTS', () => {
     expect(API_ENDPOINTS.auth.me).toBe('/auth/me');
     expect(API_ENDPOINTS.predenuncias).toBe('/predenuncias');
     expect(API_ENDPOINTS.casos).toBe('/casos');
+    expect(API_ENDPOINTS.asignaciones).toBe('/asignaciones');
     expect(API_ENDPOINTS.denuncias).toBe('/denuncias');
     expect(API_ENDPOINTS.seguimientos).toBe('/seguimientos');
   });

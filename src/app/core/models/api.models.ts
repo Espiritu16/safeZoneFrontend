@@ -149,6 +149,33 @@ export interface ActualizarCasoRequest {
   estado?: EstadoCaso;
 }
 
+export interface AsignacionCasoResponse {
+  id: string;
+  casoId: string;
+  profesionalId: string;
+  rolProfesional: Extract<BackendRole, 'PSICOLOGO' | 'DEFENSOR'>;
+  activo: boolean;
+  fechaAsignacion: string;
+  fechaFin?: string | null;
+  asignadoPor: string;
+  fechaActualizacion?: string | null;
+  actualizadoPor?: string | null;
+  inactivadoPor?: string | null;
+  fechaInactivacion?: string | null;
+}
+
+export interface CrearAsignacionCasoRequest {
+  casoId: string;
+  profesionalId: string;
+  rolProfesional: Extract<BackendRole, 'PSICOLOGO' | 'DEFENSOR'>;
+}
+
+export interface ActualizarAsignacionCasoRequest {
+  profesionalId?: string;
+  rolProfesional?: Extract<BackendRole, 'PSICOLOGO' | 'DEFENSOR'>;
+  activo?: boolean;
+}
+
 export interface CrearDenunciaRequest {
   casoId?: string;
   victimaId: string;

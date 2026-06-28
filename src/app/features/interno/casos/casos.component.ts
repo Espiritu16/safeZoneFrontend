@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -15,6 +15,12 @@ import type { PrioridadCaso, EstadoCaso, ActualizarCasoRequest } from '../../../
 export class CasosComponent {
   protected readonly casesService = inject(CasesService);
   protected readonly casesViewMode = signal<string>('table');
+  protected readonly psicologos = computed(() =>
+    this.casesService.profesionales().filter((usuario) => usuario.rol === 'PSICOLOGO'),
+  );
+  protected readonly defensores = computed(() =>
+    this.casesService.profesionales().filter((usuario) => usuario.rol === 'DEFENSOR'),
+  );
 
   // Delete modal state
   protected readonly showDeleteModal = signal<boolean>(false);
@@ -76,7 +82,11 @@ export class CasosComponent {
       estado: estadoMap[editing.estado] || 'EN_EVALUACION'
     };
 
-    this.casesService.editCase(editing.id, request);
-    this.casesService.closeModal();
+    this.casesService.updateCaseWithAssignments(
+      editing.id,
+      request,
+      editing.psicologoId,
+      editing.defensorId,
+    );
   }
 }

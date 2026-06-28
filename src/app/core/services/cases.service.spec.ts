@@ -22,10 +22,12 @@ describe('CasesService', () => {
 
   function flushInitialLoad(
     casos: unknown[] = [],
+    asignaciones: unknown[] = [],
     denuncias: unknown[] = [],
     usuarios: unknown[] = [],
   ): void {
     http.expectOne('http://localhost:8080/api/casos').flush(casos);
+    http.expectOne('http://localhost:8080/api/asignaciones').flush(asignaciones);
     http.expectOne('http://localhost:8080/api/denuncias').flush(denuncias);
     http.expectOne('http://localhost:8080/api/usuarios').flush(usuarios);
   }
@@ -43,6 +45,16 @@ describe('CasesService', () => {
           activo: true,
           fechaCreacion: '2026-06-16T10:00:00',
           fechaActualizacion: '2026-06-16T10:00:00',
+        },
+      ],
+      [
+        {
+          id: 'asignacion-1',
+          casoId: '12345678-0000-0000-0000-000000000000',
+          profesionalId: 'psicologo-1',
+          rolProfesional: 'PSICOLOGO',
+          activo: true,
+          fechaAsignacion: '2026-06-16T11:00:00',
         },
       ],
       [
@@ -75,6 +87,17 @@ describe('CasesService', () => {
           rol: 'VICTIMA',
           activo: true,
         },
+        {
+          id: 'psicologo-1',
+          correo: 'psicologa@example.com',
+          nombres: 'Rosa',
+          apellidos: 'Salas',
+          dni: '12345678',
+          telefono: '999111222',
+          distrito: 'Comas',
+          rol: 'PSICOLOGO',
+          activo: true,
+        },
       ],
     );
 
@@ -87,6 +110,7 @@ describe('CasesService', () => {
         estado: 'En atención',
         riesgo: 'Alto',
         distrito: 'Comas',
+        asignado: 'Psic.: Rosa Salas',
       }),
     ]);
   });

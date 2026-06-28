@@ -1,15 +1,17 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { catchError, forkJoin, map, Observable, of, tap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../http/api-endpoints';
 import { ApiClientService } from '../http/api-client.service';
 import type {
   ActualizarCasoRequest,
+  AsignacionCasoResponse,
   CasoResponse,
   DenunciaResponse,
   EstadoCaso,
   PrioridadCaso,
   UsuarioResponse,
 } from '../models/api.models';
+import { AsignacionesService } from './asignaciones.service';
 import { DenunciasService } from './denuncias.service';
 import { ToastService } from './toast.service';
 import { UsuariosService } from './usuarios.service';
@@ -35,6 +37,10 @@ export interface Caso {
   estado: string;
   riesgo: string;
   asignado: string;
+  psicologoId?: string;
+  psicologoAsignacionId?: string;
+  defensorId?: string;
+  defensorAsignacionId?: string;
   fecha: string;
   emocion: string;
   resumen?: string;
@@ -46,13 +52,16 @@ export interface Caso {
 export class CasesService {
   private readonly toastService = inject(ToastService);
   private readonly api = inject(ApiClientService);
+  private readonly asignacionesService = inject(AsignacionesService);
   private readonly denunciasService = inject(DenunciasService);
   private readonly usuariosService = inject(UsuariosService);
   public readonly showModal = signal<boolean>(false);
   private denunciasByCasoId = new Map<string, DenunciaResponse>();
   private usuariosById = new Map<string, UsuarioResponse>();
+  private asignacionesByCasoId = new Map<string, AsignacionCasoResponse[]>();
 
   public readonly casos = signal<Caso[]>([]);
+  public readonly profesionales = signal<UsuarioResponse[]>([]);
   public readonly isLoading = signal<boolean>(false);
   public readonly loadError = signal<string>('');
   public readonly editingCase = signal<Caso | null>(null);
@@ -98,10 +107,11 @@ export class CasesService {
     this.loadError.set('');
     return forkJoin({
       casos: this.api.get<CasoResponse[]>(API_ENDPOINTS.casos),
+      asignaciones: this.asignacionesService.list().pipe(catchError(() => of([] as AsignacionCasoResponse[]))),
       denuncias: this.denunciasService.list().pipe(catchError(() => of([] as DenunciaResponse[]))),
       usuarios: this.usuariosService.list().pipe(catchError(() => of([] as UsuarioResponse[]))),
     }).pipe(
-      tap(({ denuncias, usuarios }) => this.syncLookupMaps(denuncias, usuarios)),
+      tap(({ asignaciones, denuncias, usuarios }) => this.syncLookupMaps(asignaciones, denuncias, usuarios)),
       map(({ casos }) => casos.map((caso) => this.toViewModel(caso))),
       tap((casos) => this.casos.set(casos)),
       catchError(() => {
@@ -148,8 +158,32 @@ export class CasesService {
     })
 
   }
+  updateCaseWithAssignments(
+    caseId: string,
+    request: ActualizarCasoRequest,
+    psicologoId?: string,
+    defensorId?: string,
+  ): void {
+    this.api.put<CasoResponse>(`${API_ENDPOINTS.casos}/${caseId}`, request).pipe(
+      switchMap(() =>
+        forkJoin(this.assignmentRequests(caseId, psicologoId, defensorId)).pipe(
+          map(() => null),
+        ),
+      ),
+    ).subscribe({
+      next: () => {
+        this.loadCasos().subscribe();
+        this.toastService.show('Caso actualizado correctamente.', 'success');
+        this.closeModal();
+      },
+      error: () => {
+        this.toastService.show('No se pudo actualizar el caso.', 'error');
+      },
+    });
+  }
+
   closedCase(caseId: string) {
-    this.api.patch<void>(`${API_ENDPOINTS.casos}/${caseId}/inhabilitar`).subscribe({
+    this.api.patch<void>(`${API_ENDPOINTS.casos}/${caseId}/inactivar`).subscribe({
       next: () => {
         this.casos.update(casos =>
           casos.filter(caso => caso.id !== caseId)
@@ -157,7 +191,7 @@ export class CasesService {
         this.toastService.show('Caso cerrado correctamente', 'success');
       },
       error: () => {
-        this.toastService.show('No se pudo eliminar el caso.', 'error');
+        this.toastService.show('No se pudo cerrar el caso.', 'error');
       }
     });
   }
@@ -170,34 +204,101 @@ export class CasesService {
     this.selectedCase.set(null);
   }
 
-  private syncLookupMaps(denuncias: DenunciaResponse[], usuarios: UsuarioResponse[]): void {
+  private syncLookupMaps(
+    asignaciones: AsignacionCasoResponse[],
+    denuncias: DenunciaResponse[],
+    usuarios: UsuarioResponse[],
+  ): void {
     this.denunciasByCasoId = new Map(
       denuncias
         .filter((denuncia) => denuncia.casoId)
         .map((denuncia) => [denuncia.casoId, denuncia]),
     );
     this.usuariosById = new Map(usuarios.map((usuario) => [usuario.id, usuario]));
+    this.asignacionesByCasoId = asignaciones.reduce((mapa, asignacion) => {
+      const lista = mapa.get(asignacion.casoId) ?? [];
+      lista.push(asignacion);
+      mapa.set(asignacion.casoId, lista);
+      return mapa;
+    }, new Map<string, AsignacionCasoResponse[]>());
+    this.profesionales.set(
+      usuarios.filter((usuario) => usuario.activo && (usuario.rol === 'PSICOLOGO' || usuario.rol === 'DEFENSOR')),
+    );
   }
 
   private toViewModel(caso: CasoResponse): Caso {
     const denuncia = this.denunciasByCasoId.get(caso.id);
     const usuario = this.usuariosById.get(caso.victimaId);
+    const asignaciones = this.asignacionesByCasoId.get(caso.id) ?? [];
+    const psicologo = asignaciones.find((asignacion) => asignacion.rolProfesional === 'PSICOLOGO');
+    const defensor = asignaciones.find((asignacion) => asignacion.rolProfesional === 'DEFENSOR');
 
     return {
       id: caso.id,
       codigo: `Caso #${caso.id.slice(0, 8).toUpperCase()}`,
       victim: this.victimLabel(usuario, denuncia, caso.victimaId),
       anonimo: denuncia?.anonima ?? false,
-      edad: denuncia?.edad != null ? String(denuncia.edad+" años") : '',
+      edad: denuncia?.edad != null ? String(denuncia.edad) : '',
       distrito: caso.distrito,
       tipo: this.tipoViolenciaLabel(denuncia?.tipoViolencia, caso.resumen),
       estado: this.statusLabel(caso.estado),
       riesgo: this.riskLabel(caso.prioridad),
-      asignado: 'Pendiente de asignación',
+      asignado: this.assignedLabel(psicologo, defensor),
+      psicologoId: psicologo?.profesionalId,
+      psicologoAsignacionId: psicologo?.id,
+      defensorId: defensor?.profesionalId,
+      defensorAsignacionId: defensor?.id,
       fecha: caso.fechaCreacion.split('T')[0] ?? caso.fechaCreacion,
       emocion: 'Seguimiento pendiente',
       resumen: caso.resumen,
     };
+  }
+
+  private assignmentRequests(caseId: string, psicologoId?: string, defensorId?: string): Observable<unknown>[] {
+    const current = this.editingCase();
+    const requests: Observable<unknown>[] = [];
+
+    requests.push(...this.assignmentRequestForRole(caseId, current?.psicologoAsignacionId, current?.psicologoId, psicologoId, 'PSICOLOGO'));
+    requests.push(...this.assignmentRequestForRole(caseId, current?.defensorAsignacionId, current?.defensorId, defensorId, 'DEFENSOR'));
+
+    return requests.length > 0 ? requests : [of(null)];
+  }
+
+  private assignmentRequestForRole(
+    caseId: string,
+    assignmentId: string | undefined,
+    currentProfessionalId: string | undefined,
+    nextProfessionalId: string | undefined,
+    rolProfesional: 'PSICOLOGO' | 'DEFENSOR',
+  ): Observable<unknown>[] {
+    const next = nextProfessionalId || undefined;
+    const current = currentProfessionalId || undefined;
+    if (next === current) {
+      return [];
+    }
+    if (assignmentId && !next) {
+      return [this.asignacionesService.inactivar(assignmentId)];
+    }
+    if (next) {
+      return [this.asignacionesService.create({ casoId: caseId, profesionalId: next, rolProfesional })];
+    }
+    return [];
+  }
+
+  private assignedLabel(psicologo?: AsignacionCasoResponse, defensor?: AsignacionCasoResponse): string {
+    const labels = [
+      psicologo ? `Psic.: ${this.professionalName(psicologo.profesionalId)}` : '',
+      defensor ? `Def.: ${this.professionalName(defensor.profesionalId)}` : '',
+    ].filter(Boolean);
+    return labels.length > 0 ? labels.join(' | ') : 'Pendiente de asignación';
+  }
+
+  private professionalName(profesionalId: string): string {
+    const usuario = this.usuariosById.get(profesionalId);
+    if (!usuario) {
+      return `Profesional ${profesionalId.slice(0, 8)}`;
+    }
+    return `${usuario.nombres} ${usuario.apellidos}`.trim() || usuario.correo;
   }
 
   private victimLabel(

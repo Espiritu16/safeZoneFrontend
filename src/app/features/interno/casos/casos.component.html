@@ -55,7 +55,7 @@
             <th>Riesgo</th>
             <th>Encargado</th>
             <th>Fecha de Ingreso</th>
-            <th>Estado de la denuncia</th>
+            <th>Estado del caso</th>
             <th>Estado Emocional</th>
             <th class="col-actions">Acciones</th>
           </tr>
@@ -198,19 +198,20 @@
 
     </div>
   }
+</div>
 
   <!-- MODAL: EDITAR CASO -->
   @if (casesService.showModal()) {
     @if (casesService.editingCase(); as caseItem) {
       <div class="sz-modal-overlay">
-        <div class="sz-modal">
+        <div class="sz-modal sz-modal-md">
           <div class="sz-modal-header">
             <h3 class="sz-modal-header-title">Editar Caso: {{ caseItem.codigo }}</h3>
             <button class="sz-modal-header-close" (click)="casesService.closeModal()">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
           </div>
-          <div class="sz-modal-body">
+          <div class="sz-modal-body sz-modal-body-scroll">
             <form #editForm="ngForm" id="caseEditForm">
               <!-- Riesgo -->
               <div class="form-group">
@@ -225,7 +226,7 @@
 
               <!-- Estado -->
               <div class="form-group">
-                <label class="form-label">Estado de la Denuncia *</label>
+                <label class="form-label">Estado del caso *</label>
                 <select class="form-select" name="estado" [(ngModel)]="caseItem.estado" required>
                   <option value="Registrado">Registrado</option>
                   <option value="En evaluación">En evaluación</option>
@@ -234,6 +235,28 @@
                   <option value="Cerrado">Cerrado</option>
                   <option value="Archivado">Archivado</option>
                 </select>
+              </div>
+
+              <div class="sz-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Psicólogo asignado</label>
+                  <select class="form-select" name="psicologoId" [(ngModel)]="caseItem.psicologoId">
+                    <option value="">Pendiente de asignación</option>
+                    @for (profesional of psicologos(); track profesional.id) {
+                      <option [value]="profesional.id">{{ profesional.nombres }} {{ profesional.apellidos }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Defensor legal asignado</label>
+                  <select class="form-select" name="defensorId" [(ngModel)]="caseItem.defensorId">
+                    <option value="">Pendiente de asignación</option>
+                    @for (profesional of defensores(); track profesional.id) {
+                      <option [value]="profesional.id">{{ profesional.nombres }} {{ profesional.apellidos }}</option>
+                    }
+                  </select>
+                </div>
               </div>
 
               <!-- Distrito -->
@@ -285,5 +308,3 @@
       </div>
     }
   }
-
-</div>
