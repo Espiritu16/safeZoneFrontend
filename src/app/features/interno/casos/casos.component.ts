@@ -47,11 +47,12 @@ export class CasosComponent {
     { label: 'Todos los estados', value: 'all' },
     ...this.kanbanColumns.map((column) => ({ label: column.title, value: column.status })),
   ];
+  private readonly statusOptions = ['Registrado', 'En evaluación', 'En atención', 'Derivado', 'Cerrado', 'Archivado'];
   private readonly allowedStatusTransitions = new Map<string, string[]>([
     ['Registrado', ['En evaluación']],
-    ['En evaluación', ['En atención']],
+    ['En evaluación', ['En atención', 'Cerrado']],
     ['En atención', ['En evaluación', 'Derivado', 'Cerrado']],
-    ['Derivado', ['En atención']],
+    ['Derivado', ['En atención', 'Cerrado']],
     ['Cerrado', ['Archivado']],
     ['Archivado', []],
   ]);
@@ -107,6 +108,11 @@ export class CasosComponent {
 
   protected canCloseCase(caso: Caso): boolean {
     return ['En evaluación', 'En atención', 'Derivado'].includes(caso.estado);
+  }
+
+  protected editableStatusOptions(caso: Caso): string[] {
+    const allowed = this.allowedStatusTransitions.get(caso.estado) ?? [];
+    return this.statusOptions.filter((status) => status === caso.estado || allowed.includes(status));
   }
 
   private canMoveStatus(currentStatus: string, targetStatus: string): boolean {

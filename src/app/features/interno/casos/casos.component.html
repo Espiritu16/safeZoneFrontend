@@ -247,13 +247,11 @@
               <div class="form-group">
                 <label class="form-label">Estado del caso *</label>
                 <select #estadoSelect class="form-select" name="estado" [ngModel]="caseItem.estado" (ngModelChange)="updateEditingCase('estado', $event)" required>
-                  <option value="Registrado">Registrado</option>
-                  <option value="En evaluación">En evaluación</option>
-                  <option value="En atención">En atención</option>
-                  <option value="Derivado">Derivado</option>
-                  <option value="Cerrado">Cerrado</option>
-                  <option value="Archivado">Archivado</option>
+                  @for (estado of editableStatusOptions(caseItem); track estado) {
+                    <option [value]="estado">{{ estado }}</option>
+                  }
                 </select>
+                <p class="text-xs text-muted mt-1">Solo se muestran los cambios válidos desde el estado actual.</p>
               </div>
 
               <div class="sz-grid-2">
