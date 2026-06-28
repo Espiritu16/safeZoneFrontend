@@ -18,17 +18,9 @@
   overflow: auto;
 }
 
-.sz-table {
-  thead {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
-}
-
-.sz-table-pagination {
+.sz-table thead {
   position: sticky;
-  bottom: 0;
+  top: 0;
   z-index: 2;
 }
 
@@ -167,6 +159,24 @@
     background: #B91C1C;
     border-color: #B91C1C;
   }
+}
+
+.sz-modal-overlay {
+  background-color: rgba(15, 23, 42, 0.5);
+}
+
+.sz-modal {
+  background: #FFFFFF;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.24);
+}
+
+.sz-modal-header,
+.sz-modal-body {
+  background: #FFFFFF;
+}
+
+.sz-modal-footer {
+  background: #F8FAFC;
 }
 
 .cdk-drag-preview {

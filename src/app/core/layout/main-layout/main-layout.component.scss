@@ -21,7 +21,7 @@
 .sz-case-section {
   border: 1px solid rgba(203, 213, 225, 0.86);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
 }
 
@@ -86,6 +86,8 @@
   font-size: 0.88rem;
   font-weight: 800;
   line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .sz-case-status-row {
@@ -97,9 +99,10 @@
 
 .sz-case-summary-text {
   margin: 10px 0 0;
-  color: #475569;
+  color: #334155;
   font-size: 0.84rem;
   line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 .badge-neutral {

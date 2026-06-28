@@ -101,7 +101,9 @@
                   } @else {
                     <span>{{ caso.victim }}</span>
                   }
-                  <span class="text-xs text-muted">({{ caso.edad }} años)</span>
+                  @if (caso.edad) {
+                    <span class="text-xs text-muted">({{ caso.edad }} años)</span>
+                  }
                 </div>
               </td>
               <td>{{ caso.tipo }}</td>
