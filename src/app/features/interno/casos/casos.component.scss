@@ -1,3 +1,49 @@
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.sz-cases-page {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.sz-table-container {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.sz-table {
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+}
+
+.sz-table-pagination {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}
+
+.sz-kanban-board {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.sz-kanban-column {
+  height: 100%;
+  max-height: none;
+  min-height: 0;
+}
+
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 8px;
