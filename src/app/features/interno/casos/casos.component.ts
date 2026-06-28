@@ -1,9 +1,18 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, ViewChild, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CasesService, Caso } from '../../../core/services/cases.service';
 import type { PrioridadCaso, EstadoCaso, ActualizarCasoRequest } from '../../../core/models/api.models';
+
+interface CaseEditFormValue {
+  riesgo?: string;
+  estado?: string;
+  psicologoId?: string;
+  defensorId?: string;
+  distrito?: string;
+  resumen?: string;
+}
 
 @Component({
   selector: 'app-casos',
@@ -15,6 +24,7 @@ import type { PrioridadCaso, EstadoCaso, ActualizarCasoRequest } from '../../../
 export class CasosComponent {
   protected readonly casesService = inject(CasesService);
   protected readonly casesViewMode = signal<string>('table');
+  @ViewChild('editForm') private editForm?: NgForm;
   protected readonly psicologos = computed(() =>
     this.casesService.profesionales().filter((usuario) => usuario.rol === 'PSICOLOGO'),
   );
@@ -47,6 +57,16 @@ export class CasosComponent {
     this.caseToDelete.set(null);
   }
 
+  protected updateEditingCase<K extends keyof Caso>(field: K, value: Caso[K]) {
+    const editing = this.casesService.editingCase();
+    if (!editing) return;
+
+    this.casesService.editingCase.set({
+      ...editing,
+      [field]: value,
+    });
+  }
+
   confirmDelete() {
     const caso = this.caseToDelete();
     if (caso) {
@@ -55,9 +75,10 @@ export class CasosComponent {
     this.closeDeleteModal();
   }
 
-  saveEdit() {
+  saveEdit(formValue?: CaseEditFormValue) {
     const editing = this.casesService.editingCase();
     if (!editing) return;
+    formValue ??= (this.editForm?.value ?? {}) as CaseEditFormValue;
 
     const prioridadMap: Record<string, PrioridadCaso> = {
       'Leve': 'BAJA',
@@ -75,18 +96,25 @@ export class CasosComponent {
       'Archivado': 'ARCHIVADO'
     };
 
+    const riesgo = formValue.riesgo || editing.riesgo;
+    const estado = formValue.estado || editing.estado;
+    const resumen = formValue.resumen ?? editing.resumen;
+    const distrito = formValue.distrito || editing.distrito;
+    const psicologoId = formValue.psicologoId || editing.psicologoId;
+    const defensorId = formValue.defensorId || editing.defensorId;
+
     const request: ActualizarCasoRequest = {
-      resumen: editing.resumen,
-      distrito: editing.distrito,
-      prioridad: prioridadMap[editing.riesgo] || 'MEDIA',
-      estado: estadoMap[editing.estado] || 'EN_EVALUACION'
+      resumen,
+      distrito,
+      prioridad: prioridadMap[riesgo] || 'MEDIA',
+      estado: estadoMap[estado] || 'EN_EVALUACION'
     };
 
     this.casesService.updateCaseWithAssignments(
       editing.id,
       request,
-      editing.psicologoId,
-      editing.defensorId,
+      psicologoId,
+      defensorId,
     );
   }
 }

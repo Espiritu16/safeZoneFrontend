@@ -118,10 +118,10 @@
       <div class="sz-kanban-column">
         <div class="sz-kanban-column-header">
           <span class="column-title"><span class="badge-dot sz-dot-warning"></span>Evaluación</span>
-          <span class="column-count">{{ casesService.getCasosByStatus('Evaluación').length }}</span>
+          <span class="column-count">{{ casesService.getCasosByStatus('En evaluación').length }}</span>
         </div>
         <div class="sz-kanban-column-list">
-          @for (c of casesService.getCasosByStatus('Evaluación'); track c.id) {
+          @for (c of casesService.getCasosByStatus('En evaluación'); track c.id) {
             <div class="sz-kanban-card">
               <div class="flex justify-between items-center">
                 <span class="badge" [ngClass]="{
@@ -129,7 +129,7 @@
                   'badge-risk-moderate': c.riesgo === 'Moderado',
                   'badge-risk-low': c.riesgo === 'Leve'
                 }">{{ c.riesgo }}</span>
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En Proceso')" title="Avanzar a En Proceso">→</button>
+                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En atención')" title="Avanzar a En atención">→</button>
               </div>
               <p class="sz-kanban-card-title">{{ c.victim }}</p>
               <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
@@ -144,20 +144,20 @@
       <!-- Columna 2: En Proceso -->
       <div class="sz-kanban-column">
         <div class="sz-kanban-column-header">
-          <span class="column-title"><span class="badge-dot sz-dot-info"></span>En Proceso</span>
-          <span class="column-count">{{ casesService.getCasosByStatus('En Proceso').length }}</span>
+          <span class="column-title"><span class="badge-dot sz-dot-info"></span>En atención</span>
+          <span class="column-count">{{ casesService.getCasosByStatus('En atención').length }}</span>
         </div>
         <div class="sz-kanban-column-list">
-          @for (c of casesService.getCasosByStatus('En Proceso'); track c.id) {
+          @for (c of casesService.getCasosByStatus('En atención'); track c.id) {
             <div class="sz-kanban-card">
               <div class="flex justify-between items-center">
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'Evaluación')" title="Retroceder a Evaluación">←</button>
+                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En evaluación')" title="Retroceder a En evaluación">←</button>
                 <span class="badge" [ngClass]="{
                   'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
                   'badge-risk-moderate': c.riesgo === 'Moderado',
                   'badge-risk-low': c.riesgo === 'Leve'
                 }">{{ c.riesgo }}</span>
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'Medidas de Protección')" title="Avanzar a Medidas">→</button>
+                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'Derivado')" title="Avanzar a derivación">→</button>
               </div>
               <p class="sz-kanban-card-title">{{ c.victim }}</p>
               <p class="sz-kanban-card-desc">{{ c.codigo }} - {{ c.tipo }}</p>
@@ -172,14 +172,14 @@
       <!-- Columna 3: Medidas de Protección -->
       <div class="sz-kanban-column">
         <div class="sz-kanban-column-header">
-          <span class="column-title"><span class="badge-dot sz-dot-success"></span>Medidas Judiciales</span>
-          <span class="column-count">{{ casesService.getCasosByStatus('Medidas de Protección').length }}</span>
+          <span class="column-title"><span class="badge-dot sz-dot-success"></span>Derivado</span>
+          <span class="column-count">{{ casesService.getCasosByStatus('Derivado').length }}</span>
         </div>
         <div class="sz-kanban-column-list">
-          @for (c of casesService.getCasosByStatus('Medidas de Protección'); track c.id) {
+          @for (c of casesService.getCasosByStatus('Derivado'); track c.id) {
             <div class="sz-kanban-card">
               <div class="flex justify-between items-center">
-                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En Proceso')" title="Retroceder a En Proceso">←</button>
+                <button class="btn btn-ghost p-1" (click)="casesService.moveCase(c.id, 'En atención')" title="Retroceder a En atención">←</button>
                 <span class="badge" [ngClass]="{
                   'badge-risk-severe': c.riesgo === 'Severo' || c.riesgo === 'Alto',
                   'badge-risk-moderate': c.riesgo === 'Moderado',
@@ -216,7 +216,7 @@
               <!-- Riesgo -->
               <div class="form-group">
                 <label class="form-label">Riesgo del Caso *</label>
-                <select class="form-select" name="riesgo" [(ngModel)]="caseItem.riesgo" required>
+                <select #riesgoSelect class="form-select" name="riesgo" [ngModel]="caseItem.riesgo" (ngModelChange)="updateEditingCase('riesgo', $event)" required>
                   <option value="Leve">Leve</option>
                   <option value="Moderado">Moderado</option>
                   <option value="Alto">Alto</option>
@@ -227,7 +227,7 @@
               <!-- Estado -->
               <div class="form-group">
                 <label class="form-label">Estado del caso *</label>
-                <select class="form-select" name="estado" [(ngModel)]="caseItem.estado" required>
+                <select #estadoSelect class="form-select" name="estado" [ngModel]="caseItem.estado" (ngModelChange)="updateEditingCase('estado', $event)" required>
                   <option value="Registrado">Registrado</option>
                   <option value="En evaluación">En evaluación</option>
                   <option value="En atención">En atención</option>
@@ -240,7 +240,7 @@
               <div class="sz-grid-2">
                 <div class="form-group">
                   <label class="form-label">Psicólogo asignado</label>
-                  <select class="form-select" name="psicologoId" [(ngModel)]="caseItem.psicologoId">
+                  <select #psicologoSelect class="form-select" name="psicologoId" [ngModel]="caseItem.psicologoId" (ngModelChange)="updateEditingCase('psicologoId', $event)">
                     <option value="">Pendiente de asignación</option>
                     @for (profesional of psicologos(); track profesional.id) {
                       <option [value]="profesional.id">{{ profesional.nombres }} {{ profesional.apellidos }}</option>
@@ -250,7 +250,7 @@
 
                 <div class="form-group">
                   <label class="form-label">Defensor legal asignado</label>
-                  <select class="form-select" name="defensorId" [(ngModel)]="caseItem.defensorId">
+                  <select #defensorSelect class="form-select" name="defensorId" [ngModel]="caseItem.defensorId" (ngModelChange)="updateEditingCase('defensorId', $event)">
                     <option value="">Pendiente de asignación</option>
                     @for (profesional of defensores(); track profesional.id) {
                       <option [value]="profesional.id">{{ profesional.nombres }} {{ profesional.apellidos }}</option>
@@ -262,7 +262,7 @@
               <!-- Distrito -->
               <div class="form-group">
                 <label class="form-label">Distrito *</label>
-                <select class="form-select" name="distrito" [(ngModel)]="caseItem.distrito" required>
+                <select #distritoSelect class="form-select" name="distrito" [ngModel]="caseItem.distrito" (ngModelChange)="updateEditingCase('distrito', $event)" required>
                   @for (distrito of distritos; track distrito) {
                     <option [value]="distrito">{{ distrito }}</option>
                   }
@@ -272,13 +272,26 @@
               <!-- Resumen -->
               <div class="form-group">
                 <label class="form-label">Resumen / Descripción del Caso *</label>
-                <textarea class="form-input" name="resumen" [(ngModel)]="caseItem.resumen" rows="4" placeholder="Ingrese el resumen del caso..." required minlength="10" maxlength="1000"></textarea>
+                <textarea #resumenInput class="form-input" name="resumen" [ngModel]="caseItem.resumen" (ngModelChange)="updateEditingCase('resumen', $event)" rows="4" placeholder="Ingrese el resumen del caso..." required minlength="10" maxlength="1000"></textarea>
               </div>
             </form>
           </div>
           <div class="sz-modal-footer">
             <button class="btn btn-outline" (click)="casesService.closeModal()">Cancelar</button>
-            <button class="btn btn-primary" (click)="saveEdit()" [disabled]="editForm.invalid || !caseItem.resumen">Guardar Cambios</button>
+            <button
+              class="btn btn-primary"
+              (click)="saveEdit({
+                riesgo: riesgoSelect.value,
+                estado: estadoSelect.value,
+                psicologoId: psicologoSelect.value,
+                defensorId: defensorSelect.value,
+                distrito: distritoSelect.value,
+                resumen: resumenInput.value
+              })"
+              [disabled]="editForm.invalid || !caseItem.resumen"
+            >
+              Guardar Cambios
+            </button>
           </div>
         </div>
       </div>

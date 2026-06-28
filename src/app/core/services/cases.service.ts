@@ -273,7 +273,7 @@ export class CasesService {
   ): Observable<unknown>[] {
     const next = nextProfessionalId || undefined;
     const current = currentProfessionalId || undefined;
-    if (next === current) {
+    if (assignmentId && next === current) {
       return [];
     }
     if (assignmentId && !next) {
@@ -349,8 +349,11 @@ export class CasesService {
   private backendStatus(label: string): EstadoCaso {
     const statuses: Record<string, EstadoCaso> = {
       'Evaluación': 'EN_EVALUACION',
+      'En evaluación': 'EN_EVALUACION',
       'En Proceso': 'EN_ATENCION',
+      'En atención': 'EN_ATENCION',
       'Medidas de Protección': 'DERIVADO',
+      'Derivado': 'DERIVADO',
       'Archivado': 'ARCHIVADO',
     };
     return statuses[label] ?? 'EN_EVALUACION';
