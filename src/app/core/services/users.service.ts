@@ -5,6 +5,7 @@ export interface User {
   id: string;
   nombre: string;
   email: string;
+  password:string;
   rol: string;
   estado: string;       // 'Activo' | 'Inactivo'
   ultimaConexion: string;
@@ -13,12 +14,12 @@ export interface User {
 const STORAGE_KEY = 'safezone_users';
 
 const DEFAULT_USERS: User[] = [
-  { id: 'u1', nombre: 'Admin SafeZone', email: 'admin@safezone.gob.pe', rol: 'Administrador', estado: 'Activo', ultimaConexion: '2026-05-22 08:10' },
-  { id: 'u2', nombre: 'Dra. Sofía Medina', email: 'smedina@safezone.gob.pe', rol: 'Psicólogo', estado: 'Activo', ultimaConexion: '2026-05-22 01:22' },
-  { id: 'u3', nombre: 'Dr. Carlos Rojas', email: 'crojas@safezone.gob.pe', rol: 'Psicólogo', estado: 'Activo', ultimaConexion: '2026-05-21 23:40' },
-  { id: 'u4', nombre: 'Recepción Lima Centro', email: 'recepcion_lima@safezone.gob.pe', rol: 'Recepcionista', estado: 'Activo', ultimaConexion: '2026-05-22 07:55' },
-  { id: 'u5', nombre: 'Abog. María Torres', email: 'mtorres@safezone.gob.pe', rol: 'Defensor Legal', estado: 'Activo', ultimaConexion: '2026-05-21 18:30' },
-  { id: 'u8', nombre: 'Dr. Manuel Cabrera', email: 'mcabrera@safezone.gob.pe', rol: 'Psicólogo', estado: 'Inactivo', ultimaConexion: '2026-05-10 11:20' },
+  { id: 'u1', nombre: 'Admin SafeZone', email: 'admin@safezone.gob.pe',password:"casa123",rol: 'Administrador', estado: 'Activo', ultimaConexion: '2026-05-22 08:10' },
+  { id: 'u2', nombre: 'Dra. Sofía Medina', email: 'smedina@safezone.gob.pe',password:"12345$",rol: 'Psicólogo', estado: 'Activo', ultimaConexion: '2026-05-22 01:22' },
+  { id: 'u3', nombre: 'Dr. Carlos Rojas', email: 'crojas@safezone.gob.pe',password:"58910&",rol: 'Psicólogo', estado: 'Activo', ultimaConexion: '2026-05-21 23:40' },
+  { id: 'u4', nombre: 'Recepción Lima Centro', email: 'recepcion_lima@safezone.gob.pe',password:"78935$",rol: 'Recepcionista', estado: 'Activo', ultimaConexion: '2026-05-22 07:55' },
+  { id: 'u5', nombre: 'Abog. María Torres', email: 'mtorres@safezone.gob.pe',password:"74158$",rol: 'Defensor Legal', estado: 'Activo', ultimaConexion: '2026-05-21 18:30' },
+  { id: 'u8', nombre: 'Dr. Manuel Cabrera', email: 'mcabrera@safezone.gob.pe',password:"714869",rol: 'Psicólogo', estado: 'Inactivo', ultimaConexion: '2026-05-10 11:20' },
 ];
 
 @Injectable({

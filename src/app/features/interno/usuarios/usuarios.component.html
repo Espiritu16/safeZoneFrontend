@@ -145,7 +145,13 @@
               <p class="text-xs text-danger mt-1">Debe ser un correo institucional válido (...@safezone.gob.pe).</p>
             }
           </div>
-
+          <div class="form-group">
+            <label class="form-label">Contraseña *</label>
+            <input class="form-input" type="password" name="password" appTrimOnBlur [(ngModel)]="formData.password" #password="ngModel" required minlength="6" maxlength="120" placeholder="Contraseña" [ngClass]="{'border-danger': password.invalid && password.touched}">
+            @if (password.invalid && password.touched) {
+              <p class="text-xs text-danger mt-1">La contraseña es obligatoria (mín. 8 caracteres).</p>
+            }
+          </div>
           <div class="sz-grid-2">
             <div class="form-group">
               <label class="form-label">Rol Asignado *</label>

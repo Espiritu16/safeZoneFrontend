@@ -27,13 +27,14 @@ export class UsuariosComponent {
   formData = {
     nombre: '',
     email: '',
+    password:'',
     rol: 'Recepcionista',
     estado: 'Activo',
     ultimaConexion: 'Nunca'
   };
 
   openCreate() {
-    this.formData = { nombre: '', email: '', rol: 'Recepcionista', estado: 'Activo', ultimaConexion: 'Nunca' };
+    this.formData = { nombre: '', email: '', rol: 'Recepcionista',password:'', estado: 'Activo', ultimaConexion: 'Nunca' };
     this.usersService.openCreateModal();
   }
 
@@ -41,6 +42,7 @@ export class UsuariosComponent {
     this.formData = {
       nombre: user.nombre,
       email: user.email,
+      password:user.password,
       rol: user.rol,
       estado: user.estado,
       ultimaConexion: user.ultimaConexion
