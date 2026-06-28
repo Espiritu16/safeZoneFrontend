@@ -63,6 +63,17 @@ export interface CrearUsuarioRequest {
   rol: BackendRole;
 }
 
+export interface ActualizarUsuarioRequest {
+  correo?: string;
+  nombres?: string;
+  apellidos?: string;
+  dni?: string;
+  telefono?: string;
+  distrito?: string;
+  rol?: BackendRole;
+  activo?: boolean;
+}
+
 export interface CrearPreDenunciaRequest {
   nombresContacto?: string;
   apellidosContacto?: string;

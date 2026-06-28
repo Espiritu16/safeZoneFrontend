@@ -1,1 +1,34 @@
-/* usuarios.component.scss — usa estilos globales */
+.sz-password-field {
+  position: relative;
+
+  .form-input {
+    padding-right: 44px;
+  }
+}
+
+.sz-password-toggle {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--color-text-muted, #757684);
+  cursor: pointer;
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: color 160ms ease;
+  width: 36px;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-brand, #00288e);
+  }
+
+  .material-symbols-outlined {
+    font-size: 21px;
+  }
+}

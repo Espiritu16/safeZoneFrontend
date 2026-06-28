@@ -84,8 +84,8 @@ describe('CasesService', () => {
         victim: 'Ana Maria Lopez',
         tipo: 'Violencia Física',
         anonimo: false,
-        estado: 'En Proceso',
-        riesgo: 'Severo',
+        estado: 'En atención',
+        riesgo: 'Alto',
         distrito: 'Comas',
       }),
     ]);
@@ -100,7 +100,7 @@ describe('CasesService', () => {
         codigo: 'Caso #CASE-1',
         victim: 'Víctima demo',
         anonimo: true,
-        edad: 0,
+        edad: '0',
         distrito: 'Lima',
         tipo: 'Fisica',
         estado: 'Evaluación',
@@ -128,6 +128,6 @@ describe('CasesService', () => {
       fechaActualizacion: '2026-06-16T10:00:00',
     });
 
-    expect(service.casos()[0].estado).toBe('En Proceso');
+    expect(service.casos()[0].estado).toBe('En atención');
   });
 });
