@@ -131,7 +131,6 @@ describe('CasesService', () => {
         riesgo: 'Moderado',
         asignado: 'Pendiente',
         fecha: '2026-06-16',
-        emocion: 'Pendiente',
       },
     ]);
 

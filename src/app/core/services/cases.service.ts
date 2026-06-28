@@ -42,7 +42,6 @@ export interface Caso {
   defensorId?: string;
   defensorAsignacionId?: string;
   fecha: string;
-  emocion: string;
   resumen?: string;
 }
 
@@ -249,7 +248,6 @@ export class CasesService {
       defensorId: defensor?.profesionalId,
       defensorAsignacionId: defensor?.id,
       fecha: caso.fechaCreacion.split('T')[0] ?? caso.fechaCreacion,
-      emocion: 'Seguimiento pendiente',
       resumen: caso.resumen,
     };
   }

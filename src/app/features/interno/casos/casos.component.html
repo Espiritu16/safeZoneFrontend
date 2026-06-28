@@ -56,7 +56,6 @@
             <th>Encargado</th>
             <th>Fecha de Ingreso</th>
             <th>Estado del caso</th>
-            <th>Estado Emocional</th>
             <th class="col-actions">Acciones</th>
           </tr>
         </thead>
@@ -87,9 +86,6 @@
               <td>{{ caso.asignado }}</td>
               <td>{{ caso.fecha }}</td>
               <td>{{ caso.estado }}</td>
-              <td>
-                <span class="text-xs text-secondary font-medium">{{ caso.emocion }}</span>
-              </td>
               <td class="col-actions">
                 <button class="btn btn-outline btn-sm my-2" (click)="casesService.viewCaseDetails(caso)">Ficha Digital</button>
                 <button class="btn btn-sm border border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white my-2" (click)="casesService.openEditModal(caso)">Editar</button>
