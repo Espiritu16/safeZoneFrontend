@@ -163,10 +163,20 @@
             cdkDropList
             [id]="'casos-' + column.status"
             [cdkDropListData]="column.status"
+            [cdkDropListSortingDisabled]="true"
             (cdkDropListDropped)="dropCase($event)"
           >
             @for (c of casesService.getFilteredCasosByStatus(column.status); track c.id) {
-              <div class="sz-kanban-card" cdkDrag [cdkDragData]="c">
+              <div class="sz-kanban-card" cdkDrag [cdkDragData]="c" [cdkDragStartDelay]="dragStartDelay">
+                <ng-template cdkDragPreview>
+                  <div class="sz-kanban-drag-preview">
+                    <strong>{{ c.victim }}</strong>
+                    <span>{{ c.codigo }} - {{ c.estado }}</span>
+                  </div>
+                </ng-template>
+                <ng-template cdkDragPlaceholder>
+                  <div class="sz-kanban-drag-placeholder"></div>
+                </ng-template>
                 <button
                   class="sz-kanban-drag-handle"
                   type="button"

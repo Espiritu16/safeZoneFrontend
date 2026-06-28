@@ -33,6 +33,7 @@ interface CaseEditFormValue {
 export class CasosComponent {
   protected readonly casesService = inject(CasesService);
   protected readonly casesViewMode = signal<string>('table');
+  protected readonly dragStartDelay = { touch: 0, mouse: 0 };
   @ViewChild('editForm') private editForm?: NgForm;
   protected readonly kanbanColumns: KanbanColumn[] = [
     { title: 'Registrado', status: 'Registrado', dotClass: 'sz-dot-warning', nextStatus: 'En evaluación' },
