@@ -10,11 +10,16 @@
   <!-- Upload Area -->
   <div class="card mt-6">
     <div class="card-body">
-      <div class="form-upload" (click)="evidenceInput.click()">
+      <div class="form-upload" (click)="fileInput.click()">
         <div class="form-upload-icon">📁</div>
         <p class="form-upload-title">Arrastre archivos multimedia de prueba aquí</p>
         <p class="form-upload-description">Los archivos se almacenan en servidores seguros con cifrado de grado judicial (AES-256).</p>
-        <input #evidenceInput class="sr-only" type="file" (change)="evidenceService.simulateFileUpload($event)">
+        <input
+              #fileInput
+              class="sr-only"
+              type="file"
+              (click)="$event.stopPropagation()"
+              (change)="evidenceService.onFileSelected($event)">
       </div>
     </div>
   </div>

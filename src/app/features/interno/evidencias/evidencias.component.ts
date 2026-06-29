@@ -13,4 +13,7 @@ import { ToastService } from '../../../core/services/toast.service';
 export class EvidenciasComponent {
   protected readonly evidenceService = inject(EvidenceService);
   protected readonly toastService = inject(ToastService);
+  ngOnInit(): void {
+    this.evidenceService.loadEvidencias().subscribe();
+  }
 }

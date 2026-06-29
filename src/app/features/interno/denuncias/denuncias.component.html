@@ -145,7 +145,12 @@
             <div class="form-upload-icon">📁</div>
             <p class="form-upload-title">Arrastre archivos aquí o haga clic para examinar</p>
             <p class="form-upload-description">Formatos seguros permitidos: JPG, PNG, PDF, MP3 (Audios de amenazas), MP4. Tamaño máx. 25MB.</p>
-            <input #fileInput class="sr-only" type="file" (change)="simulateFileUpload($event)">
+            <input
+              #fileInput
+              class="sr-only"
+              type="file"
+              (click)="$event.stopPropagation()"
+              (change)="evidenceService.onFileSelected($event)">
           </div>
 
           <div class="mt-4">

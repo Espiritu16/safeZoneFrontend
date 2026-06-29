@@ -167,7 +167,6 @@
               }
             </div>
           </div>
-
           <div class="form-group">
             <label class="form-label" for="email">Correo electrónico *</label>
             <input id="email" class="form-input" type="email" name="email" appTrimOnBlur [(ngModel)]="formData.email" #email="ngModel" required maxlength="254" pattern="^[^\s@]+@[^\s@]+\.[^\s@]{2,}$" placeholder="usuario@safezone.gob.pe">
@@ -175,7 +174,6 @@
               <p class="text-xs text-danger mt-1">Ingrese un correo válido.</p>
             }
           </div>
-
           <div class="sz-grid-2">
             <div class="form-group">
               <label class="form-label" for="dni">DNI *</label>
