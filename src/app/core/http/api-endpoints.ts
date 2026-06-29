@@ -15,6 +15,7 @@ export const API_ENDPOINTS = {
   denuncias: '/denuncias',
   seguimientos: '/seguimientos',
   usuarios: '/usuarios',
+  adjuntos:'/evidencias',
   victimas: '/victimas',
   panelPrincipal: '/panel-principal/me',
 } as const;

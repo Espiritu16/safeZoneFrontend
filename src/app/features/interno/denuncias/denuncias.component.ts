@@ -27,7 +27,7 @@ export class DenunciasComponent {
   private readonly casesService = inject(CasesService);
   private readonly denunciasService = inject(DenunciasService);
   private readonly toastService = inject(ToastService);
-  private readonly evidenceService = inject(EvidenceService);
+  readonly evidenceService = inject(EvidenceService);
   private readonly usuariosService = inject(UsuariosService);
 
   protected readonly Math = Math;
@@ -68,26 +68,30 @@ export class DenunciasComponent {
       return;
     }
     this.normalizeForm();
-
     this.isSubmitting.set(true);
-    this.resolveVictima().pipe(
-      switchMap((victima) => this.denunciasService.create({
-        victimaId: victima.id,
-        edad:Number(this.denunciaForm.edad),
-        descripcion: this.denunciaForm.detalleHechos,
-        tipoViolencia: this.denunciaForm.tipoViolencia,
-        fechaIncidente: new Date().toISOString(),
-        distrito: this.denunciaForm.distrito,
-        direccionReferencia: `Relacion con agresor: ${this.denunciaForm.relacionAgresor}`,
-        nivelRiesgo: this.resolveRisk(),
-        anonima: this.denunciaForm.anonimo,
-        adjuntos: [],
-      })),
+    this.evidenceService.uploadAll().pipe(
+    switchMap((adjuntos) =>
+      this.resolveVictima().pipe(
+        switchMap((victima) => this.denunciasService.create({
+          victimaId: victima.id,
+          edad: Number(this.denunciaForm.edad),
+          descripcion: this.denunciaForm.detalleHechos,
+          tipoViolencia: this.denunciaForm.tipoViolencia,
+          fechaIncidente: new Date().toISOString(),
+          distrito: this.denunciaForm.distrito,
+          direccionReferencia: `Relacion con agresor: ${this.denunciaForm.relacionAgresor}`,
+          nivelRiesgo: this.resolveRisk(),
+          anonima: this.denunciaForm.anonimo,
+          adjuntos, 
+        })),
+      ),
+    ),
       switchMap(() => this.casesService.loadCasos()),
       finalize(() => this.isSubmitting.set(false)),
     ).subscribe({
       next: () => {
         this.toastService.show('Denuncia registrada en el backend. El caso asociado ya fue actualizado.', 'success');
+        this.evidenceService.clearPending();
         this.resetForm();
         void this.router.navigateByUrl('/casos');
       },
@@ -96,11 +100,9 @@ export class DenunciasComponent {
       },
     });
   }
-
   simulateFileUpload(event: Event) {
-    this.evidenceService.simulateFileUpload(event);
+    this.evidenceService.onFileSelected(event);
   }
-
   private normalizeForm() {
     this.denunciaForm = {
       ...this.denunciaForm,

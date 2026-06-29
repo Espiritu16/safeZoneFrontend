@@ -21,7 +21,16 @@ export interface LoginResponse {
   refreshToken: string;
   tipoToken: string;
 }
-
+export interface EvidenciaResponse {
+  id: string;
+  url: string;
+  nombreOriginal: string;
+  tamano: number;
+  subidoPor: string;
+  fechaCreacion: string;
+  casoId?: string | null;
+  denunciaId?: string | null;
+}
 export interface SessionContextResponse {
   success: boolean;
   message: string;
@@ -111,7 +120,10 @@ export interface FormalizarPreDenunciaRequest {
   formalizarAnonima?: boolean;
   edad?: number;
 }
-
+export interface VincularEvidenciaRequest {
+  casoId?: string;
+  denunciaId?: string;
+}
 export interface CasoResponse {
   id: string;
   victimaId: string;
