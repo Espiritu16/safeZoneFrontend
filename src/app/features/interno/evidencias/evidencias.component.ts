@@ -16,4 +16,12 @@ export class EvidenciasComponent {
   ngOnInit(): void {
     this.evidenceService.loadEvidencias().subscribe();
   }
+  protected onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.evidenceService.uploadDirecto(file);
+    input.value = '';
+  }
 }
