@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CasesService, Caso } from '../../../core/services/cases.service';
 import type { PrioridadCaso, EstadoCaso, ActualizarCasoRequest } from '../../../core/models/api.models';
-
+import { AuthService } from '../../../core/services/auth.service';
 interface KanbanColumn {
   title: string;
   status: string;
@@ -38,6 +38,7 @@ interface PendingStatusMove {
 export class CasosComponent {
   protected readonly casesService = inject(CasesService);
   protected readonly casesViewMode = signal<string>('table');
+  protected readonly authService = inject(AuthService);
   protected readonly dragStartDelay = { touch: 0, mouse: 0 };
   @ViewChild('editForm') private editForm?: NgForm;
   protected readonly kanbanColumns: KanbanColumn[] = [

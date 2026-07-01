@@ -4,7 +4,12 @@ import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
 import { API_ENDPOINTS } from '../http/api-endpoints';
 import { ApiClientService } from '../http/api-client.service';
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY } from '../http/auth-token.interceptor';
-import type { BackendRole, FrontendRole, LoginResponse, SessionContextResponse } from '../models/api.models';
+import type {
+  BackendRole,
+  FrontendRole,
+  LoginResponse,
+  SessionContextResponse,
+} from '../models/api.models';
 import { roleToLabel } from '../utils/role-mapper';
 import { ToastService } from './toast.service';
 
@@ -27,7 +32,7 @@ interface RegisterAccountRequest {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly router = inject(Router);
@@ -55,7 +60,14 @@ export class AuthService {
   private readonly isLoadingSignal = signal<boolean>(false);
   public readonly isLoading = this.isLoadingSignal.asReadonly();
 
-  public readonly roles: FrontendRole[] = ['Administrador', 'Psicólogo', 'Recepcionista', 'Defensor Legal', 'Soporte Técnico', 'Víctima'];
+  public readonly roles: FrontendRole[] = [
+    'Administrador',
+    'Psicólogo',
+    'Recepcionista',
+    'Defensor Legal',
+    'Soporte Técnico',
+    'Víctima',
+  ];
 
   constructor() {
     this.restoreSession();
@@ -63,17 +75,27 @@ export class AuthService {
 
   login(correo: string, contrasena: string): Observable<LoginResponse> {
     this.isLoadingSignal.set(true);
-    return this.api.post<LoginResponse>(API_ENDPOINTS.auth.login, { correo: correo.trim().toLowerCase(), contrasena }).pipe(
-      tap((response) => this.persistSession(response)),
-      tap(() => this.toastService.show('Sesión iniciada con éxito. Bienvenido al portal SafeZone.', 'success')),
-      tap(() => void this.router.navigateByUrl(this.homeUrl())),
-      catchError((error) => {
-        const message = this.errorMessage(error);
-        this.toastService.show(message, 'error');
-        return throwError(() => new Error(message));
-      }),
-      finalize(() => this.isLoadingSignal.set(false)),
-    );
+    return this.api
+      .post<LoginResponse>(API_ENDPOINTS.auth.login, {
+        correo: correo.trim().toLowerCase(),
+        contrasena,
+      })
+      .pipe(
+        tap((response) => this.persistSession(response)),
+        tap(() =>
+          this.toastService.show(
+            'Sesión iniciada con éxito. Bienvenido al portal SafeZone.',
+            'success',
+          ),
+        ),
+        tap(() => void this.router.navigateByUrl(this.homeUrl())),
+        catchError((error) => {
+          const message = this.errorMessage(error);
+          this.toastService.show(message, 'error');
+          return throwError(() => new Error(message));
+        }),
+        finalize(() => this.isLoadingSignal.set(false)),
+      );
   }
 
   registerAccount(nombre: string, correo: string, contrasena: string): Observable<BasicResponse> {
@@ -85,7 +107,9 @@ export class AuthService {
     };
 
     return this.api.post<BasicResponse>(API_ENDPOINTS.auth.register, request).pipe(
-      tap((response) => this.toastService.show(response.message || 'Cuenta creada correctamente', 'success')),
+      tap((response) =>
+        this.toastService.show(response.message || 'Cuenta creada correctamente', 'success'),
+      ),
       catchError((error) => {
         const message = this.errorMessage(error, 'No se pudo crear la cuenta.');
         this.toastService.show(message, 'error');
@@ -94,51 +118,76 @@ export class AuthService {
       finalize(() => this.isLoadingSignal.set(false)),
     );
   }
-
+  hasRole(...roles: BackendRole[]): boolean {
+    return roles.includes(this.currentBackendRoleSignal());
+  }
   requestPasswordRecovery(correo: string): Observable<BasicResponse> {
     this.isLoadingSignal.set(true);
-    return this.api.post<BasicResponse>(API_ENDPOINTS.auth.recoverPassword, { correo: this.normalizeEmail(correo) }).pipe(
-      tap((response) => this.toastService.show(response.message || 'Codigo enviado correctamente', 'success')),
-      catchError((error) => {
-        const message = this.errorMessage(error, 'No se pudo solicitar el codigo de recuperacion.');
-        this.toastService.show(message, 'error');
-        return throwError(() => new Error(message));
-      }),
-      finalize(() => this.isLoadingSignal.set(false)),
-    );
+    return this.api
+      .post<BasicResponse>(API_ENDPOINTS.auth.recoverPassword, {
+        correo: this.normalizeEmail(correo),
+      })
+      .pipe(
+        tap((response) =>
+          this.toastService.show(response.message || 'Codigo enviado correctamente', 'success'),
+        ),
+        catchError((error) => {
+          const message = this.errorMessage(
+            error,
+            'No se pudo solicitar el codigo de recuperacion.',
+          );
+          this.toastService.show(message, 'error');
+          return throwError(() => new Error(message));
+        }),
+        finalize(() => this.isLoadingSignal.set(false)),
+      );
   }
 
   verifyRecoveryCode(correo: string, codigo: string): Observable<BasicResponse> {
     this.isLoadingSignal.set(true);
-    return this.api.post<BasicResponse>(API_ENDPOINTS.auth.verifyCode, {
-      correo: this.normalizeEmail(correo),
-      codigo: codigo.trim(),
-    }).pipe(
-      tap((response) => this.toastService.show(response.message || 'Codigo verificado correctamente', 'success')),
-      catchError((error) => {
-        const message = this.errorMessage(error, 'No se pudo verificar el codigo de recuperacion.');
-        this.toastService.show(message, 'error');
-        return throwError(() => new Error(message));
-      }),
-      finalize(() => this.isLoadingSignal.set(false)),
-    );
+    return this.api
+      .post<BasicResponse>(API_ENDPOINTS.auth.verifyCode, {
+        correo: this.normalizeEmail(correo),
+        codigo: codigo.trim(),
+      })
+      .pipe(
+        tap((response) =>
+          this.toastService.show(response.message || 'Codigo verificado correctamente', 'success'),
+        ),
+        catchError((error) => {
+          const message = this.errorMessage(
+            error,
+            'No se pudo verificar el codigo de recuperacion.',
+          );
+          this.toastService.show(message, 'error');
+          return throwError(() => new Error(message));
+        }),
+        finalize(() => this.isLoadingSignal.set(false)),
+      );
   }
 
   resetPassword(correo: string, codigo: string, nuevaPassword: string): Observable<BasicResponse> {
     this.isLoadingSignal.set(true);
-    return this.api.post<BasicResponse>(API_ENDPOINTS.auth.resetPassword, {
-      correo: this.normalizeEmail(correo),
-      codigo: codigo.trim(),
-      nuevaPassword,
-    }).pipe(
-      tap((response) => this.toastService.show(response.message || 'Contrasena restablecida correctamente', 'success')),
-      catchError((error) => {
-        const message = this.errorMessage(error, 'No se pudo restablecer la contrasena.');
-        this.toastService.show(message, 'error');
-        return throwError(() => new Error(message));
-      }),
-      finalize(() => this.isLoadingSignal.set(false)),
-    );
+    return this.api
+      .post<BasicResponse>(API_ENDPOINTS.auth.resetPassword, {
+        correo: this.normalizeEmail(correo),
+        codigo: codigo.trim(),
+        nuevaPassword,
+      })
+      .pipe(
+        tap((response) =>
+          this.toastService.show(
+            response.message || 'Contrasena restablecida correctamente',
+            'success',
+          ),
+        ),
+        catchError((error) => {
+          const message = this.errorMessage(error, 'No se pudo restablecer la contrasena.');
+          this.toastService.show(message, 'error');
+          return throwError(() => new Error(message));
+        }),
+        finalize(() => this.isLoadingSignal.set(false)),
+      );
   }
 
   refreshContext(): Observable<SessionContextResponse> {
@@ -159,7 +208,9 @@ export class AuthService {
   logout(showMessage = true): void {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     if (refreshToken) {
-      this.api.post(API_ENDPOINTS.auth.logout, { refreshToken }).subscribe({ error: () => undefined });
+      this.api
+        .post(API_ENDPOINTS.auth.logout, { refreshToken })
+        .subscribe({ error: () => undefined });
     }
     this.clearSession();
     if (showMessage) {
@@ -243,7 +294,10 @@ export class AuthService {
     }
   }
 
-  private errorMessage(error: unknown, fallback = 'No se pudo iniciar sesión. Verifique sus credenciales.'): string {
+  private errorMessage(
+    error: unknown,
+    fallback = 'No se pudo iniciar sesión. Verifique sus credenciales.',
+  ): string {
     if (typeof error === 'object' && error !== null && 'error' in error) {
       const payload = (error as { error?: { message?: string; mensaje?: string } }).error;
       return payload?.message ?? payload?.mensaje ?? fallback;
