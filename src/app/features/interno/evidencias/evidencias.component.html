@@ -1,9 +1,10 @@
 <div class="animate-slide-up">
-  
   <div class="sz-page-header">
     <div class="sz-page-header-info">
       <h1 class="sz-page-title">Gestión de Evidencias Digitales</h1>
-      <p class="sz-page-description">Bóveda digital de archivos cargados bajo encriptación segura del gobierno.</p>
+      <p class="sz-page-description">
+        Bóveda digital de archivos cargados bajo encriptación segura del gobierno.
+      </p>
     </div>
   </div>
 
@@ -13,13 +14,16 @@
       <div class="form-upload" (click)="fileInput.click()">
         <div class="form-upload-icon">📁</div>
         <p class="form-upload-title">Arrastre archivos multimedia de prueba aquí</p>
-        <p class="form-upload-description">Los archivos se almacenan en servidores seguros con cifrado de grado judicial (AES-256).</p>
+        <p class="form-upload-description">
+          Los archivos se almacenan en servidores seguros con cifrado de grado judicial (AES-256).
+        </p>
         <input
-              #fileInput
-              class="sr-only"
-              type="file"
-              (click)="$event.stopPropagation()"
-              (change)="onFileSelected($event)">
+          #fileInput
+          class="sr-only"
+          type="file"
+          (click)="$event.stopPropagation()"
+          (change)="onFileSelected($event)"
+        />
       </div>
     </div>
   </div>
@@ -30,22 +34,46 @@
     @for (file of evidenceService.evidencias(); track file.id) {
       <div class="card p-4 border-all rounded-lg flex flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <div class="btn btn-outline icon-square-44" (click)="evidenceService.showEvidenceModal.set(true)">
-            @if (file.type === 'PDF') { 📄 } @else if (file.type === 'Audio') { 🔊 } @else { 🖼 }
+          <div
+            class="btn btn-outline icon-square-44"
+            (click)="evidenceService.showEvidenceModal.set(true)"
+          >
+            @if (file.type === 'PDF') {
+              📄
+            } @else if (file.type === 'Audio') {
+              🔊
+            } @else {
+              🖼
+            }
           </div>
           <div>
             <p class="font-bold text-sm text-primary">{{ file.name }}</p>
-            <p class="text-xs text-muted mt-1">Tamaño: {{ file.size }} | Subido por: {{ file.uploader }}</p>
+            <p class="text-xs text-muted mt-1">
+              Tamaño: {{ file.size }} | Subido por: {{ file.uploader }}
+            </p>
           </div>
         </div>
         <div class="flex gap-2">
-          <button class="btn btn-outline btn-sm" (click)="evidenceService.showEvidenceModal.set(true)">Previsualizar</button>
-          <button class="btn btn-ghost btn-sm" (click)="toastService.show('Descarga denegada por directiva de privacidad.', 'error')" title="Descargar de forma segura">💾</button>
+          <button
+            class="btn btn-outline btn-sm"
+            (click)="evidenceService.showEvidenceModal.set(true)"
+          >
+            Previsualizar
+          </button>
+          @if (!file.casoId && !file.denunciaId) {
+            <button class="btn btn-primary btn-sm" (click)="abrirVincular(file)">Vincular</button>
+          }
+          <button
+            class="btn btn-ghost btn-sm"
+            (click)="toastService.show('Descarga denegada por directiva de privacidad.', 'error')"
+            title="Descargar de forma segura"
+          >
+            💾
+          </button>
         </div>
       </div>
     }
   </div>
-
 </div>
 
 <!-- MODAL: PREVISUALIZAR EVIDENCIA -->
@@ -54,14 +82,25 @@
     <div class="sz-modal sz-modal-lg">
       <div class="sz-modal-header">
         <h3 class="sz-modal-header-title">Visor de Evidencia Digital Cifrada</h3>
-        <button class="sz-modal-header-close" (click)="evidenceService.showEvidenceModal.set(false)">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        <button
+          class="sz-modal-header-close"
+          (click)="evidenceService.showEvidenceModal.set(false)"
+        >
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
         </button>
       </div>
       <div class="sz-modal-body text-center p-6">
-        
         <!-- Mock de Visor de Audio / Documento -->
-        <div class="p-6 bg-brand-soft border-all rounded-lg flex flex-col items-center justify-center gap-4">
+        <div
+          class="p-6 bg-brand-soft border-all rounded-lg flex flex-col items-center justify-center gap-4"
+        >
           <span class="sz-audio-icon">🎵</span>
           <p class="font-bold">grabacion_audio_amenaza.mp3</p>
           <div class="w-full bg-border-subtle rounded-full sz-audio-progress">
@@ -78,11 +117,70 @@
           </div>
         </div>
 
-        <p class="text-xs text-muted mt-4">SafeZone protege la privacidad del material probatorio. Queda estrictamente prohibida la copia o reproducción externa.</p>
-
+        <p class="text-xs text-muted mt-4">
+          SafeZone protege la privacidad del material probatorio. Queda estrictamente prohibida la
+          copia o reproducción externa.
+        </p>
       </div>
       <div class="sz-modal-footer">
-        <button class="btn btn-primary" (click)="evidenceService.showEvidenceModal.set(false)">Cerrar Visor</button>
+        <button class="btn btn-primary" (click)="evidenceService.showEvidenceModal.set(false)">
+          Cerrar Visor
+        </button>
+      </div>
+    </div>
+  </div>
+}
+@if (evidenceService.evidenciaAVincular(); as evidencia) {
+  <div class="sz-modal-overlay">
+    <div class="sz-modal">
+      <div class="sz-modal-header">
+        <h3 class="sz-modal-header-title">Vincular Evidencia</h3>
+        <button class="sz-modal-header-close" (click)="cerrarVincular()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="sz-modal-body p-4">
+        <p class="text-sm font-semibold mb-3">{{ evidencia.name }}</p>
+
+        <label class="text-xs text-muted mb-1 block">Caso ID*</label>
+        <select
+          class="form-input mb-3"
+          [ngModel]="vincularCasoId()"
+          (ngModelChange)="vincularCasoId.set($event)"
+        >
+          <option value="">-- Seleccione un caso --</option>
+          @for (caso of casesService.casos(); track caso.id) {
+            <option [value]="caso.id">{{ caso.codigo }} — {{ caso.victim }}</option>
+          }
+        </select>
+
+        <label class="text-xs text-muted mb-1 block">Denuncia ID (opcional)*</label>
+        <select
+          class="form-input"
+          [ngModel]="vincularDenunciaId()"
+          (ngModelChange)="vincularDenunciaId.set($event)"
+        >
+          <option value="">-- Ninguna --</option>
+          @for (denuncia of denunciasService.denuncias(); track denuncia.id) {
+            <option [value]="denuncia.id">
+              {{ denuncia.victimaNombre }} — {{ denuncia.tipoViolencia }}
+            </option>
+          }
+        </select>
+        <p class="text-xs text-muted">
+          *Los IDs se obtienen a partir de los casos y denuncias que has seleccionado
+        </p>
+      </div>
+      <div class="sz-modal-footer">
+        <button class="btn btn-outline" (click)="cerrarVincular()">Cancelar</button>
+        <button class="btn btn-primary" (click)="confirmarVincular()">Vincular</button>
       </div>
     </div>
   </div>

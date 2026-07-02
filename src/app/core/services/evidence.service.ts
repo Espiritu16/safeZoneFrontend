@@ -27,7 +27,7 @@ export class EvidenceService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
   private readonly authService = inject(AuthService);
-
+  public readonly evidenciaAVincular = signal<Evidencia | null>(null)
   public readonly evidencias = signal<Evidencia[]>([]);
   public readonly showEvidenceModal = signal<boolean>(false);
   private readonly pendingFiles = signal<File[]>([]);
