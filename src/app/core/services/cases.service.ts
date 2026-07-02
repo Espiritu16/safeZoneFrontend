@@ -2,6 +2,8 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { catchError, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { API_ENDPOINTS } from '../http/api-endpoints';
 import { ApiClientService } from '../http/api-client.service';
+import { victimLabel } from '../utils/victim-label.util';
+
 import type {
   ActualizarCasoRequest,
   AsignacionCasoResponse,
@@ -279,7 +281,7 @@ export class CasesService {
     return {
       id: caso.id,
       codigo: `Caso #${caso.id.slice(0, 8).toUpperCase()}`,
-      victim: this.victimLabel(usuario, denuncia, caso.victimaId),
+      victim: victimLabel(usuario, denuncia?.anonima, caso.victimaId),
       anonimo: denuncia?.anonima ?? false,
       edad: denuncia?.edad != null ? String(denuncia.edad) : '',
       distrito: caso.distrito,
