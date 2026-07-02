@@ -122,7 +122,7 @@
               <td class="col-actions">
                 <div class="sz-case-actions">
                   <button class="btn btn-outline btn-sm" type="button" (click)="casesService.viewCaseDetails(caso)">Ficha</button>
-                  <button class="btn btn-sm sz-case-action-edit" type="button" (click)="casesService.openEditModal(caso)">Editar</button>
+                  <button class="btn btn-sm sz-case-action-edit" type="button" [disabled]="!authService.hasRole('ADMIN','RECEPCIONISTA')" (click)="casesService.openEditModal(caso)">Editar</button>
                   <button
                     class="btn btn-sm sz-case-action-close"
                     type="button"

@@ -80,7 +80,7 @@ export class EvidenceService {
     if (denunciaId) formData.append('denunciaId', denunciaId);
 
     return this.http.post<EvidenciaResponse>(`${environment.apiBaseUrl}${API_ENDPOINTS.adjuntos}`, formData).pipe(
-      map((response) => response.url),
+      map((response) => response.id),
       catchError(() => {
         this.toastService.show(`No se pudo subir el archivo: ${file.name}`, 'error');
         throw new Error('upload_failed');
@@ -103,7 +103,14 @@ export class EvidenceService {
       }),
     );
   }
-
+  uploadDirecto(file: File): void {
+    this.uploadOne(file).subscribe({
+      next: () => {
+        this.toastService.show('Evidencia subida correctamente.', 'success');
+        this.loadEvidencias().subscribe();
+      },
+    });
+  }
   /** Vincula una evidencia suelta a un caso y/o denuncia existente. */
   vincular(evidenciaId: string, request: VincularEvidenciaRequest): Observable<Evidencia> {
     return this.http.patch<EvidenciaResponse>(
