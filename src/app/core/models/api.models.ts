@@ -26,6 +26,7 @@ export interface EvidenciaResponse {
   url: string;
   nombreOriginal: string;
   tamano: number;
+  tipoMime?: string | null;
   subidoPor?: string | null;
   fechaCreacion: string;
   casoId?: string | null;

@@ -10,9 +10,11 @@ import { ApiClientService } from '../http/api-client.service';
 
 export interface Evidencia {
   id: string; // antes era number — debe coincidir con el UUID (String) del backend
+  url: string;
   name: string;
   size: string;
   type: string;
+  mimeType?: string | null;
   date: string;
   uploader: string;
   riskIcon: string;
@@ -85,6 +87,7 @@ export class EvidenceService {
 
       const nuevoArchivo: Evidencia = {
         id: crypto.randomUUID(), // antes: this.evidencias().length + 1 (colisionaba)
+        url: '',
         name: file.name,
         size: this.formatSize(file.size),
         type: this.inferType(file.name),
@@ -151,6 +154,15 @@ export class EvidenceService {
       }),
     );
   }
+  loadArchivo(evidenciaId: string, download = false): Observable<Blob> {
+    return this.http.get(
+      `${this.api.getBaseUrl()}${API_ENDPOINTS.adjuntos}/${evidenciaId}/archivo`,
+      {
+        params: { download: String(download) },
+        responseType: 'blob',
+      },
+    );
+  }
   uploadDirecto(file: File): void {
     this.uploadOne(file).subscribe({
       next: () => {
@@ -182,9 +194,11 @@ export class EvidenceService {
   private toViewModel(r: EvidenciaResponse): Evidencia {
     return {
       id: r.id, // directo, sin conversión a Number (era el bug principal)
+      url: r.url,
       name: r.nombreOriginal,
       size: `${(r.tamano / (1024 * 1024)).toFixed(1)} MB`,
-      type: this.inferType(r.nombreOriginal),
+      type: this.inferType(r.nombreOriginal, r.tipoMime),
+      mimeType: r.tipoMime,
       date: r.fechaCreacion,
       uploader: r.subidoPor ?? 'Predenuncia publica',
       riskIcon: 'image',
@@ -194,12 +208,19 @@ export class EvidenceService {
     };
   }
 
-  private inferType(nombreArchivo: string): string {
+  private inferType(nombreArchivo: string, mimeType?: string | null): string {
+    const mime = mimeType?.toLowerCase() ?? '';
+    if (mime.startsWith('image/')) return 'Imagen';
+    if (mime === 'application/pdf') return 'PDF';
+    if (mime.startsWith('audio/')) return 'Audio';
+    if (mime.startsWith('video/')) return 'Video';
+    if (mime.includes('word')) return 'Documento';
     const ext = nombreArchivo.split('.').pop()?.toLowerCase() ?? '';
     if (['pdf'].includes(ext)) return 'PDF';
     if (['mp3', 'wav', 'ogg'].includes(ext)) return 'Audio';
     if (['mp4', 'mov', 'avi'].includes(ext)) return 'Video';
     if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) return 'Imagen';
+    if (['doc', 'docx'].includes(ext)) return 'Documento';
     return 'Desconocido';
   }
 
