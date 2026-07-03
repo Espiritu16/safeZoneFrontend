@@ -4,9 +4,9 @@ import { Observable, forkJoin, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../http/api-endpoints';
 import { VincularEvidenciaRequest, EvidenciaResponse } from '../models/api.models';
+import { ApiClientService } from '../http/api-client.service';
 
 export interface Evidencia {
   id: string; // antes era number — debe coincidir con el UUID (String) del backend
@@ -54,6 +54,7 @@ export class EvidenceService {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ]);
   private readonly http = inject(HttpClient);
+  private readonly api = inject(ApiClientService);
   private readonly toastService = inject(ToastService);
   private readonly authService = inject(AuthService);
   public readonly evidenciaAVincular = signal<Evidencia | null>(null)
@@ -125,7 +126,7 @@ export class EvidenceService {
     if (denunciaId) formData.append('denunciaId', denunciaId);
     if (predenunciaId) formData.append('predenunciaId', predenunciaId);
 
-    return this.http.post<EvidenciaResponse>(`${environment.apiBaseUrl}${API_ENDPOINTS.adjuntos}`, formData).pipe(
+    return this.http.post<EvidenciaResponse>(`${this.api.getBaseUrl()}${API_ENDPOINTS.adjuntos}`, formData).pipe(
       map((response) => response.id),
       catchError(() => {
         this.toastService.show(`No se pudo subir el archivo: ${file.name}`, 'error');
@@ -141,7 +142,7 @@ export class EvidenceService {
     if (denunciaId) params['denunciaId'] = denunciaId;
     if (predenunciaId) params['predenunciaId'] = predenunciaId;
 
-    return this.http.get<EvidenciaResponse[]>(`${environment.apiBaseUrl}${API_ENDPOINTS.adjuntos}`, { params }).pipe(
+    return this.http.get<EvidenciaResponse[]>(`${this.api.getBaseUrl()}${API_ENDPOINTS.adjuntos}`, { params }).pipe(
       map((response) => response.map((r) => this.toViewModel(r))),
       tap((evidencias) => this.evidencias.set(evidencias)),
       catchError(() => {
@@ -161,7 +162,7 @@ export class EvidenceService {
   /** Vincula una evidencia suelta a un caso y/o denuncia existente. */
   vincular(evidenciaId: string, request: VincularEvidenciaRequest): Observable<Evidencia> {
     return this.http.patch<EvidenciaResponse>(
-      `${environment.apiBaseUrl}${API_ENDPOINTS.adjuntos}/${evidenciaId}/vincular`,
+      `${this.api.getBaseUrl()}${API_ENDPOINTS.adjuntos}/${evidenciaId}/vincular`,
       request,
     ).pipe(
       map((r) => this.toViewModel(r)),

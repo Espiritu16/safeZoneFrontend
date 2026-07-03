@@ -11,6 +11,10 @@ export class ApiClientService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = this.resolveBaseUrl();
 
+  getBaseUrl(): string {
+    return this.baseUrl;
+  }
+
   get<T>(path: string, params?: Record<string, QueryValue>): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}${path}`, { params: this.toParams(params) });
   }
