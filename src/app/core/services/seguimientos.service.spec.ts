@@ -51,4 +51,32 @@ describe('SeguimientosService', () => {
       fechaActualizacion: '2026-07-02T10:00:00',
     });
   });
+
+  it('convierte fecha datetime-local a ISO con zona horaria antes de crear observacion', () => {
+    service
+      .create({
+        casoId: 'caso-1',
+        tipoSeguimiento: 'OBSERVACION',
+        contenido: 'Se registra observacion con proxima accion.',
+        proximaAccion: 'Programar llamada de seguimiento.',
+        fechaProximaAccion: '2026-07-19T08:09',
+      })
+      .subscribe();
+
+    const request = http.expectOne('http://localhost:8080/api/seguimientos');
+    expect(request.request.body.fechaProximaAccion).toBe(new Date('2026-07-19T08:09').toISOString());
+    request.flush({
+      id: 'seguimiento-2',
+      casoId: 'caso-1',
+      autorId: 'profesional-1',
+      rolAutor: 'PSICOLOGO',
+      tipoSeguimiento: 'OBSERVACION',
+      contenido: 'Se registra observacion con proxima accion.',
+      proximaAccion: 'Programar llamada de seguimiento.',
+      fechaProximaAccion: new Date('2026-07-19T08:09').toISOString(),
+      activo: true,
+      fechaCreacion: '2026-07-02T10:00:00',
+      fechaActualizacion: '2026-07-02T10:00:00',
+    });
+  });
 });
