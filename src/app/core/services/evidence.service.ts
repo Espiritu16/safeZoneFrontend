@@ -31,6 +31,12 @@ export interface PendingEvidence {
   type: string;
 }
 
+export interface EvidenceUploadContext {
+  casoId?: string;
+  denunciaId?: string;
+  predenunciaId?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -163,13 +169,21 @@ export class EvidenceService {
       },
     );
   }
-  uploadDirecto(file: File): void {
-    this.uploadOne(file).subscribe({
+  uploadDirecto(file: File, context: EvidenceUploadContext = {}): void {
+    this.uploadOne(file, context.casoId, context.denunciaId, context.predenunciaId).subscribe({
       next: () => {
         this.toastService.show('Evidencia subida correctamente.', 'success');
         this.loadEvidencias().subscribe();
       },
     });
+  }
+
+  evidenciasDelCaso(evidencias: Evidencia[], casoId: string): Evidencia[] {
+    return evidencias.filter((evidencia) => evidencia.casoId === casoId);
+  }
+
+  evidenciasSinCaso(evidencias: Evidencia[]): Evidencia[] {
+    return evidencias.filter((evidencia) => !evidencia.casoId);
   }
   /** Vincula una evidencia suelta a un caso y/o denuncia existente. */
   vincular(evidenciaId: string, request: VincularEvidenciaRequest): Observable<Evidencia> {

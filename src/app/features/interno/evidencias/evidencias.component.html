@@ -1,83 +1,195 @@
 <div class="animate-slide-up">
   <div class="sz-page-header">
     <div class="sz-page-header-info">
-      <h1 class="sz-page-title">Gestión de Evidencias Digitales</h1>
+      <h1 class="sz-page-title">Evidencias por expediente</h1>
       <p class="sz-page-description">
-        Bóveda digital de archivos cargados bajo encriptación segura del gobierno.
+        Consulte, cargue y vincule archivos probatorios desde el caso correspondiente.
       </p>
     </div>
   </div>
 
-  <!-- Upload Area -->
-  <div class="card mt-6">
-    <div class="card-body">
-      <div class="form-upload" (click)="fileInput.click()">
-        <div class="form-upload-icon">📁</div>
-        <p class="form-upload-title">Arrastre archivos multimedia de prueba aquí</p>
-        <p class="form-upload-description">
-          Los archivos se almacenan en servidores seguros con cifrado de grado judicial (AES-256).
-        </p>
-        <input
-          #fileInput
-          class="sr-only"
-          type="file"
-          (click)="$event.stopPropagation()"
-          (change)="onFileSelected($event)"
-        />
-      </div>
-    </div>
-  </div>
+  <div class="evidence-case-layout mt-6">
+    <aside class="card evidence-case-list">
+      <div class="card-body">
+        <div class="evidence-section-header">
+          <div>
+            <h3>Casos</h3>
+            <p>Seleccione un expediente para revisar sus evidencias.</p>
+          </div>
+          <span class="badge badge-soft">{{ filteredCases().length }}</span>
+        </div>
 
-  <!-- Grid de Evidencias -->
-  <h3 class="mt-6 mb-3">Evidencias Registradas</h3>
-  <div class="sz-grid-2">
-    @for (file of evidenceService.evidencias(); track file.id) {
-      <div class="card p-4 border-all rounded-lg flex flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <div
-            class="btn btn-outline icon-square-44"
-            (click)="abrirPreview(file)"
+        <div class="form-group mt-4">
+          <input
+            class="form-input"
+            type="text"
+            aria-label="Buscar caso para evidencias"
+            placeholder="Buscar por código, víctima o distrito"
+            [ngModel]="caseSearchQuery()"
+            (ngModelChange)="caseSearchQuery.set($event)"
           >
-            @if (file.type === 'PDF') {
-              📄
-            } @else if (file.type === 'Audio') {
-              🔊
-            } @else if (file.type === 'Video') {
-              🎬
-            } @else if (file.type === 'Documento') {
-              📝
+        </div>
+
+        <div class="evidence-case-scroll">
+          @if (filteredCases().length) {
+            @for (caso of filteredCases(); track caso.id) {
+              <button
+                class="evidence-case-item"
+                type="button"
+                [class.is-active]="selectedCaseId() === caso.id"
+                (click)="selectCase(caso.id)"
+              >
+                <span class="evidence-case-code">{{ caso.codigo }}</span>
+                <span class="evidence-case-title">{{ caso.victim }}</span>
+                <span class="evidence-case-meta">
+                  {{ caso.estado }} · {{ caso.distrito }}
+                </span>
+                <span class="evidence-case-count">
+                  {{ evidenceCount(caso.id) }} evidencia{{ evidenceCount(caso.id) === 1 ? '' : 's' }}
+                </span>
+              </button>
+            }
+          } @else {
+            <div class="empty-state">
+              <p class="font-semibold">No se encontraron casos.</p>
+              <p class="text-sm text-muted">Ajuste la búsqueda para ver expedientes disponibles.</p>
+            </div>
+          }
+        </div>
+      </div>
+    </aside>
+
+    <section class="card evidence-case-detail">
+      <div class="card-body">
+        @if (selectedCase(); as caso) {
+          <div class="evidence-detail-header">
+            <div>
+              <p class="eyebrow">Expediente seleccionado</p>
+              <h2>{{ caso.codigo }}</h2>
+              <p class="text-muted">{{ caso.victim }} · {{ caso.distrito }}</p>
+            </div>
+            <div class="evidence-detail-badges">
+              <span class="badge badge-soft">{{ caso.estado }}</span>
+              <span class="badge badge-soft">Riesgo {{ caso.riesgo }}</span>
+              <span class="badge badge-soft">{{ selectedCaseEvidence().length }} evidencia{{ selectedCaseEvidence().length === 1 ? '' : 's' }}</span>
+            </div>
+          </div>
+
+          <div class="form-upload evidence-case-upload mt-5" (click)="caseFileInput.click()">
+            <div class="form-upload-icon">📎</div>
+            <p class="form-upload-title">Agregar evidencia al caso</p>
+            <p class="form-upload-description">
+              Formatos permitidos: imágenes, PDF, audio, video y documentos Word hasta 25 MB.
+            </p>
+            <input
+              #caseFileInput
+              class="sr-only"
+              type="file"
+              (click)="$event.stopPropagation()"
+              (change)="onCaseFileSelected($event)"
+            />
+          </div>
+
+          <div class="evidence-section-header mt-6">
+            <div>
+              <h3>Evidencias del caso</h3>
+              <p>Archivos asociados directamente al expediente seleccionado.</p>
+            </div>
+          </div>
+
+          <div class="evidence-files-grid">
+            @if (selectedCaseEvidence().length) {
+              @for (file of selectedCaseEvidence(); track file.id) {
+                <article class="evidence-file-card">
+                  <button class="evidence-file-icon" type="button" (click)="abrirPreview(file)">
+                    @if (file.type === 'PDF') {
+                      📄
+                    } @else if (file.type === 'Audio') {
+                      🔊
+                    } @else if (file.type === 'Video') {
+                      🎬
+                    } @else if (file.type === 'Documento') {
+                      📝
+                    } @else {
+                      🖼
+                    }
+                  </button>
+                  <div class="evidence-file-content">
+                    <p class="evidence-file-name">{{ file.name }}</p>
+                    <p class="evidence-file-meta">{{ file.type }} · {{ file.size }}</p>
+                    <p class="evidence-file-meta">Subido por: {{ file.uploader }}</p>
+                  </div>
+                  <div class="evidence-file-actions">
+                    <button class="btn btn-outline btn-sm" (click)="abrirPreview(file)">Previsualizar</button>
+                    <button class="btn btn-ghost btn-sm" (click)="descargar(file)" title="Descargar de forma segura">💾</button>
+                  </div>
+                </article>
+              }
             } @else {
-              🖼
+              <div class="empty-state evidence-empty">
+                <p class="font-semibold">Este caso aún no tiene evidencias.</p>
+                <p class="text-sm text-muted">Use el área de carga para adjuntar el primer archivo del expediente.</p>
+              </div>
             }
           </div>
-          <div>
-            <p class="font-bold text-sm text-primary">{{ file.name }}</p>
-            <p class="text-xs text-muted mt-1">
-              Tamaño: {{ file.size }} | Subido por: {{ file.uploader }}
-            </p>
+        } @else {
+          <div class="empty-state evidence-empty">
+            <p class="font-semibold">Seleccione un caso.</p>
+            <p class="text-sm text-muted">Las evidencias se mostrarán dentro del expediente seleccionado.</p>
           </div>
-        </div>
-        <div class="flex gap-2">
-          <button
-            class="btn btn-outline btn-sm"
-            (click)="abrirPreview(file)"
-          >
-            Previsualizar
-          </button>
-          @if (!file.casoId && !file.denunciaId && !file.predenunciaId) {
-            <button class="btn btn-primary btn-sm" (click)="abrirVincular(file)">Vincular</button>
-          }
-          <button
-            class="btn btn-ghost btn-sm"
-            (click)="descargar(file)"
-            title="Descargar de forma segura"
-          >
-            💾
-          </button>
-        </div>
+        }
       </div>
-    }
+    </section>
   </div>
+
+  <section class="card mt-6">
+    <div class="card-body">
+      <div class="evidence-section-header">
+        <div>
+          <h3>Evidencias pendientes de vincular</h3>
+          <p>Archivos existentes que todavía no forman parte de un caso.</p>
+        </div>
+        <span class="badge badge-soft">{{ unlinkedEvidence().length }}</span>
+      </div>
+
+      <div class="evidence-files-grid mt-4">
+        @if (unlinkedEvidence().length) {
+          @for (file of unlinkedEvidence(); track file.id) {
+            <article class="evidence-file-card">
+              <button class="evidence-file-icon" type="button" (click)="abrirPreview(file)">
+                @if (file.type === 'PDF') {
+                  📄
+                } @else if (file.type === 'Audio') {
+                  🔊
+                } @else if (file.type === 'Video') {
+                  🎬
+                } @else if (file.type === 'Documento') {
+                  📝
+                } @else {
+                  🖼
+                }
+              </button>
+              <div class="evidence-file-content">
+                <p class="evidence-file-name">{{ file.name }}</p>
+                <p class="evidence-file-meta">{{ file.type }} · {{ file.size }}</p>
+                <p class="evidence-file-meta">Subido por: {{ file.uploader }}</p>
+              </div>
+              <div class="evidence-file-actions">
+                <button class="btn btn-outline btn-sm" (click)="abrirPreview(file)">Previsualizar</button>
+                <button class="btn btn-primary btn-sm" (click)="abrirVincular(file)">Vincular</button>
+                <button class="btn btn-ghost btn-sm" (click)="descargar(file)" title="Descargar de forma segura">💾</button>
+              </div>
+            </article>
+          }
+        } @else {
+          <div class="empty-state evidence-empty">
+            <p class="font-semibold">No hay evidencias sueltas.</p>
+            <p class="text-sm text-muted">Todos los archivos cargados ya están vinculados a un expediente.</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
 </div>
 
 <!-- MODAL: PREVISUALIZAR EVIDENCIA -->
