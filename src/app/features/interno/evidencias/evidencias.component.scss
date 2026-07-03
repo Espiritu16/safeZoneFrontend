@@ -1,1 +1,40 @@
-// Component-specific styles if any
+.evidence-preview-frame {
+  align-items: center;
+  background: var(--surface-container-low, #f8fafc);
+  border-radius: 0.75rem;
+  display: flex;
+  justify-content: center;
+  max-height: min(65vh, 720px);
+  overflow: auto;
+  padding: 1rem;
+}
+
+.evidence-preview-image {
+  border-radius: 0.5rem;
+  display: block;
+  height: auto;
+  max-height: calc(min(65vh, 720px) - 2rem);
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.evidence-preview-document {
+  border: 1px solid var(--outline-variant, #d8dee8);
+  border-radius: 0.75rem;
+  height: min(65vh, 720px);
+  width: 100%;
+}
+
+.evidence-preview-video {
+  background: #0f172a;
+  border-radius: 0.75rem;
+  max-height: min(65vh, 720px);
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .evidence-preview-document,
+  .evidence-preview-video {
+    height: 55vh;
+  }
+}

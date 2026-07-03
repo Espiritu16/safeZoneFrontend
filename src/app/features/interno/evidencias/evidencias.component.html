@@ -36,12 +36,16 @@
         <div class="flex items-center gap-3">
           <div
             class="btn btn-outline icon-square-44"
-            (click)="evidenceService.showEvidenceModal.set(true)"
+            (click)="abrirPreview(file)"
           >
             @if (file.type === 'PDF') {
               📄
             } @else if (file.type === 'Audio') {
               🔊
+            } @else if (file.type === 'Video') {
+              🎬
+            } @else if (file.type === 'Documento') {
+              📝
             } @else {
               🖼
             }
@@ -56,7 +60,7 @@
         <div class="flex gap-2">
           <button
             class="btn btn-outline btn-sm"
-            (click)="evidenceService.showEvidenceModal.set(true)"
+            (click)="abrirPreview(file)"
           >
             Previsualizar
           </button>
@@ -65,7 +69,7 @@
           }
           <button
             class="btn btn-ghost btn-sm"
-            (click)="toastService.show('Descarga denegada por directiva de privacidad.', 'error')"
+            (click)="descargar(file)"
             title="Descargar de forma segura"
           >
             💾
@@ -77,14 +81,14 @@
 </div>
 
 <!-- MODAL: PREVISUALIZAR EVIDENCIA -->
-@if (evidenceService.showEvidenceModal()) {
+@if (previewFile(); as file) {
   <div class="sz-modal-overlay">
     <div class="sz-modal sz-modal-lg">
       <div class="sz-modal-header">
-        <h3 class="sz-modal-header-title">Visor de Evidencia Digital Cifrada</h3>
+        <h3 class="sz-modal-header-title">Vista previa de evidencia</h3>
         <button
           class="sz-modal-header-close"
-          (click)="evidenceService.showEvidenceModal.set(false)"
+          (click)="cerrarPreview()"
         >
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
@@ -96,36 +100,48 @@
           </svg>
         </button>
       </div>
-      <div class="sz-modal-body text-center p-6">
-        <!-- Mock de Visor de Audio / Documento -->
-        <div
-          class="p-6 bg-brand-soft border-all rounded-lg flex flex-col items-center justify-center gap-4"
-        >
-          <span class="sz-audio-icon">🎵</span>
-          <p class="font-bold">grabacion_audio_amenaza.mp3</p>
-          <div class="w-full bg-border-subtle rounded-full sz-audio-progress">
-            <div class="bg-brand-light rounded-full sz-audio-progress-fill"></div>
-          </div>
-          <div class="flex gap-4 text-xs text-muted">
-            <span>01:12</span>
-            <span>/</span>
-            <span>03:24</span>
-          </div>
-          <div class="flex gap-4 mt-2">
-            <button class="btn btn-outline btn-sm">▶ Reproducir</button>
-            <button class="btn btn-ghost btn-sm">⏸ Pausa</button>
-          </div>
+      <div class="sz-modal-body p-6">
+        <div class="mb-4">
+          <p class="font-bold text-primary">{{ file.name }}</p>
+          <p class="text-xs text-muted mt-1">
+            Tipo: {{ file.type }} | Tamaño: {{ file.size }} | Subido por: {{ file.uploader }}
+          </p>
         </div>
 
+        @if (previewLoading()) {
+          <div class="p-6 bg-brand-soft border-all rounded-lg text-center">
+            <p class="font-semibold">Cargando vista previa...</p>
+          </div>
+        } @else if (previewError()) {
+          <div class="p-6 bg-danger-soft border-all rounded-lg text-center">
+            <p class="font-semibold text-error">{{ previewError() }}</p>
+          </div>
+        } @else if (!canPreview(file)) {
+          <div class="p-6 bg-brand-soft border-all rounded-lg text-center">
+            <p class="font-semibold">Vista previa no disponible para este formato.</p>
+            <p class="text-sm text-muted mt-2">Descargue el archivo para revisarlo en una aplicación compatible.</p>
+          </div>
+        } @else if (file.type === 'Imagen' && previewUrl()) {
+          <div class="evidence-preview-frame">
+            <img class="evidence-preview-image" [src]="previewUrl()" [alt]="file.name">
+          </div>
+        } @else if (file.type === 'PDF' && previewSafeUrl()) {
+          <iframe class="evidence-preview-document" [src]="previewSafeUrl()" title="Vista previa PDF"></iframe>
+        } @else if (file.type === 'Audio' && previewUrl()) {
+          <div class="p-6 bg-brand-soft border-all rounded-lg">
+            <audio class="w-full" [src]="previewUrl()" controls></audio>
+          </div>
+        } @else if (file.type === 'Video' && previewUrl()) {
+          <video class="evidence-preview-video" [src]="previewUrl()" controls></video>
+        }
+
         <p class="text-xs text-muted mt-4">
-          SafeZone protege la privacidad del material probatorio. Queda estrictamente prohibida la
-          copia o reproducción externa.
+          SafeZone protege la privacidad del material probatorio. El acceso queda registrado para auditoría institucional.
         </p>
       </div>
       <div class="sz-modal-footer">
-        <button class="btn btn-primary" (click)="evidenceService.showEvidenceModal.set(false)">
-          Cerrar Visor
-        </button>
+        <button class="btn btn-outline" (click)="descargar(file)">Descargar</button>
+        <button class="btn btn-primary" (click)="cerrarPreview()">Cerrar visor</button>
       </div>
     </div>
   </div>
