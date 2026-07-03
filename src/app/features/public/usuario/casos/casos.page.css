@@ -1,1 +1,122 @@
-/* Placeholder para casos del usuario/victima. */
+:host {
+  display: block;
+}
+
+.case-list {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.case-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #d7dde7;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.case-card-main {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 0.875rem;
+}
+
+.case-card-main > .material-symbols-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(15, 118, 110, 0.08);
+  color: #0f766e;
+}
+
+.case-code {
+  display: inline-flex;
+  margin-bottom: 0.25rem;
+  color: #1e3a8a;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.case-card h3 {
+  margin: 0;
+  color: #102033;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.case-card p {
+  margin: 0.25rem 0 0;
+  color: #607086;
+  line-height: 1.45;
+}
+
+.case-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  color: #607086;
+  font-size: 0.8125rem;
+}
+
+.case-meta > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0.35rem 0.625rem;
+  border-radius: 999px;
+  background: #f8fafc;
+}
+
+.case-meta strong {
+  color: #102033;
+  margin-left: 0.25rem;
+}
+
+.status-pill {
+  background: #ecfdf5 !important;
+  color: #0f766e;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.empty-state,
+.victim-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 120px;
+  border: 1px dashed #d7dde7;
+  border-radius: 12px;
+  color: #607086;
+  text-align: center;
+}
+
+.victim-state {
+  flex-wrap: wrap;
+  border-style: solid;
+}
+
+.victim-state.error {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: rgba(220, 38, 38, 0.08);
+  color: #991b1b;
+}
+
+.victim-state button {
+  min-height: 40px;
+  padding: 0 0.875rem;
+  border: 1px solid rgba(15, 118, 110, 0.24);
+  border-radius: 8px;
+  background: #ecfdf5;
+  color: #0f766e;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}

@@ -17,6 +17,7 @@ describe('CasosComponent', () => {
     getFilteredCasosByStatus: ReturnType<typeof vi.fn>;
     hasActiveCaseFilters: ReturnType<typeof vi.fn>;
     casesSearchQuery: ReturnType<typeof signal<string>>;
+    casesAliasFilter: ReturnType<typeof signal<string>>;
     casesRiskFilter: ReturnType<typeof signal<string>>;
     casesStatusFilter: ReturnType<typeof signal<string>>;
     casesDistrictFilter: ReturnType<typeof signal<string>>;
@@ -24,6 +25,7 @@ describe('CasosComponent', () => {
     casesDateFromFilter: ReturnType<typeof signal<string>>;
     casesDateToFilter: ReturnType<typeof signal<string>>;
     clearCaseFilters: ReturnType<typeof vi.fn>;
+    loadCasos: ReturnType<typeof vi.fn>;
     moveCase: ReturnType<typeof vi.fn>;
     closedCase: ReturnType<typeof vi.fn>;
     closeModal: ReturnType<typeof vi.fn>;
@@ -57,6 +59,7 @@ describe('CasosComponent', () => {
       getFilteredCasosByStatus: vi.fn().mockReturnValue([]),
       hasActiveCaseFilters: vi.fn().mockReturnValue(false),
       casesSearchQuery: signal(''),
+      casesAliasFilter: signal(''),
       casesRiskFilter: signal('all'),
       casesStatusFilter: signal('all'),
       casesDistrictFilter: signal('all'),
@@ -64,6 +67,7 @@ describe('CasosComponent', () => {
       casesDateFromFilter: signal(''),
       casesDateToFilter: signal(''),
       clearCaseFilters: vi.fn(),
+      loadCasos: vi.fn(),
       moveCase: vi.fn(),
       closedCase: vi.fn(),
       closeModal: vi.fn(),

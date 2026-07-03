@@ -3,7 +3,68 @@
   <p class="sz-page-description">Resumen de actividad, alertas pendientes y últimos movimientos del usuario.</p>
 </section>
 
-<div class="empty-state">
-  <span class="material-symbols-outlined" aria-hidden="true">dashboard</span>
-  <p>No hay actividad reciente disponible para esta cuenta.</p>
-</div>
+@if (historialService.isLoading()) {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
+    <p>Cargando tu historial vinculado...</p>
+  </div>
+} @else if (historialService.error()) {
+  <div class="victim-state error" role="alert">
+    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+    <p>{{ historialService.error() }}</p>
+    <button type="button" (click)="refresh()">Reintentar</button>
+  </div>
+} @else {
+  <section class="summary-grid" aria-label="Resumen de actividad">
+    <article class="summary-card">
+      <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+      <strong>{{ historialService.casos().length }}</strong>
+      <small>Casos vinculados</small>
+    </article>
+    <article class="summary-card">
+      <span class="material-symbols-outlined" aria-hidden="true">event</span>
+      <strong>{{ historialService.citas().length }}</strong>
+      <small>Citas registradas</small>
+    </article>
+    <article class="summary-card">
+      <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+      <strong>{{ historialService.evidencias().length }}</strong>
+      <small>Evidencias visibles</small>
+    </article>
+    <article class="summary-card">
+      <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+      <strong>{{ historialService.denuncias().length }}</strong>
+      <small>Denuncias formalizadas</small>
+    </article>
+  </section>
+
+  <section class="activity-panel" aria-labelledby="recent-activity-title">
+    <div class="section-heading">
+      <div>
+        <h3 id="recent-activity-title">Actividad reciente</h3>
+        <p>Últimos movimientos relacionados con tus registros.</p>
+      </div>
+      <button type="button" (click)="refresh()">Actualizar</button>
+    </div>
+
+    @if (recentItems().length) {
+      <div class="activity-list">
+        @for (item of recentItems(); track item.tipo + item.id) {
+          <article class="activity-item">
+            <span class="material-symbols-outlined" aria-hidden="true">{{ itemIcon(item) }}</span>
+            <div>
+              <strong>{{ item.titulo }}</strong>
+              <p>{{ item.detalle || 'Movimiento registrado en tu historial.' }}</p>
+              <small>{{ item.tipo }} · {{ statusLabel(item.estado) }} · {{ formatDate(item.fecha) }}</small>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <span class="material-symbols-outlined" aria-hidden="true">dashboard</span>
+        <p>No hay actividad reciente disponible para esta cuenta.</p>
+      </div>
+    }
+  </section>
+}

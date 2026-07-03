@@ -41,6 +41,7 @@ describe('PredenunciasService', () => {
     service.formalize('pd-1', {
       victimaId: 'victima-1',
       nivelRiesgo: 'ALTO',
+      edad: 28,
     }).subscribe((response) => {
       expect(response.estado).toBe('FORMALIZADA');
       expect(response.denunciaId).toBe('denuncia-1');
@@ -49,7 +50,7 @@ describe('PredenunciasService', () => {
 
     const request = http.expectOne('http://localhost:8080/api/predenuncias/pd-1/formalizar');
     expect(request.request.method).toBe('PATCH');
-    expect(request.request.body).toEqual({ victimaId: 'victima-1', nivelRiesgo: 'ALTO' });
+    expect(request.request.body).toEqual({ victimaId: 'victima-1', nivelRiesgo: 'ALTO', edad: 28 });
     request.flush({
       id: 'pd-1',
       estado: 'FORMALIZADA',
@@ -64,6 +65,7 @@ describe('PredenunciasService', () => {
     service.formalize('pd-2', {
       nivelRiesgo: 'CRITICO',
       formalizarAnonima: true,
+      edad: 28,
     }).subscribe((response) => {
       expect(response.estado).toBe('FORMALIZADA');
       expect(response.victimaId).toBe('victima-alias-1');
@@ -71,7 +73,7 @@ describe('PredenunciasService', () => {
 
     const request = http.expectOne('http://localhost:8080/api/predenuncias/pd-2/formalizar');
     expect(request.request.method).toBe('PATCH');
-    expect(request.request.body).toEqual({ nivelRiesgo: 'CRITICO', formalizarAnonima: true });
+    expect(request.request.body).toEqual({ nivelRiesgo: 'CRITICO', formalizarAnonima: true, edad: 28 });
     request.flush({
       id: 'pd-2',
       estado: 'FORMALIZADA',

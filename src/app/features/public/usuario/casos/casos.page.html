@@ -3,7 +3,41 @@
   <p class="sz-page-description">Historial de casos asociados y estado actual de cada atención.</p>
 </section>
 
-<div class="empty-state">
-  <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
-  <p>No hay casos vinculados a esta cuenta.</p>
-</div>
+@if (historialService.isLoading()) {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
+    <p>Cargando casos vinculados...</p>
+  </div>
+} @else if (historialService.error()) {
+  <div class="victim-state error" role="alert">
+    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+    <p>{{ historialService.error() }}</p>
+    <button type="button" (click)="refresh()">Reintentar</button>
+  </div>
+} @else if (historialService.casos().length) {
+  <section class="case-list" aria-label="Casos vinculados">
+    @for (caso of historialService.casos(); track caso.id) {
+      <article class="case-card">
+        <div class="case-card-main">
+          <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+          <div>
+            <span class="case-code">Caso {{ caso.id.slice(0, 8).toUpperCase() }}</span>
+            <h3>{{ caso.titulo }}</h3>
+            <p>{{ caso.detalle }}</p>
+          </div>
+        </div>
+        <div class="case-meta">
+          <span class="status-pill">{{ statusLabel(caso.estado) }}</span>
+          <span>Prioridad: <strong>{{ metadata(caso, 'prioridad') }}</strong></span>
+          <span>Distrito: <strong>{{ metadata(caso, 'distrito') }}</strong></span>
+          <span>Actualizado: <strong>{{ formatDate(caso.fecha) }}</strong></span>
+        </div>
+      </article>
+    }
+  </section>
+} @else {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+    <p>No hay casos vinculados a esta cuenta.</p>
+  </div>
+}

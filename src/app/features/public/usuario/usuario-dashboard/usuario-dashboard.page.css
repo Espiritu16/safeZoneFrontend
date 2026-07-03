@@ -1,1 +1,160 @@
-/* Placeholder para panel principal del usuario/victima. */
+:host {
+  display: block;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.summary-card {
+  display: grid;
+  gap: 0.35rem;
+  min-height: 120px;
+  padding: 1rem;
+  border: 1px solid #d7dde7;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.summary-card .material-symbols-outlined {
+  color: #0f766e;
+  font-size: 1.75rem;
+}
+
+.summary-card strong {
+  color: #102033;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.summary-card small {
+  color: #607086;
+  font-weight: 700;
+}
+
+.activity-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.section-heading h3 {
+  margin: 0 0 0.25rem;
+  color: #102033;
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.section-heading p {
+  margin: 0;
+  color: #607086;
+}
+
+.section-heading button,
+.victim-state button {
+  min-height: 40px;
+  padding: 0 0.875rem;
+  border: 1px solid rgba(15, 118, 110, 0.24);
+  border-radius: 8px;
+  background: #ecfdf5;
+  color: #0f766e;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.activity-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.activity-item {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 0.875rem;
+  padding: 1rem;
+  border: 1px solid #d7dde7;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.activity-item > .material-symbols-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(15, 118, 110, 0.08);
+  color: #0f766e;
+}
+
+.activity-item strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #102033;
+}
+
+.activity-item p,
+.activity-item small {
+  display: block;
+  margin: 0;
+  color: #607086;
+  line-height: 1.45;
+}
+
+.activity-item small {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.empty-state,
+.victim-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 120px;
+  border: 1px dashed #d7dde7;
+  border-radius: 12px;
+  color: #607086;
+  text-align: center;
+}
+
+.victim-state {
+  flex-wrap: wrap;
+  border-style: solid;
+}
+
+.victim-state.error {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: rgba(220, 38, 38, 0.08);
+  color: #991b1b;
+}
+
+@media (max-width: 900px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading {
+    display: grid;
+  }
+}

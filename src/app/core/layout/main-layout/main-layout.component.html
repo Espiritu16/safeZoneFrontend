@@ -16,21 +16,21 @@
 
 <!-- DRAWER: DETALLE DE EXPEDIENTE DIGITAL -->
 @if (casesService.selectedCase(); as caseItem) {
-  <div class="sz-drawer-overlay" (click)="casesService.closeCaseDrawer()"></div>
+  <div class="sz-drawer-overlay" (click)="closeCaseDrawer()"></div>
   <div class="sz-drawer sz-case-drawer">
     <div class="sz-drawer-header">
       <div>
         <p class="sz-case-drawer-eyebrow">Ficha digital</p>
         <h3 class="sz-drawer-header-title">{{ caseItem.codigo }}</h3>
       </div>
-      <button class="btn btn-outline btn-sm" type="button" (click)="casesService.closeCaseDrawer()">Cerrar</button>
+      <button class="btn btn-outline btn-sm" type="button" (click)="closeCaseDrawer()">Cerrar</button>
     </div>
     
     <div class="sz-drawer-body">
       
       <div class="sz-case-detail-tabs">
         <button class="tab-btn" [ngClass]="{'is-active': casesService.activeCaseTab() === 'detalles'}" (click)="casesService.activeCaseTab.set('detalles')">Detalles</button>
-        <button class="tab-btn" [ngClass]="{'is-active': casesService.activeCaseTab() === 'historial'}" (click)="casesService.activeCaseTab.set('historial')">Seguimiento</button>
+        <button class="tab-btn" [ngClass]="{'is-active': casesService.activeCaseTab() === 'historial'}" (click)="openSeguimientoTab(caseItem.id)">Seguimiento</button>
       </div>
 
       <!-- Tab 1: Detalles -->
@@ -105,30 +105,138 @@
       <!-- Tab 2: Historial (Timeline) -->
       @if (casesService.activeCaseTab() === 'historial') {
         <div class="animate-fade-in">
-          <div class="sz-timeline">
-            
-            <div class="sz-timeline-item">
-              <div class="sz-timeline-item-node is-active"></div>
-              <div class="sz-timeline-item-header">
-                <span class="time-title">Seguimiento del caso registrado</span>
-                <span class="time-stamp">{{ caseItem.fecha }}</span>
+          <section class="sz-case-section sz-followup-panel">
+            <div class="sz-followup-header">
+              <div>
+                <h4>Observaciones del expediente</h4>
+                <p class="text-xs text-muted">Registra acciones realizadas, recomendaciones y próximas acciones.</p>
               </div>
-              <p class="sz-timeline-item-body">
-                Se registró el avance operativo del caso. Estado actual: {{ caseItem.estado }}.
-              </p>
+              <button class="btn btn-primary btn-sm" type="button" (click)="showSeguimientoForm.set(!showSeguimientoForm())">
+                {{ showSeguimientoForm() ? 'Ocultar formulario' : 'Agregar observación' }}
+              </button>
             </div>
 
+            @if (showSeguimientoForm()) {
+              <form class="sz-followup-form" (ngSubmit)="submitSeguimiento(caseItem.id)">
+                <div class="form-group">
+                  <label class="form-label" for="tipoSeguimiento">Tipo de seguimiento</label>
+                  <select
+                    id="tipoSeguimiento"
+                    class="form-select"
+                    [ngModel]="seguimientoForm().tipoSeguimiento"
+                    (ngModelChange)="updateSeguimientoForm('tipoSeguimiento', $event)"
+                    name="tipoSeguimiento"
+                    required
+                  >
+                    <option value="OBSERVACION">Observación</option>
+                    <option value="ACCION_REALIZADA">Acción realizada</option>
+                    <option value="RECOMENDACION">Recomendación</option>
+                    <option value="PROXIMA_ACCION">Próxima acción</option>
+                    <option value="CONTACTO">Contacto</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="contenidoSeguimiento">Observación / acciones realizadas</label>
+                  <textarea
+                    id="contenidoSeguimiento"
+                    class="form-input"
+                    rows="4"
+                    [ngModel]="seguimientoForm().contenido"
+                    (ngModelChange)="updateSeguimientoForm('contenido', $event)"
+                    name="contenido"
+                    placeholder="Describe la atención, acción realizada o recomendación registrada en el expediente."
+                    required
+                    minlength="10"
+                    maxlength="3000"
+                  ></textarea>
+                  <p class="text-xs text-muted">Mínimo 10 caracteres.</p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="proximaAccion">Próxima acción</label>
+                  <textarea
+                    id="proximaAccion"
+                    class="form-input"
+                    rows="2"
+                    [ngModel]="seguimientoForm().proximaAccion"
+                    (ngModelChange)="updateSeguimientoForm('proximaAccion', $event)"
+                    name="proximaAccion"
+                    placeholder="Ejemplo: coordinar cita, llamar a la víctima, derivar documento legal."
+                    maxlength="1000"
+                  ></textarea>
+                </div>
+
+                <div class="sz-followup-form-footer">
+                  <div class="form-group">
+                    <label class="form-label" for="fechaProximaAccion">Fecha próxima acción</label>
+                    <input
+                      id="fechaProximaAccion"
+                      class="form-input"
+                      type="datetime-local"
+                      [ngModel]="seguimientoForm().fechaProximaAccion"
+                      (ngModelChange)="updateSeguimientoForm('fechaProximaAccion', $event)"
+                      name="fechaProximaAccion"
+                    />
+                  </div>
+                  <button class="btn btn-primary" type="submit" [disabled]="!canSubmitSeguimiento()">
+                    {{ isSavingSeguimiento() ? 'Guardando...' : 'Guardar observación' }}
+                  </button>
+                </div>
+              </form>
+            }
+          </section>
+
+          @if (isLoadingSeguimientos()) {
+            <div class="sz-empty-state">
+              <p>Cargando seguimientos...</p>
+            </div>
+          } @else if (seguimientoError()) {
+            <div class="sz-empty-state">
+              <p>{{ seguimientoError() }}</p>
+              <button class="btn btn-outline btn-sm" type="button" (click)="loadSeguimientos(caseItem.id)">Reintentar</button>
+            </div>
+          } @else if (seguimientos().length) {
+            <div class="sz-timeline">
+              @for (seguimiento of seguimientos(); track seguimiento.id) {
+                <div class="sz-timeline-item">
+                  <div class="sz-timeline-item-node is-active"></div>
+                  <div class="sz-timeline-item-header">
+                    <span class="time-title">{{ seguimiento.tipoSeguimiento }}</span>
+                    <span class="time-stamp">{{ seguimiento.fechaCreacion | date:'dd MMM yyyy, h:mm a' }}</span>
+                  </div>
+                  <p class="sz-timeline-item-body">{{ seguimiento.contenido }}</p>
+                  @if (seguimiento.proximaAccion) {
+                    <div class="sz-followup-next">
+                      <strong>Próxima acción:</strong>
+                      <span>{{ seguimiento.proximaAccion }}</span>
+                    </div>
+                  }
+                  @if (seguimiento.fechaProximaAccion) {
+                    <p class="text-xs text-muted">Programado: {{ seguimiento.fechaProximaAccion | date:'dd MMM yyyy, h:mm a' }}</p>
+                  }
+                  <p class="text-xs text-muted">Registrado por: {{ seguimiento.rolAutor }}</p>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="sz-empty-state">
+              <p>Aún no hay observaciones registradas para este caso.</p>
+              <button class="btn btn-outline btn-sm" type="button" (click)="showSeguimientoForm.set(true)">Agregar primera observación</button>
+            </div>
+          }
+
+          <div class="sz-timeline mt-4">
             <div class="sz-timeline-item">
               <div class="sz-timeline-item-node is-success"></div>
               <div class="sz-timeline-item-header">
-                <span class="time-title">Denuncia Ingresada al Sistema</span>
-                <span class="time-stamp">Hace 5 días</span>
+                <span class="time-title">Caso registrado en el sistema</span>
+                <span class="time-stamp">{{ caseItem.fecha }}</span>
               </div>
               <p class="sz-timeline-item-body">
-                Registro preliminar de la denuncia digitalizado en comisaría de Lima Metropolitana.
+                Estado actual del expediente: {{ caseItem.estado }}.
               </p>
             </div>
-
           </div>
         </div>
       }
@@ -136,7 +244,7 @@
     </div>
 
     <div class="sz-drawer-footer">
-      <button class="btn btn-outline" (click)="casesService.closeCaseDrawer()">Cerrar ficha</button>
+      <button class="btn btn-outline" (click)="closeCaseDrawer()">Cerrar ficha</button>
       <button class="btn btn-primary" (click)="toastService.show('Medidas urgentes ratificadas en el Poder Judicial.', 'success')">Ratificar Medidas</button>
     </div>
   </div>

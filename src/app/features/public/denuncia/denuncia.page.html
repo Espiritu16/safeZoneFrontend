@@ -28,11 +28,16 @@
               </div>
               <div class="w-px h-6 bg-outline-variant ml-3"></div>
               <div class="flex items-center gap-md" [class.step-active]="currentStep === 3" [class.step-completed]="currentStep > 3" [class.text-on-surface-variant]="currentStep < 3">
-                <span class="material-symbols-outlined">{{ currentStep > 3 ? 'check_circle' : 'contact_mail' }}</span>
+                <span class="material-symbols-outlined">{{ currentStep > 3 ? 'check_circle' : 'attach_file' }}</span>
+                <span class="font-body-md">Evidencias</span>
+              </div>
+              <div class="w-px h-6 bg-outline-variant ml-3"></div>
+              <div class="flex items-center gap-md" [class.step-active]="currentStep === 4" [class.step-completed]="currentStep > 4" [class.text-on-surface-variant]="currentStep < 4">
+                <span class="material-symbols-outlined">{{ currentStep > 4 ? 'check_circle' : 'contact_mail' }}</span>
                 <span class="font-body-md">Información de contacto</span>
               </div>
               <div class="w-px h-6 bg-outline-variant ml-3"></div>
-              <div class="flex items-center gap-md" [class.step-active]="currentStep === 4" [class.text-on-surface-variant]="currentStep < 4">
+              <div class="flex items-center gap-md" [class.step-active]="currentStep === 5" [class.text-on-surface-variant]="currentStep < 5">
                 <span class="material-symbols-outlined">fact_check</span>
                 <span class="font-body-md">Revisión y envío</span>
               </div>
@@ -180,6 +185,46 @@
 
         @if (!submitted && currentStep === 3) {
           <section class="form-container space-y-lg">
+            <h2 class="font-headline-md text-headline-md text-on-surface">Evidencias opcionales</h2>
+            <p class="text-body-sm text-on-surface-variant">Puede adjuntar fotos, documentos, audios o videos relacionados. Este paso es opcional.</p>
+            <div class="evidence-upload" (click)="fileInput.click()">
+              <span class="material-symbols-outlined text-primary">upload_file</span>
+              <strong>Adjuntar evidencias</strong>
+              <small>JPG, PNG, WEBP, PDF, MP3, WAV, M4A, MP4, MOV, DOC o DOCX. Maximo 5 archivos de 25 MB.</small>
+              <input
+                #fileInput
+                class="sr-only"
+                type="file"
+                multiple
+                accept=".jpg,.jpeg,.png,.webp,.pdf,.mp3,.wav,.m4a,.mp4,.mov,.doc,.docx"
+                (click)="$event.stopPropagation()"
+                (change)="evidenceService.onFileSelected($event)"
+              />
+            </div>
+
+            @if (evidenceService.pendingEvidence().length) {
+              <div class="evidence-list">
+                @for (file of evidenceService.pendingEvidence(); track file.id) {
+                  <div class="evidence-item">
+                    <div>
+                      <strong>{{ file.name }}</strong>
+                      <small>{{ file.type }} - {{ file.size }}</small>
+                    </div>
+                    <button type="button" (click)="evidenceService.removeFile(file.file)">Quitar</button>
+                  </div>
+                }
+              </div>
+            }
+
+            <div class="flex justify-between pt-md">
+              <button class="text-on-surface-variant font-bold px-lg py-md hover:bg-surface-container-low rounded-lg transition-all" type="button" (click)="goToStep(2)">Regresar</button>
+              <button class="bg-primary text-white px-xl py-md rounded-lg font-bold hover:opacity-90 active:scale-95 transition-all" type="button" (click)="goToStep(4)">Continuar</button>
+            </div>
+          </section>
+        }
+
+        @if (!submitted && currentStep === 4) {
+          <section class="form-container space-y-lg">
             <h2 class="font-headline-md text-headline-md text-on-surface">Información de contacto</h2>
             <p class="text-body-sm text-on-surface-variant">¿Cómo prefiere ser contactado por nuestros agentes especializados?</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
@@ -215,13 +260,13 @@
               <p class="text-body-sm text-on-surface-variant italic">Nota: Nuestros agentes realizarán un primer contacto de validación bajo un protocolo de discreción absoluta.</p>
             </div>
             <div class="flex justify-between pt-md">
-              <button class="text-on-surface-variant font-bold px-lg py-md hover:bg-surface-container-low rounded-lg transition-all" type="button" (click)="goToStep(2)">Regresar</button>
-              <button class="bg-primary text-white px-xl py-md rounded-lg font-bold hover:opacity-90 active:scale-95 transition-all" type="button" (click)="goToStep(4)">Revisar Pre-denuncia</button>
+              <button class="text-on-surface-variant font-bold px-lg py-md hover:bg-surface-container-low rounded-lg transition-all" type="button" (click)="goToStep(3)">Regresar</button>
+              <button class="bg-primary text-white px-xl py-md rounded-lg font-bold hover:opacity-90 active:scale-95 transition-all" type="button" (click)="goToStep(5)">Revisar Pre-denuncia</button>
             </div>
           </section>
         }
 
-        @if (!submitted && currentStep === 4) {
+        @if (!submitted && currentStep === 5) {
           <section class="form-container space-y-lg">
             <h2 class="font-headline-md text-headline-md text-on-surface">Revisión de Información</h2>
             <div class="border border-outline-variant rounded-xl divide-y divide-outline-variant">
@@ -244,13 +289,17 @@
                   <p class="text-body-sm text-primary">{{ reviewContactValue }}</p>
                 </div>
               </div>
+              <div class="p-lg grid grid-cols-1 md:grid-cols-3 gap-md">
+                <span class="font-label-md text-on-surface-variant uppercase tracking-wider">Evidencias</span>
+                <span class="md:col-span-2 font-body-md">{{ evidenceService.pendingEvidence().length }} archivo(s) adjunto(s)</span>
+              </div>
             </div>
             <div class="flex items-center gap-sm">
               <input class="rounded border-outline-variant text-primary focus:ring-primary" id="terms" type="checkbox" name="acceptedTerms" [(ngModel)]="formData.acceptedTerms">
               <label class="text-body-sm text-on-surface-variant" for="terms">Confirmo que la información proporcionada es verídica y acepto el tratamiento de datos para fines de asistencia.</label>
             </div>
             <div class="flex justify-between pt-md">
-              <button class="text-on-surface-variant font-bold px-lg py-md hover:bg-surface-container-low rounded-lg transition-all" type="button" (click)="goToStep(3)">Regresar</button>
+              <button class="text-on-surface-variant font-bold px-lg py-md hover:bg-surface-container-low rounded-lg transition-all" type="button" (click)="goToStep(4)">Regresar</button>
               <button class="bg-primary text-white px-xl py-md rounded-lg font-bold hover:opacity-90 active:scale-95 transition-all flex items-center gap-sm disabled:opacity-60" type="button" [disabled]="isSubmitting" (click)="submitForm()">
                 <span class="material-symbols-outlined">send</span>
                 {{ isSubmitting ? 'Enviando...' : 'Enviar predenuncia' }}

@@ -1,6 +1,6 @@
 <section class="sz-page-heading">
-  <h2 class="sz-page-title">Mis denuncias</h2>
-  <p class="sz-page-description">Listado de denuncias registradas por el usuario o asociadas a su atención.</p>
+  <h2 class="sz-page-title">Mis registros y denuncias</h2>
+  <p class="sz-page-description">Consulta tus predenuncias registradas y denuncias formalizadas asociadas a tu cuenta.</p>
 </section>
 
 <section class="victim-actions" aria-label="Acciones de denuncias">
@@ -12,7 +12,7 @@
   >
     <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
     <span>
-      <strong>Nueva denuncia</strong>
+      <strong>Nueva predenuncia</strong>
       <small>Registra una nueva predenuncia de forma segura.</small>
     </span>
   </button>
@@ -25,8 +25,8 @@
   >
     <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
     <span>
-      <strong>Consultar caso</strong>
-      <small>Revisa el avance de tus registros vinculados.</small>
+      <strong>Consultar registro</strong>
+      <small>Revisa el avance de tus predenuncias y denuncias.</small>
     </span>
   </button>
 </section>
@@ -158,6 +158,46 @@
 
         @if (currentReportStep() === 3) {
           <section class="wizard-step">
+            <h4>Evidencias opcionales</h4>
+            <p class="step-copy">Adjunta archivos relacionados con los hechos si los tienes. Puedes continuar sin subir evidencias.</p>
+            <div class="compact-evidence-upload" (click)="evidenceInput.click()">
+              <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
+              <strong>Seleccionar evidencias</strong>
+              <small>JPG, PNG, WEBP, PDF, MP3, WAV, M4A, MP4, MOV, DOC o DOCX. Maximo 5 archivos de 25 MB.</small>
+              <input
+                #evidenceInput
+                class="sr-only"
+                type="file"
+                multiple
+                accept=".jpg,.jpeg,.png,.webp,.pdf,.mp3,.wav,.m4a,.mp4,.mov,.doc,.docx"
+                (click)="$event.stopPropagation()"
+                (change)="evidenceService.onFileSelected($event)"
+              />
+            </div>
+
+            @if (evidenceService.pendingEvidence().length) {
+              <div class="compact-evidence-list">
+                @for (file of evidenceService.pendingEvidence(); track file.id) {
+                  <div class="compact-evidence-item">
+                    <div>
+                      <strong>{{ file.name }}</strong>
+                      <small>{{ file.type }} - {{ file.size }}</small>
+                    </div>
+                    <button type="button" (click)="evidenceService.removeFile(file.file)">Quitar</button>
+                  </div>
+                }
+              </div>
+            }
+
+            <div class="form-actions">
+              <button class="secondary-button" type="button" (click)="previousReportStep()">Regresar</button>
+              <button class="primary-button" data-testid="continue-step-3" type="button" (click)="nextReportStep()">Continuar</button>
+            </div>
+          </section>
+        }
+
+        @if (currentReportStep() === 4) {
+          <section class="wizard-step">
             <h4>Informacion de contacto</h4>
             <p class="step-copy">Usaremos tu sesion para identificarte. Puedes agregar un telefono alternativo para contacto rapido.</p>
             <div class="embedded-report-form">
@@ -178,12 +218,12 @@
             </div>
             <div class="form-actions">
               <button class="secondary-button" type="button" (click)="previousReportStep()">Regresar</button>
-              <button class="primary-button" data-testid="continue-step-3" type="button" (click)="nextReportStep()">Revisar</button>
+              <button class="primary-button" data-testid="continue-step-4" type="button" (click)="nextReportStep()">Revisar</button>
             </div>
           </section>
         }
 
-        @if (currentReportStep() === 4) {
+        @if (currentReportStep() === 5) {
           <section class="wizard-step">
             <h4>Revision y envio</h4>
             <div class="review-grid">
@@ -195,6 +235,8 @@
               <p>{{ newPredenunciaForm.controls.descripcionHecho.value }}</p>
               <span>Contacto</span>
               <strong>{{ newPredenunciaForm.controls.contactoValor.value || authService.correo() }}</strong>
+              <span>Evidencias</span>
+              <strong>{{ evidenceService.pendingEvidence().length }} archivo(s) adjunto(s)</strong>
             </div>
 
             <label class="terms-row">
@@ -219,34 +261,34 @@
   <section #caseConsultationPanel class="embedded-case-panel" aria-labelledby="case-consultation-title">
     <div class="embedded-report-header">
       <div>
-        <h3 id="case-consultation-title">Consulta de caso</h3>
-        <p>Seguimiento compacto de tus predenuncias y denuncias vinculadas a esta cuenta.</p>
+        <h3 id="case-consultation-title">Consulta de registro</h3>
+        <p>Seguimiento compacto de tus predenuncias y denuncias formales. Los casos se consultan en la pestaña Casos.</p>
       </div>
       <button class="icon-button" type="button" aria-label="Cerrar consulta" (click)="closeCaseConsultation()">
         <span class="material-symbols-outlined" aria-hidden="true">close</span>
       </button>
     </div>
 
-    @if (isLoadingRecords()) {
+    @if (isLoadingRecords() || historialService.isLoading()) {
       <div class="empty-state compact-empty">
         <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
-        <p>Cargando casos vinculados...</p>
+        <p>Cargando registros vinculados...</p>
       </div>
-    } @else if (selectedCaseRecord(); as record) {
+    } @else if (selectedRecord(); as record) {
       <div class="compact-case-layout">
-        <aside class="case-selector" aria-label="Casos vinculados">
+        <aside class="case-selector" aria-label="Registros vinculados">
           <h4>Tus registros</h4>
           <div class="case-selector-list">
-            @for (item of myPredenuncias(); track item.id) {
+            @for (item of registros(); track item.id) {
               <button
                 class="case-selector-item"
                 type="button"
-                [class.is-active]="isSelectedCaseRecord(item)"
-                (click)="selectCaseRecord(item)"
+                [class.is-active]="isSelectedRecord(item)"
+                (click)="selectRecord(item)"
               >
-                <span class="record-code">{{ trackingCode(item) }}</span>
-                <strong>{{ recordSummary(item) }}</strong>
-                <small>{{ item.estado }}</small>
+                <span class="record-code">{{ item.codigo }}</span>
+                <strong>{{ item.titulo }}</strong>
+                <small>{{ item.etiqueta }}</small>
               </button>
             }
           </div>
@@ -256,8 +298,8 @@
           <article class="case-summary-card">
             <div class="case-summary-heading">
               <div>
-                <span>Resumen del expediente</span>
-                <h4>{{ trackingCode(record) }}</h4>
+                <span>Resumen del registro</span>
+                <h4>{{ record.codigo }}</h4>
               </div>
               <span class="case-status">{{ record.estado }}</span>
             </div>
@@ -265,7 +307,7 @@
             <dl class="case-facts">
               <div>
                 <dt>Fecha de inicio</dt>
-                <dd>{{ formatCaseDate(record.fechaCreacion) }}</dd>
+                <dd>{{ formatCaseDate(record.fechaInicio) }}</dd>
               </div>
               <div>
                 <dt>Ultima actualizacion</dt>
@@ -273,11 +315,18 @@
               </div>
               <div>
                 <dt>Proximo paso</dt>
-                <dd>{{ caseNextStep(record) }}</dd>
+                <dd>{{ record.proximoPaso }}</dd>
               </div>
             </dl>
 
-            <p class="case-description">{{ record.descripcionHecho }}</p>
+            <p class="case-description">{{ record.descripcion }}</p>
+
+            @if (record.casoId) {
+              <div class="linked-case-note">
+                <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
+                <span>Este registro tiene un caso asociado: <strong>{{ linkedCaseCode(record.casoId) }}</strong>. Revisa su seguimiento en la pestaña Casos.</span>
+              </div>
+            }
           </article>
 
           <aside class="case-security-card">
@@ -289,7 +338,7 @@
           <article class="case-timeline-card">
             <h4>Cronología del proceso</h4>
             <ol class="case-timeline">
-              @for (event of timelineFor(record); track event.label) {
+              @for (event of record.timeline; track event.label) {
                 <li [class.is-complete]="event.complete">
                   <span class="timeline-dot">
                     <span class="material-symbols-outlined" aria-hidden="true">{{ event.complete ? 'check' : 'more_horiz' }}</span>
@@ -308,7 +357,7 @@
     } @else {
       <div class="empty-state compact-empty">
         <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
-        <p>No hay registros vinculados para consultar desde este panel.</p>
+        <p>No hay predenuncias ni denuncias formales vinculadas para consultar desde este panel.</p>
       </div>
     }
   </section>
@@ -321,26 +370,25 @@
   </div>
 }
 
-@if (isLoadingRecords()) {
+@if (isLoadingRecords() || historialService.isLoading()) {
   <div class="empty-state">
     <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
     <p>Cargando denuncias vinculadas...</p>
   </div>
-} @else if (myPredenuncias().length > 0) {
-  <section class="victim-record-list" aria-label="Denuncias vinculadas">
-    @for (record of myPredenuncias(); track record.id) {
+} @else if (registros().length > 0) {
+  <section class="victim-record-list" aria-label="Registros y denuncias vinculadas">
+    @for (record of registros(); track record.id) {
       <article class="victim-record-card">
         <div>
-          <span class="record-code">{{ trackingCode(record) }}</span>
-          <h3>{{ recordSummary(record) }}</h3>
-          <p>{{ record.descripcionHecho }}</p>
+          <span class="record-code">{{ record.codigo }}</span>
+          <h3>{{ record.titulo }}</h3>
+          <p>{{ record.descripcion }}</p>
         </div>
         <div class="record-meta">
           <span class="record-status">{{ record.estado }}</span>
-          @if (record.denunciaId) {
-            <span class="record-link">Formalizada</span>
-          } @else {
-            <span class="record-link">Predenuncia</span>
+          <span class="record-link">{{ record.etiqueta }}</span>
+          @if (record.casoId) {
+            <span class="record-link case-linked">{{ linkedCaseCode(record.casoId) }}</span>
           }
         </div>
       </article>
@@ -349,6 +397,6 @@
 } @else {
   <div class="empty-state">
     <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
-    <p>Aún no hay denuncias vinculadas a esta cuenta.</p>
+    <p>Aún no hay predenuncias ni denuncias formales vinculadas a esta cuenta.</p>
   </div>
 }

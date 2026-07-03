@@ -149,15 +149,20 @@
               #fileInput
               class="sr-only"
               type="file"
+              multiple
+              accept=".jpg,.jpeg,.png,.webp,.pdf,.mp3,.wav,.m4a,.mp4,.mov,.doc,.docx"
               (click)="$event.stopPropagation()"
               (change)="evidenceService.onFileSelected($event)">
           </div>
 
-          <div class="mt-4">
+          <div class="mt-4" *ngIf="evidenceService.pendingEvidence().length">
             <p class="text-xs font-semibold text-secondary mb-2">Archivos listos para registrar:</p>
-            <div class="border-all rounded-md p-3 flex justify-between items-center bg-brand-soft">
-              <span class="text-xs font-medium">acta_de_incidente_preliminar.pdf (1.2 MB)</span>
-              <span class="text-xs text-success font-semibold">Listo</span>
+            <div
+              class="border-all rounded-md p-3 flex justify-between items-center bg-brand-soft mb-2"
+              *ngFor="let file of evidenceService.pendingEvidence()"
+            >
+              <span class="text-xs font-medium">{{ file.name }} ({{ file.size }})</span>
+              <button class="text-xs text-error font-semibold" type="button" (click)="evidenceService.removeFile(file.file)">Quitar</button>
             </div>
           </div>
         </div>

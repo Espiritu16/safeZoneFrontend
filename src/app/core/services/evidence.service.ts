@@ -1,4 +1,4 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, computed, signal, inject } from '@angular/core';
 import { ToastService } from './toast.service';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
@@ -18,12 +18,41 @@ export interface Evidencia {
   riskIcon: string;
   casoId?: string | null;
   denunciaId?: string | null;
+  predenunciaId?: string | null;
+}
+
+export interface PendingEvidence {
+  id: string;
+  file: File;
+  name: string;
+  size: string;
+  type: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class EvidenceService {
+  private static readonly maxFiles = 5;
+  private static readonly maxFileSizeBytes = 25 * 1024 * 1024;
+  private static readonly allowedExtensions = new Set([
+    'jpg', 'jpeg', 'png', 'webp', 'pdf', 'mp3', 'wav', 'm4a', 'mp4', 'mov', 'doc', 'docx',
+  ]);
+  private static readonly allowedMimes = new Set([
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'application/pdf',
+    'audio/mpeg',
+    'audio/wav',
+    'audio/x-wav',
+    'audio/mp4',
+    'audio/x-m4a',
+    'video/mp4',
+    'video/quicktime',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  ]);
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
   private readonly authService = inject(AuthService);
@@ -31,26 +60,42 @@ export class EvidenceService {
   public readonly evidencias = signal<Evidencia[]>([]);
   public readonly showEvidenceModal = signal<boolean>(false);
   private readonly pendingFiles = signal<File[]>([]);
+  public readonly pendingEvidence = computed<PendingEvidence[]>(() =>
+    this.pendingFiles().map((file) => ({
+      id: `${file.name}-${file.size}-${file.lastModified}`,
+      file,
+      name: file.name,
+      size: this.formatSize(file.size),
+      type: this.inferType(file.name),
+    })),
+  );
 
   /** Maneja la selección de un archivo (preview local antes de subirlo). */
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) return;
+    const files = Array.from(input.files ?? []);
+    if (!files.length) return;
 
-    this.pendingFiles.update((files) => [...files, file]);
+    for (const file of files) {
+      if (!this.canQueueFile(file)) {
+        continue;
+      }
+      this.pendingFiles.update((current) => [...current, file]);
 
-    const nuevoArchivo: Evidencia = {
-      id: crypto.randomUUID(), // antes: this.evidencias().length + 1 (colisionaba)
-      name: file.name,
-      size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-      type: this.inferType(file.name),
-      date: new Date().toLocaleString(),
-      uploader: this.authService.currentRole(),
-      riskIcon: 'image',
-    };
-    this.evidencias.update((e) => [nuevoArchivo, ...e]);
-    this.toastService.show('Archivo añadido. Se subirá al registrar la denuncia.', 'warning');
+      const nuevoArchivo: Evidencia = {
+        id: crypto.randomUUID(), // antes: this.evidencias().length + 1 (colisionaba)
+        name: file.name,
+        size: this.formatSize(file.size),
+        type: this.inferType(file.name),
+        date: new Date().toLocaleString(),
+        uploader: this.authService.currentRole(),
+        riskIcon: 'image',
+      };
+      this.evidencias.update((e) => [nuevoArchivo, ...e]);
+    }
+    if (files.length) {
+      this.toastService.show('Evidencia añadida. Se subirá al enviar el registro.', 'warning');
+    }
 
     input.value = ''; // permite volver a seleccionar el mismo archivo si hace falta
   }
@@ -64,20 +109,21 @@ export class EvidenceService {
   }
 
   /** Sube todos los archivos pendientes y devuelve sus URLs/IDs. */
-  uploadAll(denunciaId?: string, casoId?: string): Observable<string[]> {
+  uploadAll(denunciaId?: string, casoId?: string, predenunciaId?: string): Observable<string[]> {
     const files = this.pendingFiles();
     if (files.length === 0) {
       return of([]);
     }
-    const uploads = files.map((file) => this.uploadOne(file, casoId, denunciaId));
+    const uploads = files.map((file) => this.uploadOne(file, casoId, denunciaId, predenunciaId));
     return forkJoin(uploads);
   }
 
-  private uploadOne(file: File, casoId?: string, denunciaId?: string): Observable<string> {
+  private uploadOne(file: File, casoId?: string, denunciaId?: string, predenunciaId?: string): Observable<string> {
     const formData = new FormData();
     formData.append('file', file);
     if (casoId) formData.append('casoId', casoId);
     if (denunciaId) formData.append('denunciaId', denunciaId);
+    if (predenunciaId) formData.append('predenunciaId', predenunciaId);
 
     return this.http.post<EvidenciaResponse>(`${environment.apiBaseUrl}${API_ENDPOINTS.adjuntos}`, formData).pipe(
       map((response) => response.id),
@@ -89,10 +135,11 @@ export class EvidenceService {
   }
 
   /** Carga evidencias desde el backend. Sin parámetros, trae todas (incluye "sueltas"). */
-  loadEvidencias(casoId?: string, denunciaId?: string): Observable<Evidencia[]> {
+  loadEvidencias(casoId?: string, denunciaId?: string, predenunciaId?: string): Observable<Evidencia[]> {
     const params: Record<string, string> = {};
     if (casoId) params['casoId'] = casoId;
     if (denunciaId) params['denunciaId'] = denunciaId;
+    if (predenunciaId) params['predenunciaId'] = predenunciaId;
 
     return this.http.get<EvidenciaResponse[]>(`${environment.apiBaseUrl}${API_ENDPOINTS.adjuntos}`, { params }).pipe(
       map((response) => response.map((r) => this.toViewModel(r))),
@@ -138,10 +185,11 @@ export class EvidenceService {
       size: `${(r.tamano / (1024 * 1024)).toFixed(1)} MB`,
       type: this.inferType(r.nombreOriginal),
       date: r.fechaCreacion,
-      uploader: r.subidoPor,
+      uploader: r.subidoPor ?? 'Predenuncia publica',
       riskIcon: 'image',
       casoId: r.casoId,
       denunciaId: r.denunciaId,
+      predenunciaId: r.predenunciaId,
     };
   }
 
@@ -156,5 +204,30 @@ export class EvidenceService {
 
   clearPending(): void {
     this.pendingFiles.set([]);
+  }
+
+  private canQueueFile(file: File): boolean {
+    if (this.pendingFiles().length >= EvidenceService.maxFiles) {
+      this.toastService.show('Solo puede adjuntar hasta 5 evidencias por registro.', 'error');
+      return false;
+    }
+    if (file.size > EvidenceService.maxFileSizeBytes) {
+      this.toastService.show(`El archivo ${file.name} supera el limite de 25 MB.`, 'error');
+      return false;
+    }
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+    if (!EvidenceService.allowedExtensions.has(ext)) {
+      this.toastService.show(`Formato no permitido: ${file.name}`, 'error');
+      return false;
+    }
+    if (file.type && !EvidenceService.allowedMimes.has(file.type.toLowerCase())) {
+      this.toastService.show(`Tipo de archivo no permitido: ${file.name}`, 'error');
+      return false;
+    }
+    return true;
+  }
+
+  private formatSize(bytes: number): string {
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   }
 }

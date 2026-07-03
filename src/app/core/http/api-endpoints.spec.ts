@@ -10,5 +10,6 @@ describe('API_ENDPOINTS', () => {
     expect(API_ENDPOINTS.asignaciones).toBe('/asignaciones');
     expect(API_ENDPOINTS.denuncias).toBe('/denuncias');
     expect(API_ENDPOINTS.seguimientos).toBe('/seguimientos');
+    expect(API_ENDPOINTS.victimaHistorial).toBe('/victimas/me/historial');
   });
 });

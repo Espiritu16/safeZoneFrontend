@@ -1,1 +1,117 @@
-/* Placeholder para citas del usuario/victima. */
+:host {
+  display: block;
+}
+
+.appointments-list {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.appointment-card {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.3fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #d7dde7;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.appointment-date {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  min-height: 100%;
+  padding: 0.875rem;
+  border-radius: 10px;
+  background: rgba(30, 58, 138, 0.08);
+  color: #1e3a8a;
+}
+
+.appointment-date .material-symbols-outlined {
+  font-size: 1.75rem;
+}
+
+.appointment-date strong {
+  line-height: 1.35;
+}
+
+.appointment-content {
+  min-width: 0;
+}
+
+.appointment-content h3 {
+  margin: 0.5rem 0 0.25rem;
+  color: #102033;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.appointment-content p,
+.appointment-content small {
+  display: block;
+  margin: 0;
+  color: #607086;
+  line-height: 1.45;
+}
+
+.appointment-content small {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #0f766e;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.empty-state,
+.victim-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 120px;
+  border: 1px dashed #d7dde7;
+  border-radius: 12px;
+  color: #607086;
+  text-align: center;
+}
+
+.victim-state {
+  flex-wrap: wrap;
+  border-style: solid;
+}
+
+.victim-state.error {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: rgba(220, 38, 38, 0.08);
+  color: #991b1b;
+}
+
+.victim-state button {
+  min-height: 40px;
+  padding: 0 0.875rem;
+  border: 1px solid rgba(15, 118, 110, 0.24);
+  border-radius: 8px;
+  background: #ecfdf5;
+  color: #0f766e;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .appointment-card {
+    grid-template-columns: 1fr;
+  }
+}

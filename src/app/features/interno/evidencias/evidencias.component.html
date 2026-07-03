@@ -60,7 +60,7 @@
           >
             Previsualizar
           </button>
-          @if (!file.casoId && !file.denunciaId) {
+          @if (!file.casoId && !file.denunciaId && !file.predenunciaId) {
             <button class="btn btn-primary btn-sm" (click)="abrirVincular(file)">Vincular</button>
           }
           <button
