@@ -67,6 +67,7 @@ export class CasesService {
   public readonly loadError = signal<string>('');
   public readonly editingCase = signal<Caso | null>(null);
   public readonly casesSearchQuery = signal<string>('');
+  public readonly casesAliasFilter = signal<string>('');
   public readonly casesRiskFilter = signal<string>('all');
   public readonly casesStatusFilter = signal<string>('all');
   public readonly casesDateFromFilter = signal<string>('');
@@ -110,6 +111,7 @@ export class CasesService {
 
   public readonly hasActiveCaseFilters = computed(() =>
     this.casesSearchQuery().trim() !== '' ||
+    this.casesAliasFilter().trim() !== '' ||
     this.casesRiskFilter() !== 'all' ||
     this.casesStatusFilter() !== 'all' ||
     this.casesDateFromFilter() !== '' ||
@@ -139,7 +141,9 @@ export class CasesService {
     this.isLoading.set(true);
     this.loadError.set('');
     return forkJoin({
-      casos: this.api.get<CasoResponse[]>(API_ENDPOINTS.casos),
+      casos: this.api.get<CasoResponse[]>(API_ENDPOINTS.casos, {
+        aliasCodigo: this.casesAliasFilter().trim() || undefined,
+      }),
       asignaciones: this.asignacionesService.list().pipe(catchError(() => of([] as AsignacionCasoResponse[]))),
       denuncias: this.denunciasService.list().pipe(catchError(() => of([] as DenunciaResponse[]))),
       usuarios: this.usuariosService.list().pipe(catchError(() => of([] as UsuarioResponse[]))),
@@ -165,6 +169,7 @@ export class CasesService {
 
   clearCaseFilters(): void {
     this.casesSearchQuery.set('');
+    this.casesAliasFilter.set('');
     this.casesRiskFilter.set('all');
     this.casesStatusFilter.set('all');
     this.casesDateFromFilter.set('');

@@ -26,10 +26,33 @@ export interface EvidenciaResponse {
   url: string;
   nombreOriginal: string;
   tamano: number;
-  subidoPor: string;
+  subidoPor?: string | null;
   fechaCreacion: string;
   casoId?: string | null;
   denunciaId?: string | null;
+  predenunciaId?: string | null;
+}
+
+export interface VictimaHistorialItem {
+  tipo: 'CASO' | 'DENUNCIA' | 'CITA' | 'SEGUIMIENTO' | 'EVIDENCIA' | string;
+  id: string;
+  casoId?: string | null;
+  titulo: string;
+  detalle?: string | null;
+  estado?: string | null;
+  fecha?: string | null;
+  metadata: Record<string, string | number | boolean | null | undefined>;
+}
+
+export interface VictimaHistorialResponse {
+  victimaId: string;
+  aliasActivo?: string | null;
+  casos: VictimaHistorialItem[];
+  denuncias: VictimaHistorialItem[];
+  citas: VictimaHistorialItem[];
+  seguimientos: VictimaHistorialItem[];
+  evidencias: VictimaHistorialItem[];
+  lineaTiempo: VictimaHistorialItem[];
 }
 export interface SessionContextResponse {
   success: boolean;
@@ -123,6 +146,7 @@ export interface FormalizarPreDenunciaRequest {
 export interface VincularEvidenciaRequest {
   casoId?: string;
   denunciaId?: string;
+  predenunciaId?: string;
 }
 export interface CasoResponse {
   id: string;
@@ -224,7 +248,6 @@ export interface DenunciaFilters {
 
 export interface CrearSeguimientoCasoRequest {
   casoId: string;
-  autorId: string;
   tipoSeguimiento: string;
   contenido: string;
   proximaAccion?: string;
@@ -238,9 +261,15 @@ export interface ActualizarSeguimientoCasoRequest {
   fechaProximaAccion?: string;
 }
 
-export interface SeguimientoCasoResponse extends CrearSeguimientoCasoRequest {
+export interface SeguimientoCasoResponse {
   id: string;
+  casoId: string;
+  autorId: string;
   rolAutor: BackendRole;
+  tipoSeguimiento: string;
+  contenido: string;
+  proximaAccion?: string;
+  fechaProximaAccion?: string;
   activo: boolean;
   fechaCreacion: string;
   fechaActualizacion: string;

@@ -1,9 +1,28 @@
 import { Component, ElementRef, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { finalize } from 'rxjs';
-import type { PreDenunciaResponse } from '../../../../core/models/api.models';
+import { finalize, map, switchMap } from 'rxjs';
+import type { PreDenunciaResponse, VictimaHistorialItem } from '../../../../core/models/api.models';
 import { AuthService } from '../../../../core/services/auth.service';
+import { EvidenceService } from '../../../../core/services/evidence.service';
 import { PredenunciasService } from '../../../../core/services/predenuncias.service';
+import { UsuarioHistorialService } from '../../../../core/services/usuario-historial.service';
+
+interface RegistroVictima {
+  id: string;
+  sourceId: string;
+  tipo: 'PREDENUNCIA' | 'DENUNCIA';
+  codigo: string;
+  titulo: string;
+  descripcion: string;
+  estado: string;
+  etiqueta: string;
+  fechaInicio?: string | null;
+  fechaActualizacion?: string | null;
+  proximoPaso: string;
+  casoId?: string | null;
+  denunciaId?: string | null;
+  timeline: Array<{ label: string; detail: string; date: string; complete: boolean }>;
+}
 
 @Component({
   selector: 'app-usuario-denuncias-page',
@@ -18,7 +37,9 @@ export class UsuarioDenunciasPage implements OnInit {
 
   private readonly fb = inject(NonNullableFormBuilder);
   protected readonly authService = inject(AuthService);
+  protected readonly evidenceService = inject(EvidenceService);
   private readonly predenunciasService = inject(PredenunciasService);
+  protected readonly historialService = inject(UsuarioHistorialService);
 
   protected readonly showNewPredenuncia = signal(false);
   protected readonly showCaseConsultation = signal(false);
@@ -26,13 +47,26 @@ export class UsuarioDenunciasPage implements OnInit {
   protected readonly isSubmitting = signal(false);
   protected readonly isLoadingRecords = signal(false);
   protected readonly myPredenuncias = signal<PreDenunciaResponse[]>([]);
-  protected readonly selectedCaseRecordId = signal('');
+  protected readonly selectedRecordId = signal('');
   protected readonly submitMessage = signal('');
   protected readonly submitError = signal('');
   protected readonly recordsError = signal('');
-  protected readonly selectedCaseRecord = computed(() => {
-    const records = this.myPredenuncias();
-    const selectedId = this.selectedCaseRecordId();
+  protected readonly registros = computed<RegistroVictima[]>(() => {
+    const predenuncias = this.myPredenuncias().map((record) => this.toPredenunciaRegistro(record));
+    const denunciaIdsFromPredenuncias = new Set(this.myPredenuncias().map((record) => record.denunciaId).filter(Boolean));
+    const denuncias = this.historialService.denuncias()
+      .filter((denuncia) => !denunciaIdsFromPredenuncias.has(denuncia.id))
+      .map((denuncia) => this.toDenunciaRegistro(denuncia));
+
+    return [...predenuncias, ...denuncias].sort((a, b) => {
+      const dateA = new Date(a.fechaActualizacion ?? a.fechaInicio ?? 0).getTime();
+      const dateB = new Date(b.fechaActualizacion ?? b.fechaInicio ?? 0).getTime();
+      return dateB - dateA;
+    });
+  });
+  protected readonly selectedRecord = computed(() => {
+    const records = this.registros();
+    const selectedId = this.selectedRecordId();
     return records.find((record) => record.id === selectedId) ?? records[0] ?? null;
   });
 
@@ -84,8 +118,9 @@ export class UsuarioDenunciasPage implements OnInit {
   protected readonly reportSteps = [
     { step: 1, icon: 'category', label: 'Tipo de situacion' },
     { step: 2, icon: 'description', label: 'Detalle de los hechos' },
-    { step: 3, icon: 'contact_mail', label: 'Informacion de contacto' },
-    { step: 4, icon: 'fact_check', label: 'Revision y envio' },
+    { step: 3, icon: 'attach_file', label: 'Evidencias' },
+    { step: 4, icon: 'contact_mail', label: 'Informacion de contacto' },
+    { step: 5, icon: 'fact_check', label: 'Revision y envio' },
   ] as const;
 
   protected readonly newPredenunciaForm = this.fb.group({
@@ -99,6 +134,7 @@ export class UsuarioDenunciasPage implements OnInit {
 
   ngOnInit(): void {
     this.loadMyRecords();
+    this.historialService.load().subscribe({ error: () => undefined });
   }
 
   protected openNewPredenuncia(): void {
@@ -107,6 +143,7 @@ export class UsuarioDenunciasPage implements OnInit {
     this.currentReportStep.set(1);
     this.submitMessage.set('');
     this.submitError.set('');
+    this.evidenceService.clearPending();
     requestAnimationFrame(() => {
       this.newPredenunciaPanel?.nativeElement.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
     });
@@ -124,13 +161,14 @@ export class UsuarioDenunciasPage implements OnInit {
       contactoValor: '',
       aceptoTerminos: false,
     });
+    this.evidenceService.clearPending();
   }
 
   protected openCaseConsultation(): void {
     this.showNewPredenuncia.set(false);
     this.submitError.set('');
-    if (!this.selectedCaseRecordId() && this.myPredenuncias().length > 0) {
-      this.selectedCaseRecordId.set(this.myPredenuncias()[0].id);
+    if (!this.selectedRecordId() && this.registros().length > 0) {
+      this.selectedRecordId.set(this.registros()[0].id);
     }
     this.showCaseConsultation.set(true);
     requestAnimationFrame(() => {
@@ -142,12 +180,12 @@ export class UsuarioDenunciasPage implements OnInit {
     this.showCaseConsultation.set(false);
   }
 
-  protected selectCaseRecord(record: PreDenunciaResponse): void {
-    this.selectedCaseRecordId.set(record.id);
+  protected selectRecord(record: RegistroVictima): void {
+    this.selectedRecordId.set(record.id);
   }
 
-  protected isSelectedCaseRecord(record: PreDenunciaResponse): boolean {
-    return this.selectedCaseRecord()?.id === record.id;
+  protected isSelectedRecord(record: RegistroVictima): boolean {
+    return this.selectedRecord()?.id === record.id;
   }
 
   protected goToReportStep(step: number): void {
@@ -163,7 +201,7 @@ export class UsuarioDenunciasPage implements OnInit {
     if (!this.validateStep(currentStep)) {
       return;
     }
-    this.currentReportStep.set(Math.min(4, currentStep + 1));
+    this.currentReportStep.set(Math.min(5, currentStep + 1));
   }
 
   protected previousReportStep(): void {
@@ -174,7 +212,7 @@ export class UsuarioDenunciasPage implements OnInit {
   protected submitNewPredenuncia(): void {
     this.submitMessage.set('');
     this.submitError.set('');
-    if (![1, 2, 3].every((step) => this.validateStep(step))) {
+    if (![1, 2, 3, 4, 5].every((step) => this.validateStep(step))) {
       return;
     }
     if (this.newPredenunciaForm.invalid) {
@@ -197,12 +235,17 @@ export class UsuarioDenunciasPage implements OnInit {
       direccionReferencia: 'Registrada desde el panel de victima',
       anonima: false,
     }).pipe(
+      switchMap((response) => this.evidenceService.uploadAll(undefined, undefined, response.id).pipe(
+        map(() => response),
+      )),
       finalize(() => this.isSubmitting.set(false)),
     ).subscribe({
       next: (response) => {
         this.submitMessage.set(`Predenuncia registrada correctamente. Codigo: PD-${response.id.slice(0, 8).toUpperCase()}`);
+        this.evidenceService.clearPending();
         this.cancelNewPredenuncia();
         this.loadMyRecords();
+        this.historialService.refresh().subscribe({ error: () => undefined });
       },
       error: () => {
         this.submitError.set('No se pudo registrar la predenuncia. Intente nuevamente.');
@@ -212,6 +255,10 @@ export class UsuarioDenunciasPage implements OnInit {
 
   protected trackingCode(record: PreDenunciaResponse): string {
     return `PD-${record.id.slice(0, 8).toUpperCase()}`;
+  }
+
+  protected linkedCaseCode(casoId: string | null | undefined): string {
+    return casoId ? `CASO ${casoId.slice(0, 8).toUpperCase()}` : 'Sin caso asociado';
   }
 
   protected recordSummary(record: PreDenunciaResponse): string {
@@ -287,8 +334,8 @@ export class UsuarioDenunciasPage implements OnInit {
     ).subscribe({
       next: (records) => {
         this.myPredenuncias.set(records);
-        if (records.length > 0 && !records.some((record) => record.id === this.selectedCaseRecordId())) {
-          this.selectedCaseRecordId.set(records[0].id);
+        if (this.registros().length > 0 && !this.registros().some((record) => record.id === this.selectedRecordId())) {
+          this.selectedRecordId.set(this.registros()[0].id);
         }
       },
       error: () => {
@@ -302,12 +349,67 @@ export class UsuarioDenunciasPage implements OnInit {
     return date ? new Date(`${date}T00:00:00-05:00`).toISOString() : undefined;
   }
 
+  private toPredenunciaRegistro(record: PreDenunciaResponse): RegistroVictima {
+    return {
+      id: `predenuncia-${record.id}`,
+      sourceId: record.id,
+      tipo: 'PREDENUNCIA',
+      codigo: this.trackingCode(record),
+      titulo: this.recordSummary(record),
+      descripcion: record.descripcionHecho,
+      estado: record.estado,
+      etiqueta: record.denunciaId ? 'Predenuncia formalizada' : 'Predenuncia',
+      fechaInicio: record.fechaCreacion,
+      fechaActualizacion: record.fechaActualizacion,
+      proximoPaso: this.caseNextStep(record),
+      casoId: record.casoId,
+      denunciaId: record.denunciaId,
+      timeline: this.timelineFor(record),
+    };
+  }
+
+  private toDenunciaRegistro(denuncia: VictimaHistorialItem): RegistroVictima {
+    const codigo = `DN-${denuncia.id.slice(0, 8).toUpperCase()}`;
+    return {
+      id: `denuncia-${denuncia.id}`,
+      sourceId: denuncia.id,
+      tipo: 'DENUNCIA',
+      codigo,
+      titulo: denuncia.titulo || 'Denuncia formal',
+      descripcion: denuncia.detalle || 'Denuncia formal vinculada a tu cuenta.',
+      estado: denuncia.estado || 'FORMALIZADA',
+      etiqueta: 'Denuncia formal',
+      fechaInicio: denuncia.fecha,
+      fechaActualizacion: denuncia.fecha,
+      proximoPaso: denuncia.casoId ? 'Seguimiento en caso asociado' : 'Revisión institucional',
+      casoId: denuncia.casoId,
+      denunciaId: denuncia.id,
+      timeline: [
+        {
+          label: 'Denuncia formalizada',
+          detail: 'El registro fue incorporado como denuncia formal en el sistema institucional.',
+          date: this.formatCaseDate(denuncia.fecha),
+          complete: true,
+        },
+        {
+          label: denuncia.casoId ? 'Caso asociado' : 'Caso pendiente de vinculación',
+          detail: denuncia.casoId
+            ? `La denuncia está vinculada al ${this.linkedCaseCode(denuncia.casoId)}.`
+            : 'El equipo institucional completará la vinculación cuando corresponda.',
+          date: this.formatCaseDate(denuncia.fecha),
+          complete: Boolean(denuncia.casoId),
+        },
+      ],
+    };
+  }
+
   private validateStep(step: number): boolean {
     const fieldsByStep: Record<number, Array<keyof typeof this.newPredenunciaForm.controls>> = {
       1: ['tipoViolencia'],
       2: ['fechaIncidente', 'distrito', 'descripcionHecho'],
-      3: ['contactoValor'],
-      4: ['aceptoTerminos'],
+      3: [],
+      4: ['contactoValor'],
+      5: ['aceptoTerminos'],
     };
     const controls = fieldsByStep[step] ?? [];
     controls.forEach((field) => this.newPredenunciaForm.controls[field].markAsTouched());

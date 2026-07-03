@@ -154,6 +154,23 @@ describe('CasesService', () => {
     expect(service.casos()[0].estado).toBe('En atención');
   });
 
+  it('loads cases filtered by victim alias when alias filter is set', () => {
+    flushInitialLoad();
+    service.casesAliasFilter.set('VIC-ABCD1234');
+
+    service.loadCasos().subscribe();
+
+    const request = http.expectOne((req) =>
+      req.url === 'http://localhost:8080/api/casos' &&
+      req.params.get('aliasCodigo') === 'VIC-ABCD1234',
+    );
+    expect(request.request.method).toBe('GET');
+    request.flush([]);
+    http.expectOne('http://localhost:8080/api/asignaciones').flush([]);
+    http.expectOne('http://localhost:8080/api/denuncias').flush([]);
+    http.expectOne('http://localhost:8080/api/usuarios').flush([]);
+  });
+
   it('closes a case by updating its status instead of inactivating it', () => {
     flushInitialLoad();
 

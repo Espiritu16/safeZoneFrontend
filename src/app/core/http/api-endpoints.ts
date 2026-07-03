@@ -17,5 +17,6 @@ export const API_ENDPOINTS = {
   usuarios: '/usuarios',
   adjuntos:'/evidencias',
   victimas: '/victimas',
+  victimaHistorial: '/victimas/me/historial',
   panelPrincipal: '/panel-principal/me',
 } as const;

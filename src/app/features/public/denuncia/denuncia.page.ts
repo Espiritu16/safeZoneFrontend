@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
+import { finalize, map, switchMap } from 'rxjs';
 import { PublicFooterComponent } from '../components/public-footer/public-footer.component';
 import { PublicHeaderComponent } from '../components/public-header/public-header.component';
 import { LettersOnlyDirective } from '../../../shared/directives/letters-only.directive';
@@ -9,6 +9,7 @@ import { TrimOnBlurDirective } from '../../../shared/directives/trim-on-blur.dir
 import { normalizeText, sanitizeLettersOnly, sanitizeNumbersOnly } from '../../../shared/utils/input-sanitizers.util';
 import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../../../shared/utils/validation-rules';
 import { PredenunciasService } from '../../../core/services/predenuncias.service';
+import { EvidenceService } from '../../../core/services/evidence.service';
 
 @Component({
   selector: 'app-denuncia-page',
@@ -19,6 +20,7 @@ import { PredenunciasService } from '../../../core/services/predenuncias.service
 })
 export class DenunciaPage {
   private readonly predenunciasService = inject(PredenunciasService);
+  protected readonly evidenceService = inject(EvidenceService);
   private readonly cdr = inject(ChangeDetectorRef);
 
   currentStep = 1;
@@ -50,7 +52,7 @@ export class DenunciaPage {
   }
 
   submitForm() {
-    if (![1, 2, 3, 4].every(step => this.validateStep(step))) {
+    if (![1, 2, 3, 4, 5].every(step => this.validateStep(step))) {
       return;
     }
     this.isSubmitting = true;
@@ -66,6 +68,9 @@ export class DenunciaPage {
       direccionReferencia: this.formData.preferredTime,
       anonima: false,
     }).pipe(
+      switchMap((response) => this.evidenceService.uploadAll(undefined, undefined, response.id).pipe(
+        map(() => response),
+      )),
       finalize(() => {
         this.isSubmitting = false;
         this.cdr.detectChanges();
@@ -74,6 +79,7 @@ export class DenunciaPage {
       next: (response) => {
         this.trackingCode = `PD-${response.id.slice(0, 8).toUpperCase()}`;
         this.submitted = true;
+        this.evidenceService.clearPending();
         this.cdr.detectChanges();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       },
@@ -89,6 +95,7 @@ export class DenunciaPage {
     this.submitted = false;
     this.validationMessage = '';
     this.trackingCode = '';
+    this.evidenceService.clearPending();
     this.formData = {
       situationType: '',
       incidentDate: '',
@@ -166,7 +173,7 @@ export class DenunciaPage {
       }
     }
 
-    if (step === 3) {
+    if (step === 4) {
       const usesEmail = this.formData.channel === 'Correo Electrónico Seguro';
       if (
         this.formData.contactName.length < VALIDATION_LIMITS.NAME_MIN ||
@@ -181,7 +188,7 @@ export class DenunciaPage {
       }
     }
 
-    if (step === 4 && !this.formData.acceptedTerms) {
+    if (step === 5 && !this.formData.acceptedTerms) {
       this.validationMessage = 'Debe confirmar la veracidad de la información y el tratamiento de datos.';
     }
 

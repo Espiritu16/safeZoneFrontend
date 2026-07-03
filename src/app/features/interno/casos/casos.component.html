@@ -25,8 +25,18 @@
   <div class="sz-table-filters mt-6">
     <div class="sz-table-filters-left">
       <div class="form-group m-0 sz-field-min-sm">
-        <input class="form-input" type="text" aria-label="Buscar casos" placeholder="Buscar por código, víctima, encargado..." 
+        <input class="form-input" type="text" aria-label="Buscar casos" placeholder="Buscar por código, víctima o encargado..." 
                [ngModel]="casesService.casesSearchQuery()" (ngModelChange)="casesService.casesSearchQuery.set($event)">
+      </div>
+      <div class="form-group m-0 sz-field-min-sm">
+        <input
+          class="form-input"
+          type="text"
+          aria-label="Buscar por alias de víctima"
+          placeholder="Alias de víctima"
+          [ngModel]="casesService.casesAliasFilter()"
+          (ngModelChange)="casesService.casesAliasFilter.set($event); casesService.loadCasos().subscribe()"
+        >
       </div>
       <div class="form-group m-0">
         <select class="form-select" aria-label="Filtrar por riesgo" [ngModel]="casesService.casesRiskFilter()" (ngModelChange)="casesService.casesRiskFilter.set($event)">
@@ -65,7 +75,7 @@
       <div class="form-group m-0 sz-date-filter">
         <input class="form-input" type="date" aria-label="Fecha de ingreso hasta" name="fechaHasta" [value]="casesService.casesDateToFilter()" (input)="casesService.casesDateToFilter.set($any($event.target).value)">
       </div>
-      <button class="btn btn-outline btn-sm" type="button" [disabled]="!casesService.hasActiveCaseFilters()" (click)="casesService.clearCaseFilters()">
+      <button class="btn btn-outline btn-sm" type="button" [disabled]="!casesService.hasActiveCaseFilters()" (click)="casesService.clearCaseFilters(); casesService.loadCasos().subscribe()">
         Limpiar filtros
       </button>
     </div>

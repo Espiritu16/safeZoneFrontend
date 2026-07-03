@@ -3,7 +3,42 @@
   <p class="sz-page-description">Evidencias asociadas a denuncias, casos y seguimientos.</p>
 </section>
 
-<div class="empty-state">
-  <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
-  <p>No hay evidencias visibles para esta cuenta.</p>
-</div>
+@if (historialService.isLoading()) {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
+    <p>Cargando evidencias vinculadas...</p>
+  </div>
+} @else if (historialService.error()) {
+  <div class="victim-state error" role="alert">
+    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+    <p>{{ historialService.error() }}</p>
+    <button type="button" (click)="refresh()">Reintentar</button>
+  </div>
+} @else if (historialService.evidencias().length) {
+  <section class="evidence-list" aria-label="Evidencias vinculadas">
+    @for (evidencia of historialService.evidencias(); track evidencia.id) {
+      <article class="evidence-card">
+        <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+        <div>
+          <span class="evidence-type">{{ metadata(evidencia, 'tipoMime') }}</span>
+          <h3>{{ evidencia.titulo }}</h3>
+          <p>{{ evidencia.detalle || 'Archivo asociado a tu atención.' }}</p>
+          <small>
+            {{ formatDate(evidencia.fecha) }}
+            @if (evidencia.casoId) {
+              · Caso {{ evidencia.casoId.slice(0, 8).toUpperCase() }}
+            }
+            @if (metadata(evidencia, 'denunciaId') !== 'No vinculado') {
+              · Denuncia {{ metadata(evidencia, 'denunciaId').slice(0, 8).toUpperCase() }}
+            }
+          </small>
+        </div>
+      </article>
+    }
+  </section>
+} @else {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+    <p>No hay evidencias visibles para esta cuenta.</p>
+  </div>
+}

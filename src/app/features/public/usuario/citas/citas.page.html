@@ -3,7 +3,42 @@
   <p class="sz-page-description">Citas psicológicas o legales visibles para el usuario.</p>
 </section>
 
-<div class="empty-state">
-  <span class="material-symbols-outlined" aria-hidden="true">event_busy</span>
-  <p>No hay citas programadas para esta cuenta.</p>
-</div>
+@if (historialService.isLoading()) {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
+    <p>Cargando citas vinculadas...</p>
+  </div>
+} @else if (historialService.error()) {
+  <div class="victim-state error" role="alert">
+    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+    <p>{{ historialService.error() }}</p>
+    <button type="button" (click)="refresh()">Reintentar</button>
+  </div>
+} @else if (historialService.citas().length) {
+  <section class="appointments-list" aria-label="Citas vinculadas">
+    @for (cita of historialService.citas(); track cita.id) {
+      <article class="appointment-card">
+        <div class="appointment-date">
+          <span class="material-symbols-outlined" aria-hidden="true">event</span>
+          <strong>{{ formatDate(cita.fecha) }}</strong>
+        </div>
+        <div class="appointment-content">
+          <span class="status-pill">{{ statusLabel(cita.estado) }}</span>
+          <h3>{{ cita.titulo }}</h3>
+          <p>{{ cita.detalle || 'Cita registrada por el equipo de atención.' }}</p>
+          <small>
+            Tipo: {{ metadata(cita, 'tipoCita') }}
+            @if (cita.casoId) {
+              · Caso {{ cita.casoId.slice(0, 8).toUpperCase() }}
+            }
+          </small>
+        </div>
+      </article>
+    }
+  </section>
+} @else {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">event_busy</span>
+    <p>No hay citas programadas para esta cuenta.</p>
+  </div>
+}

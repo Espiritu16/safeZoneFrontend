@@ -111,7 +111,7 @@
                       />
                       <span>
                         <strong>Formalizar bajo alias anónimo</strong>
-                        <small>No solicita DNI; el sistema genera una víctima protegida.</small>
+                        <small>No solicita DNI ni nombre completo; la edad sigue siendo necesaria para la denuncia formal.</small>
                       </span>
                     </label>
                     @if (!formalizeForms[predenuncia.id].formalizarAnonima) {
@@ -139,19 +139,6 @@
                           [(ngModel)]="formalizeForms[predenuncia.id].nombre"
                         />
                       </div>
-                       <div class="form-group">
-                        <label class="form-label" [for]="'edad-' + predenuncia.id">Edad de la víctima</label>
-                        <input
-                          [id]="'edad-' + predenuncia.id"
-                          class="form-input"
-                          name="edad"
-                          inputmode="numeric"
-                          appNumbersOnly
-                          appTrimOnBlur
-                          maxlength="3"
-                          [(ngModel)]="formalizeForms[predenuncia.id].edad"
-                        />
-                      </div>
                     } @else {
                       <div class="predenuncia-alias-note">
                         Se creará una víctima protegida con alias institucional.
@@ -160,6 +147,19 @@
                         La denuncia se marcará como anónima.
                       </div>
                     }
+                    <div class="form-group">
+                      <label class="form-label" [for]="'edad-' + predenuncia.id">Edad de la víctima</label>
+                      <input
+                        [id]="'edad-' + predenuncia.id"
+                        class="form-input"
+                        name="edad"
+                        inputmode="numeric"
+                        appNumbersOnly
+                        appTrimOnBlur
+                        maxlength="3"
+                        [(ngModel)]="formalizeForms[predenuncia.id].edad"
+                      />
+                    </div>
                     <div class="form-group">
                       <label class="form-label" [for]="'telefono-' + predenuncia.id">Teléfono</label>
                       <input

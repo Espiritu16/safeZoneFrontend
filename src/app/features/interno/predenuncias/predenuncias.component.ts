@@ -41,7 +41,7 @@ export class PredenunciasComponent implements OnInit {
   protected readonly formalizeActionId = signal<string | null>(null);
   protected readonly errorMessage = signal('');
 
-  protected estadoFilter: EstadoPreDenuncia | '' = 'PENDIENTE';
+  protected estadoFilter: EstadoPreDenuncia | '' = '';
   protected formalizeForms: Record<string, FormalizeForm> = {};
   ngOnInit(): void {
     this.load();
@@ -85,7 +85,7 @@ export class PredenunciasComponent implements OnInit {
     this.formalizeForms[predenuncia.id] ??= {
       formalizarAnonima: predenuncia.anonima ?? false,
       dni: '',
-      edad:'',
+      edad: '',
       nombre: predenuncia.nombresContacto || '',
       telefono: predenuncia.telefonoContacto || '',
       distrito: predenuncia.distrito || 'Lima',
@@ -105,7 +105,7 @@ export class PredenunciasComponent implements OnInit {
         victimaId: victima?.id,
         nivelRiesgo: form.nivelRiesgo,
         formalizarAnonima: form.formalizarAnonima,
-        edad: Number(form.edad)
+        edad: Number(form.edad),
       })),
       finalize(() => this.formalizeActionId.set(null)),
     ).subscribe({
@@ -171,7 +171,7 @@ export class PredenunciasComponent implements OnInit {
       this.toastService.show('Ingrese el distrito de la víctima.', 'error');
       return false;
     }
-     const edadNum = Number(form.edad);
+    const edadNum = Number(form.edad);
     if (!form.edad || isNaN(edadNum) || edadNum <= 0 || edadNum > 120) {
       this.toastService.show('Ingrese una edad válida.', 'error');
       return false;
