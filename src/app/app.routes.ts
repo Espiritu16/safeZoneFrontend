@@ -121,10 +121,8 @@ export const routes: Routes = [
       },
       {
         path: 'denuncias',
-        canActivate: [roleGuard],
-        loadComponent: () =>
-          import('./features/interno/denuncias/denuncias.component').then((m) => m.DenunciasComponent),
-        data: { roles: ['Administrador', 'Recepcionista'] },
+        pathMatch: 'full',
+        redirectTo: 'predenuncias',
       },
       {
         path: 'casos',

@@ -32,7 +32,6 @@ export class SidebarComponent {
   protected readonly navItems: SidebarItem[] = [
     { label: 'Panel', path: '/dashboard', icon: 'bi-grid-1x2-fill', module: 'dashboard', allowedRoles: INTERNAL_ROLES },
     { label: 'Predenuncias', path: '/predenuncias', icon: 'bi-inbox', module: 'predenuncias', allowedRoles: ['Administrador', 'Recepcionista'], hasArrow: true },
-    { label: 'Denuncias', path: '/denuncias', icon: 'bi-file-earmark-text', module: 'denuncias', allowedRoles: ['Administrador', 'Recepcionista'], hasArrow: true },
     { label: 'Casos', path: '/casos', icon: 'bi-folder2-open', module: 'casos', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
     { label: 'Víctimas', path: '/victimas', icon: 'bi-shield-check', module: 'victimas', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
     { label: 'Citas', path: '/citas', icon: 'bi-calendar3', module: 'citas', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },

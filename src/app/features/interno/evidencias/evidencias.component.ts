@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -22,11 +22,34 @@ export class EvidenciasComponent implements OnDestroy {
   private readonly sanitizer = inject(DomSanitizer);
   protected readonly vincularCasoId=signal<string>('');
   protected readonly vincularDenunciaId=signal<string>('');
+  protected readonly selectedCaseId = signal<string>('');
+  protected readonly caseSearchQuery = signal<string>('');
   protected readonly previewFile = signal<Evidencia | null>(null);
   protected readonly previewUrl = signal<string | null>(null);
   protected readonly previewSafeUrl = signal<SafeResourceUrl | null>(null);
   protected readonly previewLoading = signal(false);
   protected readonly previewError = signal('');
+  protected readonly filteredCases = computed(() => {
+    const query = this.caseSearchQuery().trim().toLowerCase();
+    const cases = this.casesService.casos();
+    if (!query) return cases;
+    return cases.filter((caso) =>
+      caso.codigo.toLowerCase().includes(query) ||
+      caso.victim.toLowerCase().includes(query) ||
+      caso.distrito.toLowerCase().includes(query) ||
+      caso.estado.toLowerCase().includes(query),
+    );
+  });
+  protected readonly selectedCase = computed(() =>
+    this.casesService.casos().find((caso) => caso.id === this.selectedCaseId()) ?? null,
+  );
+  protected readonly selectedCaseEvidence = computed(() => {
+    const caso = this.selectedCase();
+    return caso ? this.evidenceService.evidenciasDelCaso(this.evidenceService.evidencias(), caso.id) : [];
+  });
+  protected readonly unlinkedEvidence = computed(() =>
+    this.evidenceService.evidenciasSinCaso(this.evidenceService.evidencias()),
+  );
 
   ngOnDestroy(): void {
     this.revokePreviewUrl();
@@ -34,9 +57,21 @@ export class EvidenciasComponent implements OnDestroy {
 
   ngOnInit(): void {
     this.evidenceService.loadEvidencias().subscribe();
-    this.casesService.loadCasos().subscribe();
+    this.casesService.loadCasos().subscribe((casos) => {
+      if (!this.selectedCaseId() && casos.length) {
+        this.selectedCaseId.set(casos[0].id);
+      }
+    });
     this.denunciasService.loadDenuncias().subscribe(); 
   }
+  protected selectCase(casoId: string): void {
+    this.selectedCaseId.set(casoId);
+  }
+
+  protected evidenceCount(casoId: string): number {
+    return this.evidenceService.evidenciasDelCaso(this.evidenceService.evidencias(), casoId).length;
+  }
+
   protected onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -45,8 +80,20 @@ export class EvidenciasComponent implements OnDestroy {
     this.evidenceService.uploadDirecto(file);
     input.value = '';
   }
+  protected onCaseFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    const caso = this.selectedCase();
+    if (!file || !caso) {
+      input.value = '';
+      return;
+    }
+
+    this.evidenceService.uploadDirecto(file, { casoId: caso.id });
+    input.value = '';
+  }
   protected abrirVincular(evidencia:Evidencia):void{
-    this.vincularCasoId.set('');
+    this.vincularCasoId.set(this.selectedCaseId());
     this.vincularDenunciaId.set('');
     this.evidenceService.evidenciaAVincular.set(evidencia);
   }
