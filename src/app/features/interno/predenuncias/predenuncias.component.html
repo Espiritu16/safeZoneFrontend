@@ -141,7 +141,11 @@
                       </div>
                     } @else {
                       <div class="predenuncia-alias-note">
-                        Se creará una víctima protegida con alias institucional.
+                        @if (predenuncia.victimaId) {
+                          Se mantendrá vinculada a la víctima original con alias institucional.
+                        } @else {
+                          Se creará una víctima protegida con alias institucional.
+                        }
                       </div>
                       <div class="predenuncia-alias-note">
                         La denuncia se marcará como anónima.
