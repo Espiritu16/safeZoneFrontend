@@ -15,6 +15,22 @@ export class SeguimientosService {
   }
 
   create(request: CrearSeguimientoCasoRequest): Observable<SeguimientoCasoResponse> {
-    return this.api.post<SeguimientoCasoResponse>(API_ENDPOINTS.seguimientos, request);
+    return this.api.post<SeguimientoCasoResponse>(API_ENDPOINTS.seguimientos, {
+      ...request,
+      fechaProximaAccion: this.toOffsetDateTime(request.fechaProximaAccion),
+    });
+  }
+
+  private toOffsetDateTime(value?: string): string | undefined {
+    if (!value) {
+      return undefined;
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return value;
+    }
+
+    return date.toISOString();
   }
 }
