@@ -1,1 +1,39 @@
-<!-- Placeholder para notificaciones. -->
+<div class="animate-slide-up">
+  <div class="sz-page-header">
+    <div class="sz-page-header-info">
+      <h1 class="sz-page-title">Notificaciones del Sistema</h1>
+      <p class="sz-page-description">Alertas de nuevos casos, citas y actualizaciones importantes.</p>
+    </div>
+  </div>
+
+  <div class="card p-4 mt-6">
+    <div class="sz-report-list">
+      @for (notificacion of notificationService.notificaciones(); track notificacion.id) {
+        <div class="list-item" [ngStyle]="{'background-color': notificacion.leida ? '#f9fafb' : '#fff', 'padding': '1rem', 'border-bottom': '1px solid #f3f4f6', 'align-items': 'center', 'display': 'flex'}">
+          <div style="flex: 1;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+              <span class="badge" [ngClass]="{
+                'badge-danger': notificacion.tipo === 'alerta',
+                'badge-info': notificacion.tipo === 'info',
+                'badge-success': notificacion.tipo === 'cita'
+              }">{{ notificacion.tipo | uppercase }}</span>
+              <span class="label" [ngStyle]="{'font-weight': notificacion.leida ? 'normal' : 'bold', 'font-size': '1.1rem'}">{{ notificacion.titulo }}</span>
+            </div>
+            <p class="text-sm" style="color: #4b5563; margin-bottom: 4px;">{{ notificacion.mensaje }}</p>
+            <small class="text-xs text-muted">{{ notificacion.fecha | date:'medium' }}</small>
+          </div>
+          
+          @if (!notificacion.leida) {
+            <button class="btn btn-outline btn-sm" (click)="marcarLeida(notificacion.id)">
+              <i class="bi bi-check"></i> Marcar Leída
+            </button>
+          } @else {
+            <span class="text-muted text-xs" style="margin-right: 1rem;"><i class="bi bi-check-all"></i> Leída</span>
+          }
+        </div>
+      } @empty {
+        <p class="text-center text-muted p-4">No tienes notificaciones en este momento.</p>
+      }
+    </div>
+  </div>
+</div>

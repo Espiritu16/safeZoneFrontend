@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AppointmentsService } from '../../../core/services/appointments.service';
+import { AppointmentsService, Cita } from '../../../core/services/appointments.service';
 import { CasesService } from '../../../core/services/cases.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { TrimOnBlurDirective } from '../../../shared/directives/trim-on-blur.directive';
@@ -18,7 +18,27 @@ export class CitasComponent {
   protected readonly casesService = inject(CasesService);
   protected readonly toastService = inject(ToastService);
 
+  // Estados del modal de registro de resultado
+  showResultadoModal = signal<boolean>(false);
+  citaSeleccionada = signal<Cita | null>(null);
+  nuevoEstado = signal<string>('Atendida');
+
   showToast(text: string, type: 'success' | 'error' | 'warning' | 'info') {
     this.toastService.show(text, type);
+  }
+
+  abrirModalResultado(cita: Cita) {
+    this.citaSeleccionada.set(cita);
+    this.nuevoEstado.set('Atendida');
+    this.showResultadoModal.set(true);
+  }
+
+  guardarResultado() {
+    const cita = this.citaSeleccionada();
+    if (cita) {
+      this.appointmentsService.actualizarEstadoCita(cita.id, this.nuevoEstado());
+      this.showResultadoModal.set(false);
+      this.citaSeleccionada.set(null);
+    }
   }
 }

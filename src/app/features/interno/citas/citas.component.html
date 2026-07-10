@@ -116,8 +116,9 @@
                 <p class="title">{{ cita.caso }}</p>
                 <p class="attendee">Profesional: {{ cita.doctor }}</p>
               </div>
-              <div>
+              <div style="display: flex; gap: 8px; align-items: center;">
                 <span class="badge" [ngClass]="cita.estado === 'Completada' ? 'badge-success' : 'badge-warning'">{{ cita.estado }}</span>
+                <button class="btn btn-outline btn-sm" (click)="abrirModalResultado(cita)">Resultado</button>
               </div>
             </div>
           }
@@ -179,6 +180,43 @@
       <div class="sz-modal-footer">
         <button class="btn btn-outline" (click)="appointmentsService.showAppointmentModal.set(false)">Cancelar</button>
         <button class="btn btn-primary" (click)="appointmentsService.saveCita()">Agendar Cita</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- MODAL: REGISTRAR RESULTADO (RF-19) -->
+@if (showResultadoModal()) {
+  <div class="sz-modal-overlay">
+    <div class="sz-modal">
+      <div class="sz-modal-header">
+        <h3 class="sz-modal-header-title">Registrar Resultado de Cita</h3>
+        <button class="sz-modal-header-close" (click)="showResultadoModal.set(false)">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="sz-modal-body">
+        
+        <p class="mb-4">
+          <strong>Cita:</strong> {{ citaSeleccionada()?.tipo }} con {{ citaSeleccionada()?.doctor }}<br>
+          <strong>Caso:</strong> {{ citaSeleccionada()?.caso }}<br>
+          <strong>Horario:</strong> {{ citaSeleccionada()?.fecha }} a las {{ citaSeleccionada()?.hora }}
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">Resultado / Nuevo Estado</label>
+          <select class="form-select" [(ngModel)]="nuevoEstado">
+            <option value="Atendida">Atendida</option>
+            <option value="Reprogramada">Reprogramada</option>
+            <option value="Cancelada">Cancelada</option>
+            <option value="No asistió">No asistió</option>
+          </select>
+        </div>
+
+      </div>
+      <div class="sz-modal-footer">
+        <button class="btn btn-outline" (click)="showResultadoModal.set(false)">Cancelar</button>
+        <button class="btn btn-primary" (click)="guardarResultado()">Guardar Resultado</button>
       </div>
     </div>
   </div>

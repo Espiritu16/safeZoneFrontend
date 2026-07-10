@@ -10,23 +10,52 @@
     </div>
   </div>
 
+  <!-- FILTROS (RF-07) -->
+  <div class="card p-4 mt-6">
+    <div class="sz-grid-4">
+      <div class="form-group mb-0">
+        <label class="form-label text-xs">Fecha Desde</label>
+        <input type="date" class="form-input" [(ngModel)]="fechaDesde">
+      </div>
+      <div class="form-group mb-0">
+        <label class="form-label text-xs">Fecha Hasta</label>
+        <input type="date" class="form-input" [(ngModel)]="fechaHasta">
+      </div>
+      <div class="form-group mb-0">
+        <label class="form-label text-xs">Tipo de Violencia</label>
+        <select class="form-select" [(ngModel)]="tipoViolencia">
+          <option value="Todos">Todos</option>
+          <option value="Física">Física</option>
+          <option value="Psicológica">Psicológica</option>
+          <option value="Económica">Económica</option>
+          <option value="Sexual">Sexual</option>
+        </select>
+      </div>
+      <div class="form-group mb-0">
+        <label class="form-label text-xs">Nivel de Riesgo</label>
+        <select class="form-select" [(ngModel)]="riesgo">
+          <option value="Todos">Todos</option>
+          <option value="Leve">Leve</option>
+          <option value="Moderado">Moderado</option>
+          <option value="Severo">Severo</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
   <!-- Report Metrics Grid -->
   <div class="sz-report-mini-grid mt-6">
     <div class="card p-4 text-center">
-      <p class="text-xs font-semibold text-muted">Tiempo Promedio Resolución</p>
-      <p class="text-xl font-bold mt-2 text-primary">18.4 Horas</p>
+      <p class="text-xs font-semibold text-muted">Total de Denuncias</p>
+      <p class="text-xl font-bold mt-2 text-primary">{{ totalDenuncias() }}</p>
     </div>
     <div class="card p-4 text-center">
-      <p class="text-xs font-semibold text-muted">Eficacia de Medidas</p>
-      <p class="text-xl font-bold mt-2 text-success">92.1%</p>
-    </div>
-    <div class="card p-4 text-center">
-      <p class="text-xs font-semibold text-muted">Casos Derivados a Fiscalía</p>
-      <p class="text-xl font-bold mt-2 text-primary">240 casos</p>
+      <p class="text-xs font-semibold text-muted">Consultas con Asesores Legales</p>
+      <p class="text-xl font-bold mt-2 text-info">{{ consultasLegales() }}</p>
     </div>
     <div class="card p-4 text-center">
       <p class="text-xs font-semibold text-muted">Consultas Psicológicas</p>
-      <p class="text-xl font-bold mt-2 text-primary">823 atenciones</p>
+      <p class="text-xl font-bold mt-2 text-success">{{ consultasPsicologicas() }}</p>
     </div>
   </div>
 
@@ -39,30 +68,14 @@
       </div>
       <div class="card-body">
         <div class="sz-chart-bar-container">
-          <div class="bar-item">
-            <div class="bar-pill is-severe sz-bar-height-80">
-              <span class="bar-tooltip">Riesgo Severo: 40 casos</span>
+          @for (bar of semanasData(); track bar.label) {
+            <div class="bar-item">
+              <div class="bar-pill" [class.is-severe]="bar.isSevere" [style.height.px]="bar.height">
+                <span class="bar-tooltip">{{ bar.tooltip }}</span>
+              </div>
+              <span class="bar-label">{{ bar.label }}</span>
             </div>
-            <span class="bar-label">Semana 1</span>
-          </div>
-          <div class="bar-item">
-            <div class="bar-pill sz-bar-height-60">
-              <span class="bar-tooltip">Riesgo Moderado: 30 casos</span>
-            </div>
-            <span class="bar-label">Semana 2</span>
-          </div>
-          <div class="bar-item">
-            <div class="bar-pill is-severe sz-bar-height-90">
-              <span class="bar-tooltip">Riesgo Severo: 45 casos</span>
-            </div>
-            <span class="bar-label">Semana 3</span>
-          </div>
-          <div class="bar-item">
-            <div class="bar-pill sz-bar-height-50">
-              <span class="bar-tooltip">Riesgo Leve: 25 casos</span>
-            </div>
-            <span class="bar-label">Semana 4</span>
-          </div>
+          }
         </div>
       </div>
     </div>

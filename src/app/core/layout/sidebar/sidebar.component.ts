@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuditService } from '../../../core/services/audit.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { LayoutService } from '../../../core/services/layout.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import type { FrontendRole } from '../../models/api.models';
 
 interface SidebarItem {
@@ -28,6 +29,7 @@ export class SidebarComponent {
   protected readonly authService = inject(AuthService);
   protected readonly layoutService = inject(LayoutService);
   protected readonly auditService = inject(AuditService);
+  public readonly notificationService = inject(NotificationService);
 
   protected readonly navItems: SidebarItem[] = [
     { label: 'Panel', path: '/dashboard', icon: 'bi-grid-1x2-fill', module: 'dashboard', allowedRoles: INTERNAL_ROLES },
@@ -37,6 +39,7 @@ export class SidebarComponent {
     { label: 'Citas', path: '/citas', icon: 'bi-calendar3', module: 'citas', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
     { label: 'Evidencias', path: '/evidencias', icon: 'bi-file-earmark-arrow-up', module: 'evidencias', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
     { label: 'Reportes', path: '/reportes', icon: 'bi-bar-chart', module: 'reportes', allowedRoles: ['Administrador', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
+    { label: 'Notificaciones', path: '/admin/notificaciones', icon: 'bi-bell', module: 'notificaciones', allowedRoles: INTERNAL_ROLES },
   ];
 
   protected readonly configItems: SidebarItem[] = [

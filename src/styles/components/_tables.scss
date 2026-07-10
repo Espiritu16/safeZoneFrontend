@@ -31,6 +31,7 @@
       font-size: 0.6875rem;
       letter-spacing: 0.05em;
       user-select: none;
+      background-color: colors.$color-bg-main;
     }
   }
 
@@ -132,8 +133,12 @@
 
   .sz-table {
     thead {
-      background: rgba(224, 242, 254, 0.58);
+      background: #e0f2fe;
       border-bottom-color: rgba(221, 231, 242, 0.82);
+
+      th {
+        background-color: #e0f2fe;
+      }
     }
 
     tbody {
