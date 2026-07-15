@@ -110,7 +110,7 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/interno/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Soporte Técnico'] },
+        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'predenuncias',
@@ -136,7 +136,7 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/interno/victimas/victimas.component').then((m) => m.VictimasComponent),
-        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
+        data: { roles: ['Administrador', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'citas',
@@ -157,35 +157,35 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/interno/reportes/reportes.component').then((m) => m.ReportesComponent),
-        data: { roles: ['Administrador', 'Psicólogo', 'Defensor Legal'] },
+        data: { roles: ['Administrador'] },
       },
       {
         path: 'notificaciones',
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/admin/notificaciones/notificaciones.page').then((m) => m.NotificacionesPage),
-        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Soporte Técnico'] },
+        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'] },
       },
       {
         path: 'auditoria',
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/interno/auditoria/auditoria.component').then((m) => m.AuditoriaComponent),
-        data: { roles: ['Administrador', 'Soporte Técnico'] },
+        data: { roles: ['Administrador'] },
       },
       {
         path: 'usuarios',
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/interno/usuarios/usuarios.component').then((m) => m.UsuariosComponent),
-        data: { roles: ['Administrador', 'Soporte Técnico'] },
+        data: { roles: ['Administrador'] },
       },
       {
         path: 'configuracion',
         canActivate: [roleGuard],
         loadComponent: () =>
           import('./features/interno/configuracion/configuracion.component').then((m) => m.ConfiguracionComponent),
-        data: { roles: ['Administrador', 'Soporte Técnico'] },
+        data: { roles: ['Administrador'] },
       },
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
     ],

@@ -15,7 +15,7 @@ interface SidebarItem {
   readonly hasArrow?: boolean;
 }
 
-const INTERNAL_ROLES: FrontendRole[] = ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Soporte Técnico'];
+const INTERNAL_ROLES: FrontendRole[] = ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'];
 
 @Component({
   selector: 'app-sidebar',
@@ -35,14 +35,14 @@ export class SidebarComponent {
     { label: 'Casos', path: '/casos', icon: 'bi-folder2-open', module: 'casos', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
     { label: 'Víctimas', path: '/victimas', icon: 'bi-shield-check', module: 'victimas', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
     { label: 'Citas', path: '/citas', icon: 'bi-calendar3', module: 'citas', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
-    { label: 'Evidencias', path: '/evidencias', icon: 'bi-file-earmark-arrow-up', module: 'evidencias', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
-    { label: 'Reportes', path: '/reportes', icon: 'bi-bar-chart', module: 'reportes', allowedRoles: ['Administrador', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
+    { label: 'Evidencias', path: '/evidencias', icon: 'bi-file-earmark-arrow-up', module: 'evidencias', allowedRoles: ['Administrador', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
+    { label: 'Reportes', path: '/reportes', icon: 'bi-bar-chart', module: 'reportes', allowedRoles: ['Administrador'], hasArrow: true },
     { label: 'Notificaciones', path: '/notificaciones', icon: 'bi-bell', module: 'notificaciones', allowedRoles: INTERNAL_ROLES, hasArrow: true },
   ];
 
   protected readonly configItems: SidebarItem[] = [
-    { label: 'Auditoría', path: '/auditoria', icon: 'bi-clock-history', module: 'auditoria', allowedRoles: ['Administrador', 'Soporte Técnico'], hasArrow: true },
-    { label: 'Usuarios', path: '/usuarios', icon: 'bi-people', module: 'usuarios', allowedRoles: ['Administrador', 'Soporte Técnico'], hasArrow: true },
+    { label: 'Auditoría', path: '/auditoria', icon: 'bi-clock-history', module: 'auditoria', allowedRoles: ['Administrador'], hasArrow: true },
+    { label: 'Usuarios', path: '/usuarios', icon: 'bi-people', module: 'usuarios', allowedRoles: ['Administrador'], hasArrow: true },
   ];
 
   protected hasAccess(item: SidebarItem): boolean {
