@@ -327,8 +327,8 @@ export interface ReporteMensualRequest {
 }
 
 export interface ReporteMensualResponse {
-  fechaDesde: string;
-  fechaHasta: string;
+  fechaDesde: string | null;
+  fechaHasta: string | null;
   totalDenuncias: number;
   totalCasos: number;
   totalCitas: number;
