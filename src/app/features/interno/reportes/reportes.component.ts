@@ -51,7 +51,7 @@ export class ReportesComponent {
   ];
 
   constructor() {
-    this.generarReporte();
+    this.exportarExcel()
   }
 
   ngAfterViewInit(): void {
@@ -62,22 +62,6 @@ export class ReportesComponent {
   ngOnDestroy(): void {
     this.destroyCharts();
   }
-
-  protected generarReporte(): void {
-    this.isLoading.set(true);
-    this.reportsService.generarMensual(this.buildRequest()).subscribe({
-      next: (response) => {
-        this.reporte.set(response);
-        this.isLoading.set(false);
-        setTimeout(() => this.renderCharts());
-      },
-      error: () => {
-        this.toastService.show('No se pudo generar el reporte.', 'error');
-        this.isLoading.set(false);
-      },
-    });
-  }
-
   protected exportarExcel(): void {
     this.isExporting.set(true);
     this.reportsService.generarMensualExcel(this.buildRequest()).subscribe({
@@ -96,19 +80,6 @@ export class ReportesComponent {
       },
     });
   }
-
-  @HostListener('window:focus')
-  protected refreshOnFocus(): void {
-    this.generarReporte();
-  }
-
-  @HostListener('document:visibilitychange')
-  protected refreshOnVisibility(): void {
-    if (document.visibilityState === 'visible') {
-      this.generarReporte();
-    }
-  }
-
   protected entries(record: Record<string, number> | undefined | null): Array<{ key: string; value: number }> {
     return Object.entries(record ?? {}).map(([key, value]) => ({ key, value }));
   }
