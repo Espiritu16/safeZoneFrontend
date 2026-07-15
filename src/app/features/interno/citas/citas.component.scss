@@ -1,1 +1,196 @@
-// Component-specific styles if any
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.sz-citas-page {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.sz-date-filter {
+  width: 150px;
+}
+
+.sz-table-container {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.sz-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.sz-citas-table {
+  min-width: 1180px;
+}
+
+.sz-citas-table th,
+.sz-citas-table td {
+  vertical-align: top;
+}
+
+.sz-citas-table .col-actions {
+  width: 330px;
+}
+
+.sz-cita-observation {
+  max-width: 240px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.sz-cita-actions {
+  display: grid;
+  grid-template-columns: auto minmax(150px, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.sz-cita-actions .btn,
+.sz-cita-actions .form-select {
+  min-height: 34px;
+}
+
+.sz-cita-actions .form-select {
+  width: 100%;
+}
+
+.sz-cita-cancel-btn {
+  color: #b91c1c;
+  border-color: rgba(185, 28, 28, 0.38);
+}
+
+.sz-cancel-summary {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.875rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  border-radius: 8px;
+  background: rgba(248, 250, 252, 0.9);
+}
+
+.sz-cancel-summary strong {
+  color: var(--color-on-surface, #0f172a);
+}
+
+.sz-cancel-summary span {
+  color: var(--color-on-surface-variant, #64748b);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 1024px) {
+  :host {
+    display: block;
+  }
+
+  .sz-citas-page {
+    display: block;
+    overflow: visible;
+  }
+
+  .sz-table-container {
+    max-width: 100%;
+    min-height: auto;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 640px) {
+  .sz-table-filters {
+    align-items: stretch;
+    gap: 0.875rem;
+  }
+
+  .sz-table-filters-left,
+  .sz-table-filters-right,
+  .sz-table-filters-left .form-group,
+  .sz-table-filters-left .form-select,
+  .sz-table-filters-left .btn,
+  .sz-date-filter {
+    width: 100%;
+  }
+
+  .sz-table-container {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+
+  .sz-citas-table,
+  .sz-citas-table tbody,
+  .sz-citas-table tr,
+  .sz-citas-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .sz-citas-table {
+    min-width: 0;
+  }
+
+  .sz-citas-table thead {
+    display: none;
+  }
+
+  .sz-citas-table tbody {
+    display: grid;
+    gap: 0.875rem;
+  }
+
+  .sz-citas-table tr {
+    padding: 1rem;
+    border: 1px solid rgba(203, 213, 225, 0.9);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.07);
+  }
+
+  .sz-citas-table td {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .sz-citas-table td + td {
+    margin-top: 0.875rem;
+  }
+
+  .sz-citas-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--color-on-surface-variant, #64748b);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .sz-citas-table td.col-actions {
+    width: 100%;
+  }
+
+  .sz-cita-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .sz-cita-actions .btn,
+  .sz-cita-actions .form-select {
+    justify-content: center;
+    min-height: 44px;
+    width: 100%;
+  }
+}

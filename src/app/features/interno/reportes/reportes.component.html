@@ -1,116 +1,100 @@
 <div class="animate-slide-up">
-  
   <div class="sz-page-header">
     <div class="sz-page-header-info">
-      <h1 class="sz-page-title">Estadísticas y Análisis de Incidencias</h1>
-      <p class="sz-page-description">Gráficos interactivos de tendencias de violencia y respuesta institucional.</p>
+      <h1 class="sz-page-title">Reportes de Incidencias</h1>
+      <p class="sz-page-description">Reportes filtrados por fecha, tipo de violencia y nivel de riesgo.</p>
     </div>
     <div class="sz-page-header-actions">
-      <button class="btn btn-outline btn-sm" (click)="toastService.show('Exportación de reporte excel iniciada.', 'success')">Exportar XLS</button>
+      <button class="btn btn-primary btn-sm" type="button" [disabled]="isLoading()" (click)="generarReporte()">Generar reporte</button>
     </div>
   </div>
 
-  <!-- Report Metrics Grid -->
-  <div class="sz-report-mini-grid mt-6">
-    <div class="card p-4 text-center">
-      <p class="text-xs font-semibold text-muted">Tiempo Promedio Resolución</p>
-      <p class="text-xl font-bold mt-2 text-primary">18.4 Horas</p>
-    </div>
-    <div class="card p-4 text-center">
-      <p class="text-xs font-semibold text-muted">Eficacia de Medidas</p>
-      <p class="text-xl font-bold mt-2 text-success">92.1%</p>
-    </div>
-    <div class="card p-4 text-center">
-      <p class="text-xs font-semibold text-muted">Casos Derivados a Fiscalía</p>
-      <p class="text-xl font-bold mt-2 text-primary">240 casos</p>
-    </div>
-    <div class="card p-4 text-center">
-      <p class="text-xs font-semibold text-muted">Consultas Psicológicas</p>
-      <p class="text-xl font-bold mt-2 text-primary">823 atenciones</p>
-    </div>
-  </div>
-
-  <div class="sz-grid-2 mt-6">
-    
-    <!-- Gráfico de Riesgo (CSS Columns) -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-header-title">Incidencias por Nivel de Riesgo (Semanas Mayo)</h3>
+  <div class="sz-table-filters mt-6">
+    <div class="sz-table-filters-left">
+      <div class="form-group m-0">
+        <label class="form-label" for="reporte-desde">Desde</label>
+        <input id="reporte-desde" class="form-input" type="date" [ngModel]="fechaDesde()" (ngModelChange)="fechaDesde.set($event)">
       </div>
-      <div class="card-body">
-        <div class="sz-chart-bar-container">
-          <div class="bar-item">
-            <div class="bar-pill is-severe sz-bar-height-80">
-              <span class="bar-tooltip">Riesgo Severo: 40 casos</span>
-            </div>
-            <span class="bar-label">Semana 1</span>
+      <div class="form-group m-0">
+        <label class="form-label" for="reporte-hasta">Hasta</label>
+        <input id="reporte-hasta" class="form-input" type="date" [ngModel]="fechaHasta()" (ngModelChange)="fechaHasta.set($event)">
+      </div>
+      <div class="form-group m-0">
+        <label class="form-label" for="reporte-tipo">Tipo de violencia</label>
+        <input id="reporte-tipo" class="form-input" type="text" placeholder="Ej. FISICA" [ngModel]="tipoViolencia()" (ngModelChange)="tipoViolencia.set($event)">
+      </div>
+      <div class="form-group m-0">
+        <label class="form-label" for="reporte-riesgo">Nivel de riesgo</label>
+        <select id="reporte-riesgo" class="form-select" [ngModel]="nivelRiesgo()" (ngModelChange)="nivelRiesgo.set($event)">
+          @for (riesgo of riesgos; track riesgo.value) {
+            <option [value]="riesgo.value">{{ riesgo.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+
+  @if (reporte(); as r) {
+    <div class="sz-grid-2 mt-6">
+      <div class="card sz-report-chart-card">
+        <div class="card-header">
+          <h3 class="card-header-title">Distribución por nivel de riesgo</h3>
+        </div>
+        <div class="card-body">
+          <div class="sz-chart-canvas">
+            @if (entries(r.porNivelRiesgo).length) {
+              <canvas #riesgoChart aria-label="Distribución por nivel de riesgo"></canvas>
+            } @else {
+              <p class="text-sm text-muted">Sin datos para el filtro.</p>
+            }
           </div>
-          <div class="bar-item">
-            <div class="bar-pill sz-bar-height-60">
-              <span class="bar-tooltip">Riesgo Moderado: 30 casos</span>
-            </div>
-            <span class="bar-label">Semana 2</span>
+        </div>
+      </div>
+
+      <div class="card sz-report-chart-card">
+        <div class="card-header">
+          <h3 class="card-header-title">Por tipo de violencia</h3>
+        </div>
+        <div class="card-body">
+          <div class="sz-chart-canvas">
+            @if (entries(r.porTipoViolencia).length) {
+              <canvas #tipoChart aria-label="Casos por tipo de violencia"></canvas>
+            } @else {
+              <p class="text-sm text-muted">Sin datos para el filtro.</p>
+            }
           </div>
-          <div class="bar-item">
-            <div class="bar-pill is-severe sz-bar-height-90">
-              <span class="bar-tooltip">Riesgo Severo: 45 casos</span>
-            </div>
-            <span class="bar-label">Semana 3</span>
+        </div>
+      </div>
+
+      <div class="card sz-report-chart-card">
+        <div class="card-header">
+          <h3 class="card-header-title">Por distrito</h3>
+        </div>
+        <div class="card-body">
+          <div class="sz-chart-canvas">
+            @if (entries(r.porDistrito).length) {
+              <canvas #distritoChart aria-label="Casos por distrito"></canvas>
+            } @else {
+              <p class="text-sm text-muted">Sin datos para el filtro.</p>
+            }
           </div>
-          <div class="bar-item">
-            <div class="bar-pill sz-bar-height-50">
-              <span class="bar-tooltip">Riesgo Leve: 25 casos</span>
-            </div>
-            <span class="bar-label">Semana 4</span>
+        </div>
+      </div>
+
+      <div class="card sz-report-chart-card">
+        <div class="card-header">
+          <h3 class="card-header-title">Atención de citas</h3>
+        </div>
+        <div class="card-body">
+          <div class="sz-chart-canvas">
+            @if (r.totalCitas > 0) {
+              <canvas #citasChart aria-label="Estado de citas"></canvas>
+            } @else {
+              <p class="text-sm text-muted">Sin citas en el periodo.</p>
+            }
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Gráfico de Distritos (Progress bars list) -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-header-title">Distritos con Mayor Reporte de Incidencias</h3>
-      </div>
-      <div class="card-body">
-        <div class="sz-report-list">
-          
-          <div class="list-item">
-            <span class="label">San Juan de Lurigancho</span>
-            <div class="value">
-              <span class="percent-bar"><span class="percent-fill sz-progress-fill-85 sz-fill-danger"></span></span>
-              <span>340 Casos</span>
-            </div>
-          </div>
-
-          <div class="list-item">
-            <span class="label">San Martín de Porres</span>
-            <div class="value">
-              <span class="percent-bar"><span class="percent-fill sz-progress-fill-65 sz-fill-warning"></span></span>
-              <span>210 Casos</span>
-            </div>
-          </div>
-
-          <div class="list-item">
-            <span class="label">Villa El Salvador</span>
-            <div class="value">
-              <span class="percent-bar"><span class="percent-fill sz-progress-fill-50"></span></span>
-              <span>170 Casos</span>
-            </div>
-          </div>
-
-          <div class="list-item">
-            <span class="label">Comas</span>
-            <div class="value">
-              <span class="percent-bar"><span class="percent-fill sz-progress-fill-40"></span></span>
-              <span>120 Casos</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-  </div>
-
+  }
 </div>

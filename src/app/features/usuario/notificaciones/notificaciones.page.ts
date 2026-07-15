@@ -1,1 +1,1 @@
-// Placeholder para notificaciones del usuario/victima.
+export { NotificacionesPage as UsuarioNotificacionesPage } from '../../admin/notificaciones/notificaciones.page';

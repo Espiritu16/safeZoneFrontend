@@ -1,4 +1,4 @@
-<div class="animate-slide-up">
+<div class="animate-slide-up sz-predenuncias-page">
   <div class="sz-page-header">
     <div class="sz-page-header-info">
       <h1 class="sz-page-title">Bandeja de Predenuncias</h1>
@@ -11,6 +11,16 @@
 
   <div class="sz-table-filters mt-6">
     <div class="sz-table-filters-left">
+      <div class="form-group m-0 sz-field-min-sm">
+        <input
+          class="form-input"
+          type="text"
+          aria-label="Buscar predenuncias"
+          placeholder="Buscar por contacto, teléfono, correo o descripción..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        >
+      </div>
       <div class="form-group m-0">
         <label class="sr-only" for="estadoPredenuncia">Estado</label>
         <select id="estadoPredenuncia" class="form-select" [(ngModel)]="estadoFilter" (ngModelChange)="load()">
@@ -21,9 +31,34 @@
           <option value="DESCARTADA">Descartadas</option>
         </select>
       </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por tipo de violencia" [ngModel]="typeFilter()" (ngModelChange)="typeFilter.set($event)">
+          <option value="">Todos los tipos</option>
+          @for (tipo of typeOptions(); track tipo) {
+            <option [value]="tipo">{{ tipo }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por distrito" [ngModel]="districtFilter()" (ngModelChange)="districtFilter.set($event)">
+          <option value="">Todos los distritos</option>
+          @for (distrito of districtOptions(); track distrito) {
+            <option [value]="distrito">{{ distrito }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-group m-0 sz-date-filter">
+        <input class="form-input" type="date" aria-label="Fecha desde" [ngModel]="dateFromFilter()" (ngModelChange)="dateFromFilter.set($event)">
+      </div>
+      <div class="form-group m-0 sz-date-filter">
+        <input class="form-input" type="date" aria-label="Fecha hasta" [ngModel]="dateToFilter()" (ngModelChange)="dateToFilter.set($event)">
+      </div>
+      <button class="btn btn-outline btn-sm" type="button" [disabled]="!hasActiveFilters()" (click)="clearFilters()">
+        Limpiar filtros
+      </button>
     </div>
     <div class="sz-table-filters-right">
-      <span class="text-xs text-muted font-medium">Resultados: {{ predenuncias().length }}</span>
+      <span class="text-xs text-muted font-medium">Resultados encontrados: {{ filteredPredenuncias().length }}</span>
     </div>
   </div>
 
@@ -35,7 +70,7 @@
     <div class="card mt-4 border-danger">
       <div class="card-body text-sm text-danger">{{ errorMessage() }}</div>
     </div>
-  } @else if (!predenuncias().length) {
+  } @else if (!filteredPredenuncias().length) {
     <div class="card mt-4">
       <div class="card-body text-sm text-muted">No hay predenuncias para el filtro seleccionado.</div>
     </div>
@@ -53,7 +88,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (predenuncia of predenuncias(); track predenuncia.id) {
+          @for (predenuncia of filteredPredenuncias(); track predenuncia.id) {
             <tr>
               <td data-label="Contacto">
                 <div class="font-semibold">{{ predenuncia.nombresContacto || 'Sin nombre' }}</div>
@@ -216,6 +251,13 @@
           }
         </tbody>
       </table>
+      <div class="sz-table-pagination">
+        <div class="sz-table-pagination-info">Mostrando {{ filteredPredenuncias().length }} de {{ predenuncias().length }} predenuncias registradas</div>
+        <div class="sz-table-pagination-actions">
+          <button class="btn btn-outline btn-sm" disabled>Anterior</button>
+          <button class="btn btn-outline btn-sm" disabled>Siguiente</button>
+        </div>
+      </div>
     </div>
   }
 </div>

@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { finalize, Observable, of, switchMap } from 'rxjs';
 import type { CrearUsuarioRequest, EstadoPreDenuncia, NivelRiesgo, PreDenunciaResponse, UsuarioResponse } from '../../../core/models/api.models';
@@ -40,9 +40,64 @@ export class PredenunciasComponent implements OnInit {
   protected readonly formalizeId = signal<string | null>(null);
   protected readonly formalizeActionId = signal<string | null>(null);
   protected readonly errorMessage = signal('');
+  protected readonly searchQuery = signal('');
+  protected readonly typeFilter = signal('');
+  protected readonly districtFilter = signal('');
+  protected readonly dateFromFilter = signal('');
+  protected readonly dateToFilter = signal('');
 
   protected estadoFilter: EstadoPreDenuncia | '' = '';
   protected formalizeForms: Record<string, FormalizeForm> = {};
+
+  protected readonly filteredPredenuncias = computed(() => {
+    const search = this.normalize(this.searchQuery());
+    const type = this.normalize(this.typeFilter());
+    const district = this.normalize(this.districtFilter());
+    const dateFrom = this.dateFromFilter();
+    const dateTo = this.dateToFilter();
+
+    return this.predenuncias().filter((predenuncia) => {
+      const searchable = this.normalize([
+        predenuncia.id,
+        predenuncia.nombresContacto,
+        predenuncia.apellidosContacto,
+        predenuncia.telefonoContacto,
+        predenuncia.correoContacto,
+        predenuncia.tipoViolencia,
+        predenuncia.distrito,
+        predenuncia.descripcionHecho,
+      ].filter(Boolean).join(' '));
+      const fecha = (predenuncia.fechaCreacion || predenuncia.fechaIncidente || '').split('T')[0];
+
+      const matchSearch = !search || searchable.includes(search);
+      const matchType = !type || this.normalize(predenuncia.tipoViolencia || '') === type;
+      const matchDistrict = !district || this.normalize(predenuncia.distrito || '') === district;
+      const matchDateFrom = !dateFrom || fecha >= dateFrom;
+      const matchDateTo = !dateTo || fecha <= dateTo;
+
+      return matchSearch && matchType && matchDistrict && matchDateFrom && matchDateTo;
+    });
+  });
+
+  protected readonly hasActiveFilters = computed(() =>
+    this.searchQuery().trim() !== '' ||
+    this.estadoFilter !== '' ||
+    this.typeFilter() !== '' ||
+    this.districtFilter() !== '' ||
+    this.dateFromFilter() !== '' ||
+    this.dateToFilter() !== ''
+  );
+
+  protected readonly typeOptions = computed(() =>
+    [...new Set(this.predenuncias().map((item) => item.tipoViolencia).filter(Boolean) as string[])]
+      .sort((a, b) => a.localeCompare(b)),
+  );
+
+  protected readonly districtOptions = computed(() =>
+    [...new Set(this.predenuncias().map((item) => item.distrito).filter(Boolean) as string[])]
+      .sort((a, b) => a.localeCompare(b)),
+  );
+
   ngOnInit(): void {
     this.load();
   }
@@ -129,6 +184,16 @@ export class PredenunciasComponent implements OnInit {
     }[estado];
   }
 
+  protected clearFilters(): void {
+    this.searchQuery.set('');
+    this.estadoFilter = '';
+    this.typeFilter.set('');
+    this.districtFilter.set('');
+    this.dateFromFilter.set('');
+    this.dateToFilter.set('');
+    this.load();
+  }
+
   private syncFormalizePanel(items: PreDenunciaResponse[]): void {
     const openId = this.formalizeId();
     if (!openId) {
@@ -213,5 +278,13 @@ export class PredenunciasComponent implements OnInit {
       nombres: parts.slice(0, midpoint).join(' '),
       apellidos: parts.slice(midpoint).join(' ') || 'No especificado',
     };
+  }
+
+  private normalize(value: string): string {
+    return value
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/\p{M}/gu, '');
   }
 }

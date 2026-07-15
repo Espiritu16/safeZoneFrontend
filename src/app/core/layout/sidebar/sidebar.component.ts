@@ -37,12 +37,12 @@ export class SidebarComponent {
     { label: 'Citas', path: '/citas', icon: 'bi-calendar3', module: 'citas', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
     { label: 'Evidencias', path: '/evidencias', icon: 'bi-file-earmark-arrow-up', module: 'evidencias', allowedRoles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
     { label: 'Reportes', path: '/reportes', icon: 'bi-bar-chart', module: 'reportes', allowedRoles: ['Administrador', 'Psicólogo', 'Defensor Legal'], hasArrow: true },
+    { label: 'Notificaciones', path: '/notificaciones', icon: 'bi-bell', module: 'notificaciones', allowedRoles: INTERNAL_ROLES, hasArrow: true },
   ];
 
   protected readonly configItems: SidebarItem[] = [
     { label: 'Auditoría', path: '/auditoria', icon: 'bi-clock-history', module: 'auditoria', allowedRoles: ['Administrador', 'Soporte Técnico'], hasArrow: true },
     { label: 'Usuarios', path: '/usuarios', icon: 'bi-people', module: 'usuarios', allowedRoles: ['Administrador', 'Soporte Técnico'], hasArrow: true },
-    { label: 'Configuración', path: '/configuracion', icon: 'bi-gear', module: 'configuracion', allowedRoles: ['Administrador', 'Soporte Técnico'] },
   ];
 
   protected hasAccess(item: SidebarItem): boolean {

@@ -33,6 +33,13 @@ export class UsuarioCitasPage implements OnInit {
     }).format(new Date(date));
   }
 
+  protected formatDateTime(value: string | number | boolean | null | undefined): string {
+    if (!value || value === 'N/A') {
+      return 'Sin fecha';
+    }
+    return this.formatDate(String(value));
+  }
+
   protected statusLabel(status: string | null | undefined): string {
     return (status ?? 'Sin estado').replaceAll('_', ' ');
   }

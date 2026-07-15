@@ -32,6 +32,12 @@
           <span>Distrito: <strong>{{ metadata(caso, 'distrito') }}</strong></span>
           <span>Actualizado: <strong>{{ formatDate(caso.fecha) }}</strong></span>
         </div>
+        <div class="case-actions">
+          <button type="button" (click)="openCase(caso)">
+            <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+            Ver caso
+          </button>
+        </div>
       </article>
     }
   </section>
@@ -39,5 +45,108 @@
   <div class="empty-state">
     <span class="material-symbols-outlined" aria-hidden="true">folder_open</span>
     <p>No hay casos vinculados a esta cuenta.</p>
+  </div>
+}
+
+@if (selectedCase(); as caso) {
+  <div class="modal-overlay" role="presentation" (click)="closeCase()">
+    <section class="case-modal" role="dialog" aria-modal="true" aria-labelledby="case-modal-title" (click)="$event.stopPropagation()">
+      <header class="case-modal-header">
+        <div>
+          <p>Detalle del caso</p>
+          <h3 id="case-modal-title">Caso {{ caso.id.slice(0, 8).toUpperCase() }}</h3>
+        </div>
+        <button type="button" class="icon-button" aria-label="Cerrar detalle de caso" (click)="closeCase()">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+      </header>
+
+      <div class="case-modal-body">
+        <section class="case-summary">
+          <span class="status-pill">{{ statusLabel(caso.estado) }}</span>
+          <h4>{{ caso.titulo }}</h4>
+          <p>{{ caso.detalle || 'Caso registrado por el equipo de atención.' }}</p>
+          <dl>
+            <div>
+              <dt>Prioridad</dt>
+              <dd>{{ metadata(caso, 'prioridad') }}</dd>
+            </div>
+            <div>
+              <dt>Distrito</dt>
+              <dd>{{ metadata(caso, 'distrito') }}</dd>
+            </div>
+            <div>
+              <dt>Ultima actualizacion</dt>
+              <dd>{{ formatDate(caso.fecha) }}</dd>
+            </div>
+            <div>
+              <dt>Fecha de cierre</dt>
+              <dd>{{ metadata(caso, 'fechaCierre') }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="case-evidence-section">
+          <div class="modal-section-heading">
+            <h4>Evidencias vinculadas</h4>
+            <span>{{ selectedCaseEvidence().length }}</span>
+          </div>
+
+          @if (selectedCaseEvidence().length) {
+            <div class="modal-evidence-list">
+              @for (evidencia of selectedCaseEvidence(); track evidencia.id) {
+                <article class="modal-evidence-card">
+                  <div>
+                    <strong>{{ evidenceName(evidencia) }}</strong>
+                    <small>{{ evidenceType(evidencia) }} · {{ formatDate(evidencia.fecha) }}</small>
+                  </div>
+                  <div class="modal-evidence-actions">
+                    <button type="button" (click)="openPreview(evidencia)">
+                      <span class="material-symbols-outlined" aria-hidden="true">preview</span>
+                      Previsualizar
+                    </button>
+                    <button type="button" class="ghost" (click)="downloadEvidence(evidencia)" aria-label="Descargar evidencia">
+                      <span class="material-symbols-outlined" aria-hidden="true">download</span>
+                    </button>
+                  </div>
+                </article>
+              }
+            </div>
+          } @else {
+            <div class="empty-state compact">
+              <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+              <p>No hay evidencias vinculadas a este caso.</p>
+            </div>
+          }
+        </section>
+
+        @if (previewEvidence(); as evidencia) {
+          <section class="preview-panel" aria-label="Vista previa de evidencia">
+            <div class="modal-section-heading">
+              <h4>{{ evidenceName(evidencia) }}</h4>
+              <button type="button" class="icon-button" aria-label="Cerrar vista previa" (click)="closePreview()">
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+              </button>
+            </div>
+
+            @if (previewLoading()) {
+              <div class="preview-state">Cargando vista previa...</div>
+            } @else if (previewError()) {
+              <div class="preview-state error">{{ previewError() }}</div>
+            } @else if (!canPreview(evidencia)) {
+              <div class="preview-state">Vista previa no disponible para este formato.</div>
+            } @else if (evidenceType(evidencia) === 'Imagen' && previewUrl()) {
+              <img class="preview-image" [src]="previewUrl()" [alt]="evidenceName(evidencia)">
+            } @else if (evidenceType(evidencia) === 'PDF' && previewSafeUrl()) {
+              <iframe class="preview-document" [src]="previewSafeUrl()" title="Vista previa PDF"></iframe>
+            } @else if (evidenceType(evidencia) === 'Audio' && previewUrl()) {
+              <audio class="preview-audio" [src]="previewUrl()" controls></audio>
+            } @else if (evidenceType(evidencia) === 'Video' && previewUrl()) {
+              <video class="preview-video" [src]="previewUrl()" controls></video>
+            }
+          </section>
+        }
+      </div>
+    </section>
   </div>
 }

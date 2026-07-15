@@ -34,15 +34,38 @@ export class AuditService {
   // Filtros
   public readonly searchQuery = signal<string>('');
   public readonly actionFilter = signal<string>('all');
+  public readonly moduleFilter = signal<string>('all');
   public readonly dateFilter = signal<string>('');
+
+  public readonly actionOptions = computed(() =>
+    [...new Set(this.logs().map((log) => log.action).filter(Boolean))].sort((a, b) => a.localeCompare(b)),
+  );
+
+  public readonly moduleOptions = computed(() =>
+    [...new Set(this.logs().map((log) => log.module).filter(Boolean))].sort((a, b) => a.localeCompare(b)),
+  );
+
+  public readonly hasActiveFilters = computed(() =>
+    this.searchQuery().trim() !== '' ||
+    this.actionFilter() !== 'all' ||
+    this.moduleFilter() !== 'all' ||
+    this.dateFilter() !== ''
+  );
 
   public readonly filteredLogs = computed(() => {
     return this.logs().filter(log => {
-      const matchSearch = log.user.toLowerCase().includes(this.searchQuery().toLowerCase()) ||
-                          log.detail.toLowerCase().includes(this.searchQuery().toLowerCase());
+      const query = this.searchQuery().trim().toLowerCase();
+      const matchSearch = !query ||
+                          log.user.toLowerCase().includes(query) ||
+                          log.role.toLowerCase().includes(query) ||
+                          log.module.toLowerCase().includes(query) ||
+                          log.action.toLowerCase().includes(query) ||
+                          log.detail.toLowerCase().includes(query) ||
+                          log.ip.toLowerCase().includes(query);
       const matchAction = this.actionFilter() === 'all' || log.action === this.actionFilter();
+      const matchModule = this.moduleFilter() === 'all' || log.module === this.moduleFilter();
       const matchDate = !this.dateFilter() || log.timestamp.startsWith(this.dateFilter());
-      return matchSearch && matchAction && matchDate;
+      return matchSearch && matchAction && matchModule && matchDate;
     });
   });
 
@@ -112,5 +135,12 @@ export class AuditService {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  clearFilters() {
+    this.searchQuery.set('');
+    this.actionFilter.set('all');
+    this.moduleFilter.set('all');
+    this.dateFilter.set('');
   }
 }

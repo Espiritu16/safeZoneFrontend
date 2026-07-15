@@ -4,6 +4,10 @@ export type FrontendRole = 'Víctima' | 'Recepcionista' | 'Psicólogo' | 'Defens
 export type EstadoCaso = 'REGISTRADO' | 'EN_EVALUACION' | 'EN_ATENCION' | 'DERIVADO' | 'CERRADO' | 'ARCHIVADO';
 export type PrioridadCaso = 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA';
 export type NivelRiesgo = 'BAJO' | 'MEDIO' | 'ALTO' | 'CRITICO';
+export type TipoCita = 'PSICOLOGIA' | 'LEGAL';
+export type EstadoCita = 'PROGRAMADA' | 'CONFIRMADA' | 'CANCELADA' | 'ATENDIDA' | 'NO_ASISTIO';
+export type TipoNotificacion = 'RIESGO_CRITICO' | 'SISTEMA' | 'RECORDATORIO';
+export type PrioridadNotificacion = 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA';
 
 export interface LoginRequest {
   correo: string;
@@ -105,6 +109,12 @@ export interface ActualizarUsuarioRequest {
   distrito?: string;
   rol?: BackendRole;
   activo?: boolean;
+}
+
+export interface CambiarContrasenaRequest {
+  contrasenaActual: string;
+  nuevaContrasena: string;
+  confirmarContrasena: string;
 }
 
 export interface CrearPreDenunciaRequest {
@@ -274,4 +284,123 @@ export interface SeguimientoCasoResponse {
   activo: boolean;
   fechaCreacion: string;
   fechaActualizacion: string;
+}
+
+export interface CrearCitaRequest {
+  casoId: string;
+  tipoCita: TipoCita;
+  fechaInicio: string;
+  fechaFin?: string | null;
+  observaciones?: string | null;
+}
+
+export interface ActualizarCitaRequest {
+  tipoCita?: TipoCita;
+  fechaInicio?: string;
+  fechaFin?: string | null;
+  estado?: EstadoCita;
+  motivoCancelacion?: string | null;
+  observaciones?: string | null;
+}
+
+export interface CitaResponse {
+  id: string;
+  casoId: string;
+  victimaId: string;
+  especialistaId: string;
+  tipoCita: TipoCita;
+  fechaInicio: string;
+  fechaFin: string;
+  estado: EstadoCita;
+  motivoCancelacion?: string | null;
+  observaciones?: string | null;
+  activo: boolean;
+  fechaCreacion: string;
+  fechaActualizacion: string;
+}
+
+export interface ReporteMensualRequest {
+  fechaDesde?: string | null;
+  fechaHasta?: string | null;
+  tipoViolencia?: string | null;
+  nivelRiesgo?: NivelRiesgo | null;
+}
+
+export interface ReporteMensualResponse {
+  fechaDesde: string;
+  fechaHasta: string;
+  totalDenuncias: number;
+  totalCasos: number;
+  totalCitas: number;
+  citasAtendidas: number;
+  citasCanceladas: number;
+  citasNoAsistidas: number;
+  porTipoViolencia: Record<string, number>;
+  porNivelRiesgo: Partial<Record<NivelRiesgo, number>>;
+  porDistrito: Record<string, number>;
+  casosPorEstado: Partial<Record<EstadoCaso, number>>;
+  citasPorEstado: Partial<Record<EstadoCita, number>>;
+}
+
+export interface CrearNotificacionRequest {
+  usuarioId: string;
+  casoId?: string | null;
+  denunciaId?: string | null;
+  tipo: TipoNotificacion;
+  prioridad: PrioridadNotificacion;
+  titulo: string;
+  mensaje: string;
+}
+
+export interface ActualizarNotificacionRequest {
+  prioridad?: PrioridadNotificacion;
+  titulo?: string;
+  mensaje?: string;
+  leida?: boolean;
+  activo?: boolean;
+}
+
+export interface NotificacionResponse {
+  id: string;
+  usuarioId: string;
+  casoId?: string | null;
+  denunciaId?: string | null;
+  tipo: TipoNotificacion;
+  prioridad: PrioridadNotificacion;
+  titulo: string;
+  mensaje: string;
+  leida: boolean;
+  fechaLectura?: string | null;
+  activo: boolean;
+  fechaCreacion: string;
+  fechaActualizacion: string;
+}
+
+export interface PanelIndicadorResponse {
+  clave: string;
+  etiqueta: string;
+  valor: number;
+}
+
+export interface PanelAccionRapidaResponse {
+  clave: string;
+  etiqueta: string;
+  modulo: string;
+}
+
+export interface PanelAlertaResponse {
+  tipo: string;
+  mensaje: string;
+  severidad: string;
+}
+
+export interface PanelRolResponse {
+  usuarioId: string;
+  nombre: string;
+  rol: BackendRole;
+  modulos: string[];
+  permisos: string[];
+  indicadores: PanelIndicadorResponse[];
+  acciones: PanelAccionRapidaResponse[];
+  alertas: PanelAlertaResponse[];
 }

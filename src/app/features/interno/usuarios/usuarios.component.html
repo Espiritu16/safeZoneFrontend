@@ -1,4 +1,4 @@
-<div class="animate-slide-up">
+<div class="animate-slide-up sz-users-page">
   <div class="sz-page-header">
     <div class="sz-page-header-info">
       <h1 class="sz-page-title">Gestión de Usuarios del Sistema</h1>
@@ -9,37 +9,6 @@
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
         <span>Nuevo Usuario</span>
       </button>
-    </div>
-  </div>
-
-  <div class="sz-grid-4 mt-6">
-    <div class="card card-kpi card-kpi-brand">
-      <p class="kpi-title">Total Usuarios</p>
-      <div class="kpi-value-row">
-        <span class="kpi-value">{{ users().length }}</span>
-      </div>
-      <p class="kpi-description">Registrados en el sistema</p>
-    </div>
-    <div class="card card-kpi card-kpi-success">
-      <p class="kpi-title">Activos</p>
-      <div class="kpi-value-row">
-        <span class="kpi-value">{{ totalActivos() }}</span>
-      </div>
-      <p class="kpi-description">Con acceso habilitado</p>
-    </div>
-    <div class="card card-kpi card-kpi-warning">
-      <p class="kpi-title">Inactivos</p>
-      <div class="kpi-value-row">
-        <span class="kpi-value">{{ totalInactivos() }}</span>
-      </div>
-      <p class="kpi-description">Cuentas suspendidas</p>
-    </div>
-    <div class="card card-kpi card-kpi-danger">
-      <p class="kpi-title">Roles Definidos</p>
-      <div class="kpi-value-row">
-        <span class="kpi-value">{{ rolesDisponibles.length }}</span>
-      </div>
-      <p class="kpi-description">Perfiles de acceso activos</p>
     </div>
   </div>
 
@@ -65,13 +34,24 @@
           }
         </select>
       </div>
+      <div class="form-group m-0">
+        <label class="sr-only" for="filtrarEstado">Filtrar por estado</label>
+        <select id="filtrarEstado" class="form-select" [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)">
+          <option value="all">Todos los estados</option>
+          <option value="Activo">Activos</option>
+          <option value="Inactivo">Inactivos</option>
+        </select>
+      </div>
+      <button class="btn btn-outline btn-sm" type="button" [disabled]="!hasActiveFilters()" (click)="clearFilters()">
+        Limpiar filtros
+      </button>
     </div>
     <div class="sz-table-filters-right">
       <span class="text-xs text-muted font-medium">
         @if (loading()) {
           Cargando usuarios...
         } @else {
-          Mostrando: {{ filteredUsers().length }} usuarios
+          Resultados encontrados: {{ filteredUsers().length }}
         }
       </span>
     </div>
@@ -91,25 +71,29 @@
         </tr>
       </thead>
       <tbody>
-        @if (!loading() && filteredUsers().length === 0) {
+        @if (loading()) {
+          <tr>
+            <td colspan="7" class="text-center text-muted">Cargando usuarios...</td>
+          </tr>
+        } @else if (filteredUsers().length === 0) {
           <tr>
             <td colspan="7" class="text-center text-muted">No hay usuarios para mostrar.</td>
           </tr>
         }
         @for (user of filteredUsers(); track user.id) {
           <tr>
-            <td>
+            <td data-label="Nombre">
               <strong>{{ user.nombreCompleto }}</strong>
               @if (user.telefono || user.distrito) {
                 <div class="text-xs text-muted">{{ user.telefono || 'Sin teléfono' }} · {{ user.distrito || 'Sin distrito' }}</div>
               }
             </td>
-            <td class="text-secondary text-xs">{{ user.email }}</td>
-            <td class="text-xs">{{ user.dni }}</td>
-            <td>
+            <td class="text-secondary text-xs" data-label="Email">{{ user.email }}</td>
+            <td class="text-xs" data-label="DNI">{{ user.dni }}</td>
+            <td data-label="Rol">
               <span class="badge badge-brand">{{ user.rol }}</span>
             </td>
-            <td>
+            <td data-label="Estado">
               <span class="badge" [ngClass]="{
                 'badge-success': user.estado === 'Activo',
                 'badge-warning': user.estado === 'Inactivo'
@@ -117,9 +101,9 @@
                 <span class="badge-dot"></span>{{ user.estado }}
               </span>
             </td>
-            <td class="text-xs text-muted">{{ user.fechaActualizacion }}</td>
-            <td class="col-actions">
-              <div class="flex gap-2">
+            <td class="text-xs text-muted" data-label="Última actualización">{{ user.fechaActualizacion }}</td>
+            <td class="col-actions" data-label="Acciones">
+              <div class="sz-user-actions">
                 <button class="btn btn-outline btn-sm" type="button" (click)="openEdit(user)">Editar</button>
                 @if (user.estado === 'Activo') {
                   @if (showInactivateConfirm() === user.id) {
@@ -137,6 +121,14 @@
         }
       </tbody>
     </table>
+
+    <div class="sz-table-pagination">
+      <div class="sz-table-pagination-info">Mostrando {{ filteredUsers().length }} de {{ users().length }} usuarios registrados</div>
+      <div class="sz-table-pagination-actions">
+        <button class="btn btn-outline btn-sm" disabled>Anterior</button>
+        <button class="btn btn-outline btn-sm" disabled>Siguiente</button>
+      </div>
+    </div>
   </div>
 </div>
 

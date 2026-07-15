@@ -1,4 +1,4 @@
-<div class="animate-slide-up">
+<div class="animate-slide-up sz-victimas-page">
   
   <div class="sz-page-header">
     <div class="sz-page-header-info">
@@ -6,38 +6,81 @@
       <p class="sz-page-description">Expedientes consolidados e historial integral de atención.</p>
     </div>
     <div class="sz-page-header-actions">
-      <button class="btn btn-primary btn-sm" (click)="openCreate()">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-        <span>Registrar Víctima</span>
+      <button class="btn btn-outline btn-sm" type="button" (click)="victimsService.loadVictims()">
+        Actualizar
       </button>
     </div>
   </div>
 
   <div class="sz-table-filters mt-6 mb-2">
-    <div class="form-group m-0 sz-field-min-lg">
-      <input class="form-input" type="text" placeholder="Buscar por DNI, Nombres, Código, Alias..."
+    <div class="sz-table-filters-left">
+      <div class="form-group m-0 sz-field-min-lg">
+        <input class="form-input" type="text" aria-label="Buscar víctima" placeholder="Buscar por DNI, nombres, código, alias..."
              [ngModel]="victimsService.searchQuery()" (ngModelChange)="victimsService.searchQuery.set($event)">
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por estado" [ngModel]="victimsService.statusFilter()" (ngModelChange)="victimsService.statusFilter.set($event)">
+          <option value="all">Todos los estados</option>
+          <option value="Activo">Activas</option>
+          <option value="Archivado">Archivadas</option>
+        </select>
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por distrito" [ngModel]="victimsService.districtFilter()" (ngModelChange)="victimsService.districtFilter.set($event)">
+          <option value="all">Todos los distritos</option>
+          @for (district of victimsService.districtOptions(); track district) {
+            <option [value]="district">{{ district }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por identidad" [ngModel]="victimsService.identityFilter()" (ngModelChange)="victimsService.identityFilter.set($event)">
+          <option value="all">Todas las identidades</option>
+          <option value="identificada">Identificadas</option>
+          <option value="anonima">Identidad protegida</option>
+        </select>
+      </div>
+      <button class="btn btn-outline btn-sm" type="button" [disabled]="!victimsService.hasActiveFilters()" (click)="victimsService.clearFilters()">
+        Limpiar filtros
+      </button>
     </div>
-    <span class="text-xs text-muted font-medium mt-2">Mostrando: {{ victimsService.filteredVictims().length }} expedientes</span>
+    <div class="sz-table-filters-right">
+      <span class="text-xs text-muted font-medium">Resultados encontrados: {{ victimsService.filteredVictims().length }}</span>
+    </div>
   </div>
 
-  <div class="sz-split-layout mt-4">
+  @if (victimsService.isLoading()) {
+    <div class="card mt-4 p-4 text-center text-muted">
+      Cargando víctimas registradas...
+    </div>
+  }
+
+  @if (victimsService.loadError()) {
+    <div class="card mt-4 p-4 text-danger">
+      {{ victimsService.loadError() }}
+    </div>
+  }
+
+  <div class="sz-victimas-layout mt-4">
     
     <!-- Izquierda: Listado -->
     <div class="flex flex-col gap-3 sz-scroll-panel">
       @for (v of victimsService.filteredVictims(); track v.id) {
-        <div class="card card-interactive p-4" [ngClass]="{'border-brand-light bg-brand-soft': victimsService.selectedVictim()?.id === v.id}" (click)="victimsService.selectVictim(v)">
-          <div class="flex items-center justify-between">
+        <button class="sz-victim-list-item" type="button" [ngClass]="{'is-selected': victimsService.selectedVictim()?.id === v.id}" (click)="victimsService.selectVictim(v)">
+          <div class="sz-victim-list-content">
             <div>
               <p class="font-bold text-sm flex items-center gap-2">
                 {{ v.anonimo ? v.alias : (v.nombre + ' ' + v.apellidos) }}
                 @if (v.anonimo) { <span title="Identidad Protegida">🔒</span> }
               </p>
-              <p class="text-xs text-muted mt-1">DNI: {{ v.anonimo ? 'Protegido' : v.dni }}</p>
+              <p class="text-xs text-muted mt-1">DNI: {{ v.anonimo ? 'Protegido' : v.dni || 'No registrado' }} · {{ v.distrito }}</p>
             </div>
-            <span class="badge badge-brand">{{ v.codigo }}</span>
+            <div class="sz-victim-list-meta">
+              <span class="badge badge-brand">{{ v.codigo }}</span>
+              <span class="badge" [ngClass]="{'badge-success': v.estado === 'Activo', 'badge-warning': v.estado !== 'Activo'}">{{ v.estado }}</span>
+            </div>
           </div>
-        </div>
+        </button>
       }
       @if (victimsService.filteredVictims().length === 0) {
         <div class="p-4 text-center text-muted text-sm border-all rounded-md">
@@ -76,12 +119,19 @@
         <div class="card flex-1">
           <div class="sz-case-detail-tabs border-b mb-4">
             <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'perfil'}" (click)="activeTab.set('perfil')">Perfil Completo</button>
-            <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'denuncias'}" (click)="activeTab.set('denuncias')">Denuncias</button>
-            <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'seguimientos'}" (click)="activeTab.set('seguimientos')">Seguimientos</button>
-            <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'citas'}" (click)="activeTab.set('citas')">Citas</button>
+            <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'denuncias'}" (click)="activeTab.set('denuncias')">Denuncias {{ victimsService.selectedHistorial()?.denuncias?.length || 0 }}</button>
+            <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'seguimientos'}" (click)="activeTab.set('seguimientos')">Seguimientos {{ victimsService.selectedHistorial()?.seguimientos?.length || 0 }}</button>
+            <button class="tab-btn" [ngClass]="{'is-active': activeTab() === 'citas'}" (click)="activeTab.set('citas')">Citas {{ victimsService.selectedHistorial()?.citas?.length || 0 }}</button>
           </div>
 
           <div class="p-4 pt-0 sz-scroll-panel-md">
+            @if (victimsService.historyLoadingId() === selected.id) {
+              <div class="text-center p-4 text-muted">Cargando historial vinculado...</div>
+            }
+
+            @if (victimsService.historyError()) {
+              <div class="p-3 mb-3 text-danger border-all rounded-md">{{ victimsService.historyError() }}</div>
+            }
             
             @if (activeTab() === 'perfil') {
               <div class="animate-fade-in sz-grid-2">
@@ -105,28 +155,73 @@
             }
 
             @if (activeTab() === 'denuncias') {
-              <div class="animate-fade-in text-center p-8 text-muted">
-                <p>Las denuncias vinculadas a este expediente se cargarán aquí desde el servicio de Denuncias.</p>
-                <button class="btn btn-outline btn-sm mt-4">Vincular Nueva Denuncia</button>
+              <div class="animate-fade-in sz-linked-items">
+                @if (victimsService.selectedHistorial()?.denuncias?.length) {
+                  @for (denuncia of victimsService.selectedHistorial()?.denuncias; track denuncia.id) {
+                    <div class="sz-linked-item">
+                      <div>
+                        <strong>{{ denuncia.titulo }}</strong>
+                        <p>{{ denuncia.detalle || 'Denuncia registrada sin descripción adicional.' }}</p>
+                      </div>
+                      <div class="sz-linked-item-meta">
+                        <span class="badge badge-warning">{{ denuncia.estado || 'Sin riesgo' }}</span>
+                        <span>{{ denuncia.fecha ? (denuncia.fecha | date:'dd/MM/yyyy HH:mm') : 'Sin fecha' }}</span>
+                      </div>
+                    </div>
+                  }
+                } @else {
+                  <div class="text-center p-8 text-muted">No hay denuncias vinculadas a esta víctima.</div>
+                }
               </div>
             }
 
             @if (activeTab() === 'seguimientos') {
               <div class="animate-fade-in sz-timeline">
-                <div class="sz-timeline-item">
-                  <div class="sz-timeline-item-node is-success"></div>
-                  <div class="sz-timeline-item-header">
-                    <span class="time-title">Registro en el Sistema</span>
-                    <span class="time-stamp">{{ selected.fechaRegistro }}</span>
+                @if (victimsService.selectedHistorial()?.seguimientos?.length) {
+                  @for (seguimiento of victimsService.selectedHistorial()?.seguimientos; track seguimiento.id) {
+                    <div class="sz-timeline-item">
+                      <div class="sz-timeline-item-node is-success"></div>
+                      <div class="sz-timeline-item-header">
+                        <span class="time-title">{{ seguimiento.titulo }}</span>
+                        <span class="time-stamp">{{ seguimiento.fecha ? (seguimiento.fecha | date:'dd/MM/yyyy HH:mm') : 'Sin fecha' }}</span>
+                      </div>
+                      <p class="sz-timeline-item-body">{{ seguimiento.detalle || 'Seguimiento registrado.' }}</p>
+                      @if (seguimiento.estado) {
+                        <p class="text-xs text-muted mt-1">Próxima acción: {{ seguimiento.estado }}</p>
+                      }
+                    </div>
+                  }
+                } @else {
+                  <div class="sz-timeline-item">
+                    <div class="sz-timeline-item-node is-success"></div>
+                    <div class="sz-timeline-item-header">
+                      <span class="time-title">Registro en el Sistema</span>
+                      <span class="time-stamp">{{ selected.fechaRegistro }}</span>
+                    </div>
+                    <p class="sz-timeline-item-body">Apertura del expediente único de víctima. No hay seguimientos adicionales registrados.</p>
                   </div>
-                  <p class="sz-timeline-item-body">Apertura del expediente único de víctima.</p>
-                </div>
+                }
               </div>
             }
 
             @if (activeTab() === 'citas') {
-              <div class="animate-fade-in text-center p-8 text-muted">
-                <p>Las citas médicas y legales se mostrarán aquí conectadas al calendario general.</p>
+              <div class="animate-fade-in sz-linked-items">
+                @if (victimsService.selectedHistorial()?.citas?.length) {
+                  @for (cita of victimsService.selectedHistorial()?.citas; track cita.id) {
+                    <div class="sz-linked-item">
+                      <div>
+                        <strong>{{ cita.titulo }}</strong>
+                        <p>{{ cita.detalle || 'Cita sin observaciones registradas.' }}</p>
+                      </div>
+                      <div class="sz-linked-item-meta">
+                        <span class="badge badge-brand">{{ cita.estado || 'Programada' }}</span>
+                        <span>{{ cita.fecha ? (cita.fecha | date:'dd/MM/yyyy HH:mm') : 'Sin fecha' }}</span>
+                      </div>
+                    </div>
+                  }
+                } @else {
+                  <div class="text-center p-8 text-muted">No hay citas vinculadas a esta víctima.</div>
+                }
               </div>
             }
           </div>
@@ -147,7 +242,7 @@
   <div class="sz-modal-overlay">
     <div class="sz-modal sz-modal-md">
       <div class="sz-modal-header">
-        <h3 class="sz-modal-header-title">{{ victimsService.editingVictim() ? 'Editar Expediente' : 'Registrar Nueva Víctima' }}</h3>
+        <h3 class="sz-modal-header-title">Editar Expediente</h3>
         <button class="sz-modal-header-close" (click)="victimsService.closeModal()">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
@@ -267,9 +362,7 @@
       
       <div class="sz-modal-footer">
         <button class="btn btn-outline" (click)="victimsService.closeModal()">Cancelar</button>
-        <button class="btn btn-primary" (click)="saveVictim()" [disabled]="vForm.invalid">
-          {{ victimsService.editingVictim() ? 'Guardar Cambios' : 'Registrar Víctima' }}
-        </button>
+        <button class="btn btn-primary" (click)="saveVictim()" [disabled]="vForm.invalid">Guardar Cambios</button>
       </div>
     </div>
   </div>

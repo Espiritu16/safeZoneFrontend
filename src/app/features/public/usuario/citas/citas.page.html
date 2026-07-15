@@ -20,7 +20,10 @@
       <article class="appointment-card">
         <div class="appointment-date">
           <span class="material-symbols-outlined" aria-hidden="true">event</span>
-          <strong>{{ formatDate(cita.fecha) }}</strong>
+          <span>Inicio</span>
+          <strong>{{ formatDateTime(cita.metadata['fechaInicio'] || cita.fecha) }}</strong>
+          <span>Fin</span>
+          <strong>{{ formatDateTime(cita.metadata['fechaFin']) }}</strong>
         </div>
         <div class="appointment-content">
           <span class="status-pill">{{ statusLabel(cita.estado) }}</span>
@@ -32,6 +35,12 @@
               · Caso {{ cita.casoId.slice(0, 8).toUpperCase() }}
             }
           </small>
+          @if (metadata(cita, 'observaciones') !== 'No especificado') {
+            <div class="appointment-note">
+              <strong>Observaciones</strong>
+              <p>{{ metadata(cita, 'observaciones') }}</p>
+            </div>
+          }
         </div>
       </article>
     }

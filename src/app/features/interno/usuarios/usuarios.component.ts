@@ -57,6 +57,7 @@ export class UsuariosComponent implements OnInit {
   readonly users = signal<UsuarioTabla[]>([]);
   readonly searchQuery = signal('');
   readonly roleFilter = signal<'all' | UsuarioRolFormulario>('all');
+  readonly statusFilter = signal<'all' | UsuarioEstado>('all');
   readonly showModal = signal(false);
   readonly editingUser = signal<UsuarioTabla | null>(null);
   readonly showInactivateConfirm = signal<string | null>(null);
@@ -73,12 +74,19 @@ export class UsuariosComponent implements OnInit {
         !query ||
         user.nombreCompleto.toLowerCase().includes(query) ||
         user.email.toLowerCase().includes(query) ||
-        user.dni.includes(query);
+        user.dni.includes(query) ||
+        user.telefono.includes(query) ||
+        user.distrito.toLowerCase().includes(query) ||
+        user.rol.toLowerCase().includes(query);
       const matchesRole = role === 'all' || user.rol === role;
-      return matchesSearch && matchesRole;
+      const matchesStatus = this.statusFilter() === 'all' || user.estado === this.statusFilter();
+      return matchesSearch && matchesRole && matchesStatus;
     });
   });
 
+  readonly hasActiveFilters = computed(() =>
+    Boolean(this.searchQuery().trim()) || this.roleFilter() !== 'all' || this.statusFilter() !== 'all'
+  );
   readonly totalActivos = computed(() => this.users().filter((user) => user.estado === 'Activo').length);
   readonly totalInactivos = computed(() => this.users().filter((user) => user.estado === 'Inactivo').length);
 
@@ -197,6 +205,12 @@ export class UsuariosComponent implements OnInit {
 
   cancelInactivate(): void {
     this.showInactivateConfirm.set(null);
+  }
+
+  clearFilters(): void {
+    this.searchQuery.set('');
+    this.roleFilter.set('all');
+    this.statusFilter.set('all');
   }
 
   private loadUsers(): void {

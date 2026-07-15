@@ -32,6 +32,17 @@ describe('UsuariosComponent', () => {
       rol: 'ADMIN',
       activo: true,
     },
+    {
+      id: 'usuario-2',
+      correo: 'victima@safezone.gob.pe',
+      nombres: 'Ana',
+      apellidos: 'Lopez',
+      dni: '87654321',
+      telefono: '999111222',
+      distrito: 'Comas',
+      rol: 'VICTIMA',
+      activo: false,
+    },
   ];
 
   beforeEach(async () => {
@@ -64,7 +75,7 @@ describe('UsuariosComponent', () => {
 
   it('loads users from the backend service', () => {
     expect(usuariosService.list).toHaveBeenCalledOnce();
-    expect(component.users()).toEqual([
+    expect(component.users()).toEqual(expect.arrayContaining([
       expect.objectContaining({
         id: 'usuario-1',
         nombreCompleto: 'Admin SafeZone',
@@ -72,7 +83,24 @@ describe('UsuariosComponent', () => {
         rol: 'Administrador',
         estado: 'Activo',
       }),
+    ]));
+  });
+
+  it('filters users by status and clears active filters', () => {
+    component.searchQuery.set('ana');
+    component.statusFilter.set('Inactivo');
+
+    expect(component.filteredUsers()).toEqual([
+      expect.objectContaining({ id: 'usuario-2', estado: 'Inactivo' }),
     ]);
+    expect(component.hasActiveFilters()).toBe(true);
+
+    component.clearFilters();
+
+    expect(component.searchQuery()).toBe('');
+    expect(component.roleFilter()).toBe('all');
+    expect(component.statusFilter()).toBe('all');
+    expect(component.filteredUsers()).toHaveLength(2);
   });
 
   it('creates a backend user with the required fields and backend role', () => {

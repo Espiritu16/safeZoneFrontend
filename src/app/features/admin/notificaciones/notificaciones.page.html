@@ -1,1 +1,117 @@
-<!-- Placeholder para notificaciones. -->
+<div class="animate-slide-up sz-notificaciones-page">
+  <div class="sz-page-header">
+    <div class="sz-page-header-info">
+      <h1 class="sz-page-title">Notificaciones</h1>
+      <p class="sz-page-description">Alertas automáticas por riesgo crítico, asignaciones, citas próximas y cambios de estado.</p>
+    </div>
+    <div class="sz-page-header-actions">
+      <button class="btn btn-outline btn-sm" type="button" (click)="load()">Actualizar</button>
+    </div>
+  </div>
+
+  <div class="sz-table-filters mt-6">
+    <div class="sz-table-filters-left">
+      <div class="form-group m-0 sz-field-min-sm">
+        <input
+          class="form-input"
+          type="text"
+          aria-label="Buscar notificaciones"
+          placeholder="Buscar por título, mensaje, tipo o prioridad..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        >
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por estado" [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event)">
+          <option value="all">Todos los estados</option>
+          <option value="pending">Pendientes</option>
+          <option value="read">Leídas</option>
+        </select>
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por prioridad" [ngModel]="priorityFilter()" (ngModelChange)="priorityFilter.set($event)">
+          @for (priority of priorityOptions; track priority.value) {
+            <option [value]="priority.value">{{ priority.label }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar por tipo" [ngModel]="typeFilter()" (ngModelChange)="typeFilter.set($event)">
+          @for (type of typeOptions; track type.value) {
+            <option [value]="type.value">{{ type.label }}</option>
+          }
+        </select>
+      </div>
+      <button class="btn btn-outline btn-sm" type="button" [disabled]="!hasActiveFilters()" (click)="clearFilters()">Limpiar filtros</button>
+    </div>
+    <div class="sz-table-filters-right">
+      <span class="text-xs text-muted font-medium">
+        @if (isLoading()) {
+          Cargando notificaciones...
+        } @else {
+          Resultados encontrados: {{ filteredNotificaciones().length }}
+        }
+      </span>
+    </div>
+  </div>
+
+  <div class="sz-table-container mt-2">
+    <table class="sz-table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Prioridad</th>
+          <th>Tipo</th>
+          <th>Mensaje</th>
+          <th>Estado</th>
+          <th class="col-actions">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="6" class="text-center text-muted">Cargando notificaciones...</td>
+          </tr>
+        } @else {
+          @for (notificacion of filteredNotificaciones(); track notificacion.id) {
+            <tr>
+              <td data-label="Fecha">{{ notificacion.fechaCreacion | date:'yyyy-MM-dd HH:mm' }}</td>
+              <td data-label="Prioridad">
+                <span class="badge" [ngClass]="{
+                  'badge-risk-severe': notificacion.prioridad === 'CRITICA' || notificacion.prioridad === 'ALTA',
+                  'badge-risk-moderate': notificacion.prioridad === 'MEDIA',
+                  'badge-risk-low': notificacion.prioridad === 'BAJA'
+                }">{{ notificacion.prioridad }}</span>
+              </td>
+              <td data-label="Tipo">{{ notificacion.tipo }}</td>
+              <td class="notificacion-message" data-label="Mensaje">
+                <strong>{{ notificacion.titulo }}</strong>
+                <div class="text-xs text-muted">{{ notificacion.mensaje }}</div>
+              </td>
+              <td data-label="Estado">
+                <span class="badge" [ngClass]="notificacion.leida ? 'badge-success' : 'badge-warning'">
+                  {{ notificacion.leida ? 'Leída' : 'Pendiente' }}
+                </span>
+              </td>
+              <td class="col-actions" data-label="Acciones">
+                <button class="btn btn-outline btn-sm" type="button" [disabled]="notificacion.leida" (click)="marcarLeida(notificacion)">Marcar leída</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="text-center text-muted">No hay notificaciones para los filtros seleccionados.</td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+
+    <div class="sz-table-pagination">
+      <div class="sz-table-pagination-info">Mostrando {{ filteredNotificaciones().length }} de {{ notificaciones().length }} notificaciones registradas</div>
+      <div class="sz-table-pagination-actions">
+        <button class="btn btn-outline btn-sm" disabled>Anterior</button>
+        <button class="btn btn-outline btn-sm" disabled>Siguiente</button>
+      </div>
+    </div>
+  </div>
+</div>

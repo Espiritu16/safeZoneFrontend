@@ -21,7 +21,7 @@
         <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
         <div>
           <span class="evidence-type">{{ metadata(evidencia, 'tipoMime') }}</span>
-          <h3>{{ evidencia.titulo }}</h3>
+          <h3>{{ evidenceName(evidencia) }}</h3>
           <p>{{ evidencia.detalle || 'Archivo asociado a tu atención.' }}</p>
           <small>
             {{ formatDate(evidencia.fecha) }}
@@ -32,6 +32,15 @@
               · Denuncia {{ metadata(evidencia, 'denunciaId').slice(0, 8).toUpperCase() }}
             }
           </small>
+          <div class="evidence-actions">
+            <button type="button" (click)="openPreview(evidencia)">
+              <span class="material-symbols-outlined" aria-hidden="true">preview</span>
+              Previsualizar
+            </button>
+            <button type="button" class="ghost" (click)="downloadEvidence(evidencia)" aria-label="Descargar evidencia">
+              <span class="material-symbols-outlined" aria-hidden="true">download</span>
+            </button>
+          </div>
         </div>
       </article>
     }
@@ -40,5 +49,52 @@
   <div class="empty-state">
     <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
     <p>No hay evidencias visibles para esta cuenta.</p>
+  </div>
+}
+
+@if (previewEvidence(); as evidencia) {
+  <div class="modal-overlay" role="presentation" (click)="closePreview()">
+    <section class="evidence-modal" role="dialog" aria-modal="true" aria-labelledby="evidence-modal-title" (click)="$event.stopPropagation()">
+      <header class="evidence-modal-header">
+        <div>
+          <p>Vista previa de evidencia</p>
+          <h3 id="evidence-modal-title">{{ evidenceName(evidencia) }}</h3>
+        </div>
+        <button type="button" class="icon-button" aria-label="Cerrar vista previa" (click)="closePreview()">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+      </header>
+
+      <div class="evidence-modal-body">
+        <div class="preview-meta">
+          <span>{{ evidenceType(evidencia) }}</span>
+          <span>{{ formatDate(evidencia.fecha) }}</span>
+          @if (evidencia.casoId) {
+            <span>Caso {{ evidencia.casoId.slice(0, 8).toUpperCase() }}</span>
+          }
+        </div>
+
+        @if (previewLoading()) {
+          <div class="preview-state">Cargando vista previa...</div>
+        } @else if (previewError()) {
+          <div class="preview-state error">{{ previewError() }}</div>
+        } @else if (!canPreview(evidencia)) {
+          <div class="preview-state">Vista previa no disponible para este formato. Puedes descargar el archivo.</div>
+        } @else if (evidenceType(evidencia) === 'Imagen' && previewUrl()) {
+          <img class="preview-image" [src]="previewUrl()" [alt]="evidenceName(evidencia)">
+        } @else if (evidenceType(evidencia) === 'PDF' && previewSafeUrl()) {
+          <iframe class="preview-document" [src]="previewSafeUrl()" title="Vista previa PDF"></iframe>
+        } @else if (evidenceType(evidencia) === 'Audio' && previewUrl()) {
+          <audio class="preview-audio" [src]="previewUrl()" controls></audio>
+        } @else if (evidenceType(evidencia) === 'Video' && previewUrl()) {
+          <video class="preview-video" [src]="previewUrl()" controls></video>
+        }
+      </div>
+
+      <footer class="evidence-modal-footer">
+        <button type="button" class="secondary" (click)="downloadEvidence(evidencia)">Descargar</button>
+        <button type="button" (click)="closePreview()">Cerrar visor</button>
+      </footer>
+    </section>
   </div>
 }

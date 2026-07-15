@@ -160,6 +160,13 @@ export const routes: Routes = [
         data: { roles: ['Administrador', 'Psicólogo', 'Defensor Legal'] },
       },
       {
+        path: 'notificaciones',
+        canActivate: [roleGuard],
+        loadComponent: () =>
+          import('./features/admin/notificaciones/notificaciones.page').then((m) => m.NotificacionesPage),
+        data: { roles: ['Administrador', 'Recepcionista', 'Psicólogo', 'Defensor Legal', 'Soporte Técnico'] },
+      },
+      {
         path: 'auditoria',
         canActivate: [roleGuard],
         loadComponent: () =>

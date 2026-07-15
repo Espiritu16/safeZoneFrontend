@@ -3,7 +3,94 @@
   <p class="sz-page-description">Datos personales, contacto seguro y preferencias de notificación.</p>
 </section>
 
-<div class="empty-state">
-  <span class="material-symbols-outlined" aria-hidden="true">manage_accounts</span>
-  <p>La edición de perfil se habilitará cuando el backend exponga estos datos.</p>
-</div>
+@if (isLoading()) {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
+    <p>Cargando perfil...</p>
+  </div>
+} @else if (error() && !perfil()) {
+  <div class="victim-state error" role="alert">
+    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+    <p>{{ error() }}</p>
+    <button type="button" (click)="load()">Reintentar</button>
+  </div>
+} @else if (perfil(); as user) {
+  <section class="profile-grid">
+    <article class="profile-panel">
+      <div class="profile-header">
+        <span class="material-symbols-outlined" aria-hidden="true">account_circle</span>
+        <div>
+          <p>Cuenta de usuario</p>
+          <h3>{{ nombreCompleto() }}</h3>
+        </div>
+      </div>
+
+      <dl class="profile-details">
+        <div>
+          <dt>Correo</dt>
+          <dd>{{ user.correo }}</dd>
+        </div>
+        <div>
+          <dt>DNI</dt>
+          <dd>{{ user.dni || 'No registrado' }}</dd>
+        </div>
+        <div>
+          <dt>Telefono</dt>
+          <dd>{{ user.telefono || 'No registrado' }}</dd>
+        </div>
+        <div>
+          <dt>Distrito</dt>
+          <dd>{{ user.distrito || 'No registrado' }}</dd>
+        </div>
+        <div>
+          <dt>Estado</dt>
+          <dd>{{ user.activo ? 'Activo' : 'Inactivo' }}</dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="profile-panel">
+      <div class="section-title">
+        <h3>Cambiar contrasena</h3>
+        <p>Usa una clave distinta, con al menos 8 caracteres, una mayuscula y un numero.</p>
+      </div>
+
+      @if (success()) {
+        <div class="victim-alert success" role="status">{{ success() }}</div>
+      }
+      @if (error()) {
+        <div class="victim-alert error" role="alert">{{ error() }}</div>
+      }
+
+      <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="submitPassword()">
+        <label>
+          <span>Contrasena actual</span>
+          <input type="password" formControlName="contrasenaActual" autocomplete="current-password">
+          @if (controlInvalid('contrasenaActual')) {
+            <small>Ingresa tu contrasena actual.</small>
+          }
+        </label>
+
+        <label>
+          <span>Nueva contrasena</span>
+          <input type="password" formControlName="nuevaContrasena" autocomplete="new-password">
+          @if (controlInvalid('nuevaContrasena')) {
+            <small>Debe tener 8 caracteres, una mayuscula y un numero.</small>
+          }
+        </label>
+
+        <label>
+          <span>Confirmar contrasena</span>
+          <input type="password" formControlName="confirmarContrasena" autocomplete="new-password">
+          @if (passwordForm.hasError('passwordMismatch') && passwordForm.controls.confirmarContrasena.touched) {
+            <small>La confirmacion no coincide.</small>
+          }
+        </label>
+
+        <button type="submit" [disabled]="isSaving()">
+          {{ isSaving() ? 'Actualizando...' : 'Actualizar contrasena' }}
+        </button>
+      </form>
+    </article>
+  </section>
+}

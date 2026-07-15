@@ -1,14 +1,16 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
+import { catchError, finalize, map, Observable, tap, throwError } from 'rxjs';
 import { API_ENDPOINTS } from '../http/api-endpoints';
 import { ApiClientService } from '../http/api-client.service';
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY } from '../http/auth-token.interceptor';
 import type {
   BackendRole,
+  CambiarContrasenaRequest,
   FrontendRole,
   LoginResponse,
   SessionContextResponse,
+  UsuarioResponse,
 } from '../models/api.models';
 import { roleToLabel } from '../utils/role-mapper';
 import { ToastService } from './toast.service';
@@ -202,6 +204,39 @@ export class AuthService {
         this.setUser(stored);
         localStorage.setItem(USER_KEY, JSON.stringify(stored));
       }),
+    );
+  }
+
+  loadMyProfile(): Observable<UsuarioResponse> {
+    return this.api.get<UsuarioResponse>(API_ENDPOINTS.usuarioPerfil).pipe(
+      catchError(() =>
+        this.refreshContext().pipe(
+          map((context) => ({
+            id: context.usuarioId,
+            correo: context.correo,
+            nombres: context.nombre,
+            apellidos: '',
+            dni: '',
+            telefono: null,
+            distrito: null,
+            rol: context.rol,
+            activo: true,
+          })),
+        ),
+      ),
+    );
+  }
+
+  changeMyPassword(request: CambiarContrasenaRequest): Observable<UsuarioResponse> {
+    this.isLoadingSignal.set(true);
+    return this.api.patch<UsuarioResponse>(API_ENDPOINTS.usuarioCambiarContrasena, request).pipe(
+      tap(() => this.toastService.show('Contrasena actualizada correctamente.', 'success')),
+      catchError((error) => {
+        const message = this.errorMessage(error, 'No se pudo actualizar la contrasena.');
+        this.toastService.show(message, 'error');
+        return throwError(() => new Error(message));
+      }),
+      finalize(() => this.isLoadingSignal.set(false)),
     );
   }
 

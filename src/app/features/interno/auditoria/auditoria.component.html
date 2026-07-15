@@ -1,11 +1,8 @@
-<div class="animate-slide-up">
+<div class="animate-slide-up sz-auditoria-page">
   
   <div class="sz-page-header">
     <div class="sz-page-header-info">
-      <h1 class="sz-page-title flex items-center gap-3">
-        Logs y Trazabilidad de Auditoría
-        <span class="badge badge-brand">{{ auditService.logs().length }} registros</span>
-      </h1>
+      <h1 class="sz-page-title">Logs y Trazabilidad de Auditoría</h1>
       <p class="sz-page-description">Historial inmutable de acciones realizadas por el personal institucional.</p>
     </div>
     <div class="sz-page-header-actions">
@@ -17,31 +14,37 @@
   </div>
 
   <!-- Filtros -->
-  <div class="sz-table-filters mt-6 mb-2">
+  <div class="sz-table-filters mt-6">
     <div class="sz-table-filters-left">
-      <div class="form-group m-0 sz-field-min-md">
-        <input class="form-input" type="text" placeholder="Buscar usuario o detalle..."
+      <div class="form-group m-0 sz-field-min-sm">
+        <input class="form-input" type="text" aria-label="Buscar auditoría" placeholder="Buscar usuario, módulo, acción, IP o detalle..."
                [ngModel]="auditService.searchQuery()" (ngModelChange)="auditService.searchQuery.set($event)">
       </div>
       <div class="form-group m-0">
-        <select class="form-select" [ngModel]="auditService.actionFilter()" (ngModelChange)="auditService.actionFilter.set($event)">
+        <select class="form-select" aria-label="Filtrar por acción" [ngModel]="auditService.actionFilter()" (ngModelChange)="auditService.actionFilter.set($event)">
           <option value="all">Todas las acciones</option>
-          <option value="Inicio de Sesión">Inicio de Sesión</option>
-          <option value="Cierre de Sesión">Cierre de Sesión</option>
-          <option value="Registro de Denuncia">Registro de Denuncia</option>
-          <option value="Acceso a Expediente">Acceso a Expediente</option>
-          <option value="Carga de Evidencia">Carga de Evidencia</option>
-          <option value="Configuración">Configuración</option>
-          <option value="Mantenimiento">Mantenimiento</option>
-          <option value="Cambio de Estado">Cambio de Estado</option>
+          @for (action of auditService.actionOptions(); track action) {
+            <option [value]="action">{{ action }}</option>
+          }
         </select>
       </div>
       <div class="form-group m-0">
-        <input type="date" class="form-input" [ngModel]="auditService.dateFilter()" (ngModelChange)="auditService.dateFilter.set($event)">
+        <select class="form-select" aria-label="Filtrar por módulo" [ngModel]="auditService.moduleFilter()" (ngModelChange)="auditService.moduleFilter.set($event)">
+          <option value="all">Todos los módulos</option>
+          @for (module of auditService.moduleOptions(); track module) {
+            <option [value]="module">{{ module }}</option>
+          }
+        </select>
       </div>
+      <div class="form-group m-0 sz-date-filter">
+        <input type="date" class="form-input" aria-label="Filtrar por fecha" [ngModel]="auditService.dateFilter()" (ngModelChange)="auditService.dateFilter.set($event)">
+      </div>
+      <button class="btn btn-outline btn-sm" type="button" [disabled]="!auditService.hasActiveFilters()" (click)="auditService.clearFilters()">
+        Limpiar filtros
+      </button>
     </div>
     <div class="sz-table-filters-right">
-      <span class="text-xs text-muted font-medium mt-2">Mostrando: {{ auditService.filteredLogs().length }} registros</span>
+      <span class="text-xs text-muted font-medium">Resultados encontrados: {{ auditService.filteredLogs().length }}</span>
     </div>
   </div>
 
@@ -61,15 +64,15 @@
       <tbody>
         @for (log of auditService.filteredLogs(); track log.id) {
           <tr>
-            <td class="text-xs text-secondary font-mono">{{ log.timestamp }}</td>
+            <td class="text-xs text-secondary font-mono" data-label="Fecha / Hora">{{ log.timestamp }}</td>
             <td>
               <strong>{{ log.user }}</strong>
               <div class="text-xs text-muted">{{ log.role }}</div>
             </td>
-            <td>
+            <td data-label="Módulo">
               <span class="badge">{{ log.module }}</span>
             </td>
-            <td>
+            <td data-label="Acción">
               <span class="text-sm font-semibold" [ngClass]="{
                 'text-success': log.action.includes('Inicio de Sesión') || log.action.includes('Registro'),
                 'text-brand': log.action.includes('Acceso'),
@@ -77,8 +80,8 @@
                 'text-danger': log.action.includes('Cierre') || log.action.includes('Eliminación')
               }">{{ log.action }}</span>
             </td>
-            <td class="text-xs text-muted font-mono">{{ log.ip }}</td>
-            <td class="text-sm">{{ log.detail }}</td>
+            <td class="text-xs text-muted font-mono" data-label="IP">{{ log.ip }}</td>
+            <td class="text-sm auditoria-detail" data-label="Detalle">{{ log.detail }}</td>
           </tr>
         }
         @if (auditService.filteredLogs().length === 0) {
@@ -88,6 +91,13 @@
         }
       </tbody>
     </table>
+    <div class="sz-table-pagination">
+      <div class="sz-table-pagination-info">Mostrando {{ auditService.filteredLogs().length }} de {{ auditService.logs().length }} registros de auditoría</div>
+      <div class="sz-table-pagination-actions">
+        <button class="btn btn-outline btn-sm" disabled>Anterior</button>
+        <button class="btn btn-outline btn-sm" disabled>Siguiente</button>
+      </div>
+    </div>
   </div>
 
 </div>

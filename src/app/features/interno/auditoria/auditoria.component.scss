@@ -1,1 +1,60 @@
-// Component-specific styles if any
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.sz-auditoria-page {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.sz-table-container {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.sz-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.sz-date-filter {
+  width: 150px;
+}
+
+.auditoria-detail {
+  max-width: 440px;
+  white-space: normal;
+}
+
+@media (max-width: 1024px) {
+  :host {
+    display: block;
+    flex: none;
+    min-height: auto;
+  }
+
+  .sz-auditoria-page {
+    display: block;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .sz-table-container {
+    max-width: 100%;
+    min-height: auto;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sz-table {
+    min-width: 980px;
+  }
+}

@@ -3,7 +3,43 @@
   <p class="sz-page-description">Alertas y mensajes de seguimiento visibles para el usuario.</p>
 </section>
 
-<div class="empty-state">
-  <span class="material-symbols-outlined" aria-hidden="true">notifications_off</span>
-  <p>No hay notificaciones pendientes.</p>
-</div>
+@if (isLoading()) {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
+    <p>Cargando notificaciones...</p>
+  </div>
+} @else if (error()) {
+  <div class="victim-state error" role="alert">
+    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+    <p>{{ error() }}</p>
+    <button type="button" (click)="load()">Reintentar</button>
+  </div>
+} @else if (notificaciones().length) {
+  <section class="notifications-list" aria-label="Notificaciones">
+    @for (notificacion of notificaciones(); track notificacion.id) {
+      <article class="notification-card" [class.is-unread]="!notificacion.leida">
+        <div class="notification-icon">
+          <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
+        </div>
+        <div class="notification-content">
+          <div class="notification-meta">
+            <span class="status-pill">{{ notificacion.prioridad }}</span>
+            <span>{{ notificacion.tipo }}</span>
+            <span>{{ notificacion.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <h3>{{ notificacion.titulo }}</h3>
+          <p>{{ notificacion.mensaje }}</p>
+          <small>{{ notificacion.leida ? 'Leida' : 'Pendiente de lectura' }}</small>
+          @if (!notificacion.leida) {
+            <button type="button" (click)="marcarLeida(notificacion)">Marcar como leída</button>
+          }
+        </div>
+      </article>
+    }
+  </section>
+} @else {
+  <div class="empty-state">
+    <span class="material-symbols-outlined" aria-hidden="true">notifications_off</span>
+    <p>No hay notificaciones pendientes.</p>
+  </div>
+}

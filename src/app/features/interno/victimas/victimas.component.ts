@@ -39,16 +39,6 @@ export class VictimasComponent {
     estado: 'Activo'
   };
 
-  openCreate() {
-    this.formData = {
-      nombre: '', apellidos: '', dni: '', edad: '18', genero: 'Femenino', estadoCivil: 'Soltera',
-      ocupacion: '', distrito: 'Lima', direccion: '', telefono: '',
-      contactoEmergenciaNombre: '', contactoEmergenciaTelefono: '',
-      anonimo: false, estado: 'Activo'
-    };
-    this.victimsService.openCreateModal();
-  }
-
   openEdit(v: Victim) {
     this.formData = {
       nombre: v.nombre,

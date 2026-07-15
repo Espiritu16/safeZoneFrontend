@@ -1,1 +1,126 @@
-/* Placeholder para notificaciones del usuario/victima. */
+:host {
+  display: block;
+}
+
+.notifications-list {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.notification-card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 0.875rem;
+  padding: 1rem;
+  border: 1px solid #d7dde7;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.notification-card.is-unread {
+  border-color: rgba(15, 118, 110, 0.35);
+  box-shadow: inset 3px 0 0 #0f766e;
+}
+
+.notification-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(30, 58, 138, 0.08);
+  color: #1e3a8a;
+}
+
+.notification-content {
+  min-width: 0;
+}
+
+.notification-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  color: #607086;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.notification-content h3 {
+  margin: 0.5rem 0 0.25rem;
+  color: #102033;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.notification-content p,
+.notification-content small {
+  display: block;
+  margin: 0;
+  color: #607086;
+  line-height: 1.45;
+}
+
+.notification-content small {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+}
+
+.notification-content button,
+.victim-state button {
+  min-height: 40px;
+  margin-top: 0.75rem;
+  padding: 0 0.875rem;
+  border: 1px solid rgba(15, 118, 110, 0.24);
+  border-radius: 8px;
+  background: #ecfdf5;
+  color: #0f766e;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #0f766e;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.empty-state,
+.victim-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 120px;
+  border: 1px dashed #d7dde7;
+  border-radius: 12px;
+  color: #607086;
+  text-align: center;
+}
+
+.victim-state {
+  flex-wrap: wrap;
+  border-style: solid;
+}
+
+.victim-state.error {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: rgba(220, 38, 38, 0.08);
+  color: #991b1b;
+}
+
+@media (max-width: 520px) {
+  .notification-card {
+    grid-template-columns: 1fr;
+  }
+}

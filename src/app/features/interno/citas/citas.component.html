@@ -1,184 +1,230 @@
-<div class="animate-slide-up">
-  
+<div class="animate-slide-up sz-citas-page">
   <div class="sz-page-header">
     <div class="sz-page-header-info">
       <h1 class="sz-page-title">Agenda y Gestión de Citas</h1>
-      <p class="sz-page-description">Programación de asesorías legales, test psicológicos y contención emocional.</p>
+      <p class="sz-page-description">Programa, reprograma, cancela y confirma citas psicológicas o legales.</p>
     </div>
     <div class="sz-page-header-actions">
-      <button class="btn btn-primary btn-sm" (click)="appointmentsService.showAppointmentModal.set(true)">Programar Nueva Cita</button>
+      <button class="btn btn-outline btn-sm" type="button" (click)="appointmentsService.loadCitas().subscribe()">Actualizar</button>
+      <button class="btn btn-primary btn-sm" type="button" (click)="appointmentsService.openCreateModal()">Programar cita</button>
     </div>
   </div>
 
-  <!-- Calendario Integrado -->
-  <div class="sz-calendar-wrapper mt-6">
-    
-    <!-- Controles -->
-    <div class="sz-calendar-controls">
-      <span class="sz-calendar-controls-date">Mayo 2026</span>
-      <div class="sz-calendar-controls-nav">
-        <button class="btn btn-outline btn-sm">&lt;</button>
-        <button class="btn btn-outline btn-sm">Hoy</button>
-        <button class="btn btn-outline btn-sm">&gt;</button>
+  <div class="sz-table-filters mt-6">
+    <div class="sz-table-filters-left">
+      <div class="form-group m-0 sz-field-min-sm">
+        <input
+          class="form-input"
+          type="text"
+          aria-label="Buscar citas"
+          placeholder="Buscar por caso, profesional, tipo o estado..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        >
       </div>
-      <div class="sz-calendar-controls-views">
-        <button class="view-btn" [ngClass]="{'is-active': appointmentsService.calendarView() === 'mes'}" (click)="appointmentsService.calendarView.set('mes')">Mes</button>
-        <button class="view-btn" [ngClass]="{'is-active': appointmentsService.calendarView() === 'semana'}" (click)="appointmentsService.calendarView.set('semana')">Semana</button>
-      </div>
-    </div>
-
-    <!-- Grilla mensual -->
-    <div class="sz-calendar-grid">
-      <!-- Cabecera de días -->
-      <div class="grid-header-day">Lun</div>
-      <div class="grid-header-day">Mar</div>
-      <div class="grid-header-day">Mié</div>
-      <div class="grid-header-day">Jue</div>
-      <div class="grid-header-day">Vie</div>
-      <div class="grid-header-day">Sáb</div>
-      <div class="grid-header-day">Dom</div>
-
-      <!-- Fila 1 de días Mayo 2026 -->
-      <div class="grid-cell-day other-month"><span class="day-number">27</span></div>
-      <div class="grid-cell-day other-month"><span class="day-number">28</span></div>
-      <div class="grid-cell-day other-month"><span class="day-number">29</span></div>
-      <div class="grid-cell-day other-month"><span class="day-number">30</span></div>
-      <div class="grid-cell-day"><span class="day-number">1</span></div>
-      <div class="grid-cell-day"><span class="day-number">2</span></div>
-      <div class="grid-cell-day"><span class="day-number">3</span></div>
-
-      <!-- Fila 2 -->
-      <div class="grid-cell-day"><span class="day-number">4</span></div>
-      <div class="grid-cell-day"><span class="day-number">5</span></div>
-      <div class="grid-cell-day"><span class="day-number">6</span></div>
-      <div class="grid-cell-day"><span class="day-number">7</span></div>
-      <div class="grid-cell-day"><span class="day-number">8</span></div>
-      <div class="grid-cell-day"><span class="day-number">9</span></div>
-      <div class="grid-cell-day"><span class="day-number">10</span></div>
-
-      <!-- Fila 3 -->
-      <div class="grid-cell-day"><span class="day-number">11</span></div>
-      <div class="grid-cell-day"><span class="day-number">12</span></div>
-      <div class="grid-cell-day"><span class="day-number">13</span></div>
-      <div class="grid-cell-day"><span class="day-number">14</span></div>
-      <div class="grid-cell-day"><span class="day-number">15</span></div>
-      <div class="grid-cell-day"><span class="day-number">16</span></div>
-      <div class="grid-cell-day"><span class="day-number">17</span></div>
-
-      <!-- Fila 4 -->
-      <div class="grid-cell-day"><span class="day-number">18</span></div>
-      <div class="grid-cell-day"><span class="day-number">19</span></div>
-      <div class="grid-cell-day"><span class="day-number">20</span></div>
-      <div class="grid-cell-day"><span class="day-number">21</span></div>
-      <!-- HOY (22 de Mayo) -->
-      <div class="grid-cell-day is-today">
-        <span class="day-number">22</span>
-        <div class="sz-calendar-event sz-calendar-event-psychology" (click)="showToast('Cita: Asesoría Psicológica con Ana María L. a las 9:00 AM.', 'info')">9:00 Cita Psicológica</div>
-        <div class="sz-calendar-event sz-calendar-event-legal" (click)="showToast('Cita: Asesoría Legal con Patricia S. a las 11:30 AM.', 'info')">11:30 Orientación Legal</div>
-      </div>
-      <div class="grid-cell-day">
-        <span class="day-number">23</span>
-        <div class="sz-calendar-event sz-calendar-event-social">15:00 Test Social</div>
-      </div>
-      <div class="grid-cell-day"><span class="day-number">24</span></div>
-
-      <!-- Fila 5 -->
-      <div class="grid-cell-day">
-        <span class="day-number">25</span>
-        <div class="sz-calendar-event sz-calendar-event-psychology">10:00 Cita Psicológica</div>
-      </div>
-      <div class="grid-cell-day"><span class="day-number">26</span></div>
-      <div class="grid-cell-day"><span class="day-number">27</span></div>
-      <div class="grid-cell-day"><span class="day-number">28</span></div>
-      <div class="grid-cell-day"><span class="day-number">29</span></div>
-      <div class="grid-cell-day"><span class="day-number">30</span></div>
-      <div class="grid-cell-day"><span class="day-number">31</span></div>
-
-    </div>
-
-    <!-- Agenda del día -->
-    <div class="sz-calendar-agenda">
-      <h3 class="sz-calendar-agenda-title">Citas de Hoy: 22 de Mayo, 2026</h3>
-      <div class="sz-calendar-agenda-list">
-        @for (cita of appointmentsService.citas(); track cita.id) {
-          @if (cita.fecha === '2026-05-22') {
-            <div class="sz-calendar-agenda-item">
-              <div class="item-time">
-                <span class="hour">{{ cita.hora }}</span>
-                <span class="period">AM</span>
-              </div>
-              <div class="item-details">
-                <span class="type text-xs" [ngClass]="{
-                  'text-success': cita.color === 'psychology',
-                  'text-info': cita.color === 'legal',
-                  'text-warning': cita.color === 'social'
-                }">{{ cita.tipo }}</span>
-                <p class="title">{{ cita.caso }}</p>
-                <p class="attendee">Profesional: {{ cita.doctor }}</p>
-              </div>
-              <div>
-                <span class="badge" [ngClass]="cita.estado === 'Completada' ? 'badge-success' : 'badge-warning'">{{ cita.estado }}</span>
-              </div>
-            </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar citas por estado" [ngModel]="appointmentsService.statusFilter()" (ngModelChange)="appointmentsService.statusFilter.set($event)">
+          @for (estado of estados; track estado.value) {
+            <option [value]="estado.value">{{ estado.label }}</option>
           }
-        }
+        </select>
       </div>
+      <div class="form-group m-0">
+        <select class="form-select" aria-label="Filtrar citas por tipo" [ngModel]="typeFilter()" (ngModelChange)="typeFilter.set($event)">
+          @for (tipo of tipos; track tipo.value) {
+            <option [value]="tipo.value">{{ tipo.label }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-group m-0 sz-date-filter">
+        <input class="form-input" type="date" aria-label="Fecha de inicio desde" [ngModel]="dateFromFilter()" (ngModelChange)="dateFromFilter.set($event)">
+      </div>
+      <div class="form-group m-0 sz-date-filter">
+        <input class="form-input" type="date" aria-label="Fecha de inicio hasta" [ngModel]="dateToFilter()" (ngModelChange)="dateToFilter.set($event)">
+      </div>
+      <button class="btn btn-outline btn-sm" type="button" (click)="clearFilters()">Limpiar filtros</button>
     </div>
-
+    <div class="sz-table-filters-right">
+      <span class="text-xs text-muted font-medium">Citas encontradas: {{ visibleCitas().length }}</span>
+    </div>
   </div>
 
+  @if (appointmentsService.loadError()) {
+    <div class="card mt-4 p-4 text-danger">{{ appointmentsService.loadError() }}</div>
+  }
+
+  <div class="sz-table-container mt-4">
+    <table class="sz-table sz-citas-table">
+      <thead>
+        <tr>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Víctima</th>
+          <th>Caso</th>
+          <th>Atención</th>
+          <th>Estado</th>
+          <th>Observación</th>
+          <th class="col-actions">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (cita of visibleCitas(); track cita.id) {
+          <tr>
+            <td data-label="Inicio">
+              <strong>{{ cita.fecha }}</strong>
+              <div class="text-xs text-muted">{{ cita.hora }}</div>
+            </td>
+            <td data-label="Fin">
+              <strong>{{ cita.fechaFinLabel }}</strong>
+              <div class="text-xs text-muted">{{ cita.horaFin }}</div>
+            </td>
+            <td data-label="Víctima">
+              <strong>{{ cita.victima }}</strong>
+              <div class="text-xs text-muted">ID: {{ cita.victimaId.slice(0, 8).toUpperCase() }}</div>
+            </td>
+            <td data-label="Caso">
+              <strong>{{ cita.caso }}</strong>
+              <div class="text-xs text-muted">{{ cita.casoId.slice(0, 8).toUpperCase() }}</div>
+            </td>
+            <td data-label="Atención">
+              <span class="badge" [ngClass]="cita.color === 'psychology' ? 'badge-info' : 'badge-warning'">{{ cita.tipo }}</span>
+              <div class="text-xs text-muted mt-1">{{ cita.profesional }}</div>
+            </td>
+            <td data-label="Estado">
+              <span class="badge" [ngClass]="{
+                'badge-success': cita.estado === 'ATENDIDA',
+                'badge-warning': cita.estado === 'PROGRAMADA' || cita.estado === 'CONFIRMADA',
+                'badge-danger': cita.estado === 'CANCELADA' || cita.estado === 'NO_ASISTIO'
+              }">{{ cita.estadoLabel }}</span>
+            </td>
+            <td class="sz-cita-observation" data-label="Observación">
+              {{ cita.observaciones || cita.motivoCancelacion || 'Sin observaciones registradas.' }}
+            </td>
+            <td class="col-actions" data-label="Acciones">
+              <div class="sz-cita-actions">
+                <button class="btn btn-outline btn-sm" type="button" (click)="appointmentsService.openEditModal(cita)">Reprogramar</button>
+                <select class="form-select" aria-label="Registrar atención" [ngModel]="''" (ngModelChange)="actualizarEstado(cita.id, $event)">
+                  <option value="">Registrar atención</option>
+                  @for (estado of estadosAtencion; track estado.value) {
+                    <option [value]="estado.value">{{ estado.label }}</option>
+                  }
+                </select>
+                <button
+                  class="btn btn-sm btn-outline sz-cita-cancel-btn"
+                  type="button"
+                  [disabled]="cita.estado === 'CANCELADA'"
+                  (click)="openCancelModal(cita)"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="8" class="text-center text-muted">No hay citas registradas para el filtro seleccionado.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="sz-table-pagination">
+      <div class="sz-table-pagination-info">Mostrando {{ visibleCitas().length }} de {{ appointmentsService.citas().length }} citas registradas</div>
+      <div class="sz-table-pagination-actions">
+        <button class="btn btn-outline btn-sm" disabled>Anterior</button>
+        <button class="btn btn-outline btn-sm" disabled>Siguiente</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- MODAL: PROGRAMAR CITA -->
 @if (appointmentsService.showAppointmentModal()) {
   <div class="sz-modal-overlay">
     <div class="sz-modal">
       <div class="sz-modal-header">
-        <h3 class="sz-modal-header-title">Programar Cita Psicosocial</h3>
-        <button class="sz-modal-header-close" (click)="appointmentsService.showAppointmentModal.set(false)">
+        <h3 class="sz-modal-header-title">{{ appointmentsService.editingCita() ? 'Reprogramar cita' : 'Programar cita' }}</h3>
+        <button class="sz-modal-header-close" type="button" aria-label="Cerrar" (click)="appointmentsService.closeModal()">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
       <div class="sz-modal-body">
-        
         <div class="form-group">
-          <label class="form-label">Caso Vinculado</label>
-          <select class="form-select" [(ngModel)]="appointmentsService.nuevaCita.casoId" required>
+          <label class="form-label" for="cita-caso">Caso vinculado</label>
+          <select id="cita-caso" class="form-select" [(ngModel)]="appointmentsService.nuevaCita.casoId" [disabled]="!!appointmentsService.editingCita()" required>
+            <option value="">Seleccione un caso</option>
             @for (c of casesService.casos(); track c.id) {
-              <option [value]="c.codigo">{{ c.codigo }} - {{ c.victim }}</option>
+              <option [value]="c.id">{{ c.codigo }} - {{ c.victim }} - {{ c.asignado }}</option>
             }
           </select>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Tipo de Asesoría</label>
-          <select class="form-select" [(ngModel)]="appointmentsService.nuevaCita.tipo" required>
-            <option value="Psicológica">Psicológica</option>
-            <option value="Legal">Legal</option>
-            <option value="Evaluación">Evaluación Social</option>
+          <label class="form-label" for="cita-tipo">Tipo de cita</label>
+          <select id="cita-tipo" class="form-select" [(ngModel)]="appointmentsService.nuevaCita.tipoCita" required>
+            <option value="PSICOLOGIA">Psicológica</option>
+            <option value="LEGAL">Legal</option>
           </select>
         </div>
 
         <div class="sz-grid-2">
           <div class="form-group">
-            <label class="form-label">Fecha</label>
-            <input class="form-input" type="date" [(ngModel)]="appointmentsService.nuevaCita.fecha" required>
+            <label class="form-label" for="cita-inicio">Inicio</label>
+            <input id="cita-inicio" class="form-input" type="datetime-local" [(ngModel)]="appointmentsService.nuevaCita.fechaInicio" required>
           </div>
           <div class="form-group">
-            <label class="form-label">Hora</label>
-            <input class="form-input" type="time" [(ngModel)]="appointmentsService.nuevaCita.hora" required>
+            <label class="form-label" for="cita-fin">Fin</label>
+            <input id="cita-fin" class="form-input" type="datetime-local" [(ngModel)]="appointmentsService.nuevaCita.fechaFin">
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Notas Adicionales</label>
-          <textarea class="form-textarea" appTrimOnBlur [(ngModel)]="appointmentsService.nuevaCita.notas" placeholder="Motivo o requerimiento específico de la cita..." maxlength="500"></textarea>
+          <label class="form-label" for="cita-observaciones">Observaciones</label>
+          <textarea id="cita-observaciones" class="form-textarea" appTrimOnBlur [(ngModel)]="appointmentsService.nuevaCita.observaciones" maxlength="500"></textarea>
         </div>
-
       </div>
       <div class="sz-modal-footer">
-        <button class="btn btn-outline" (click)="appointmentsService.showAppointmentModal.set(false)">Cancelar</button>
-        <button class="btn btn-primary" (click)="appointmentsService.saveCita()">Agendar Cita</button>
+        <button class="btn btn-outline" type="button" (click)="appointmentsService.closeModal()">Cancelar</button>
+        <button class="btn btn-primary" type="button" (click)="appointmentsService.saveCita()">
+          {{ appointmentsService.editingCita() ? 'Guardar cambios' : 'Agendar cita' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (cancelingCita(); as cita) {
+  <div class="sz-modal-overlay">
+    <div class="sz-modal sz-modal-sm">
+      <div class="sz-modal-header">
+        <h3 class="sz-modal-header-title">Cancelar cita</h3>
+        <button class="sz-modal-header-close" type="button" aria-label="Cerrar" (click)="closeCancelModal()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="sz-modal-body">
+        <div class="sz-cancel-summary">
+          <strong>{{ cita.caso }}</strong>
+          <span>{{ cita.tipo }} · {{ cita.fecha }} {{ cita.hora }}</span>
+          <span>Profesional: {{ cita.profesional }}</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="motivo-cancelacion">Motivo / observación de cancelación *</label>
+          <textarea
+            id="motivo-cancelacion"
+            class="form-textarea"
+            appTrimOnBlur
+            maxlength="500"
+            rows="4"
+            placeholder="Ej. La víctima solicitó reprogramar por disponibilidad..."
+            [ngModel]="cancelReason()"
+            (ngModelChange)="cancelReason.set($event)"
+          ></textarea>
+          <p class="text-xs text-muted mt-1">{{ cancelReason().length }}/500 caracteres</p>
+        </div>
+      </div>
+      <div class="sz-modal-footer">
+        <button class="btn btn-outline" type="button" (click)="closeCancelModal()">Volver</button>
+        <button class="btn btn-danger" type="button" (click)="confirmCancel()">Confirmar cancelación</button>
       </div>
     </div>
   </div>
