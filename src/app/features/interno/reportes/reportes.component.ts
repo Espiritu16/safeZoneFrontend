@@ -24,8 +24,8 @@ export class ReportesComponent {
   private refreshTimer?: ReturnType<typeof setTimeout>;
   private viewReady = false;
 
-  protected readonly fechaDesde = signal<string>(new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10));
-  protected readonly fechaHasta = signal<string>(new Date().toISOString().slice(0, 10));
+  protected readonly fechaDesde = signal<string>('');
+  protected readonly fechaHasta = signal<string>('');
   protected readonly tipoViolencia = signal<string>('');
   protected readonly nivelRiesgo = signal<NivelRiesgo | ''>('');
   protected readonly reporte = signal<ReporteMensualResponse | null>(null);
