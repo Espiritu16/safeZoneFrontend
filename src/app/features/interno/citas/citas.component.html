@@ -5,8 +5,7 @@
       <p class="sz-page-description">Programa, reprograma, cancela y confirma citas psicológicas o legales.</p>
     </div>
     <div class="sz-page-header-actions">
-      <button class="btn btn-outline btn-sm" type="button" (click)="appointmentsService.loadCitas().subscribe()">Actualizar</button>
-      <button class="btn btn-primary btn-sm" type="button" (click)="appointmentsService.openCreateModal()">Programar cita</button>
+      <button class="btn btn-primary btn-sm" type="button" (click)="openCreateModal()">Programar cita</button>
     </div>
   </div>
 
@@ -29,6 +28,7 @@
           }
         </select>
       </div>
+      @if (!forcedTipoCita()) {
       <div class="form-group m-0">
         <select class="form-select" aria-label="Filtrar citas por tipo" [ngModel]="typeFilter()" (ngModelChange)="typeFilter.set($event)">
           @for (tipo of tipos; track tipo.value) {
@@ -36,6 +36,7 @@
           }
         </select>
       </div>
+      }
       <div class="form-group m-0 sz-date-filter">
         <input class="form-input" type="date" aria-label="Fecha de inicio desde" [ngModel]="dateFromFilter()" (ngModelChange)="dateFromFilter.set($event)">
       </div>
@@ -102,7 +103,7 @@
             </td>
             <td class="col-actions" data-label="Acciones">
               <div class="sz-cita-actions">
-                <button class="btn btn-outline btn-sm" type="button" (click)="appointmentsService.openEditModal(cita)">Reprogramar</button>
+                <button class="btn btn-outline btn-sm" type="button" (click)="openEditModal(cita)">Reprogramar</button>
                 <select class="form-select" aria-label="Registrar atención" [ngModel]="''" (ngModelChange)="actualizarEstado(cita.id, $event)">
                   <option value="">Registrar atención</option>
                   @for (estado of estadosAtencion; track estado.value) {
@@ -158,13 +159,20 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="cita-tipo">Tipo de cita</label>
-          <select id="cita-tipo" class="form-select" [(ngModel)]="appointmentsService.nuevaCita.tipoCita" required>
-            <option value="PSICOLOGIA">Psicológica</option>
-            <option value="LEGAL">Legal</option>
-          </select>
-        </div>
+        @if (forcedTipoCita()) {
+          <div class="form-group">
+            <label class="form-label">Tipo de cita</label>
+            <div class="form-input" aria-readonly="true">{{ forcedTipoLabel() }}</div>
+          </div>
+        } @else {
+          <div class="form-group">
+            <label class="form-label" for="cita-tipo">Tipo de cita</label>
+            <select id="cita-tipo" class="form-select" [(ngModel)]="appointmentsService.nuevaCita.tipoCita" required>
+              <option value="PSICOLOGIA">Psicológica</option>
+              <option value="LEGAL">Legal</option>
+            </select>
+          </div>
+        }
 
         <div class="sz-grid-2">
           <div class="form-group">
@@ -184,7 +192,7 @@
       </div>
       <div class="sz-modal-footer">
         <button class="btn btn-outline" type="button" (click)="appointmentsService.closeModal()">Cancelar</button>
-        <button class="btn btn-primary" type="button" (click)="appointmentsService.saveCita()">
+        <button class="btn btn-primary" type="button" (click)="saveCita()">
           {{ appointmentsService.editingCita() ? 'Guardar cambios' : 'Agendar cita' }}
         </button>
       </div>

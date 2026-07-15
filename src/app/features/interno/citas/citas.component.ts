@@ -5,6 +5,7 @@ import { AppointmentsService, type Cita } from '../../../core/services/appointme
 import { CasesService } from '../../../core/services/cases.service';
 import type { EstadoCita, TipoCita } from '../../../core/models/api.models';
 import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { TrimOnBlurDirective } from '../../../shared/directives/trim-on-blur.directive';
 import { normalizeText } from '../../../shared/utils/input-sanitizers.util';
 import { VALIDATION_LIMITS } from '../../../shared/utils/validation-rules';
@@ -19,6 +20,7 @@ import { VALIDATION_LIMITS } from '../../../shared/utils/validation-rules';
 export class CitasComponent {
   protected readonly appointmentsService = inject(AppointmentsService);
   protected readonly casesService = inject(CasesService);
+  protected readonly authService = inject(AuthService);
   private readonly toastService = inject(ToastService);
 
   protected readonly searchQuery = signal('');
@@ -49,9 +51,21 @@ export class CitasComponent {
     { value: 'LEGAL', label: 'Legales' },
   ];
 
+  protected readonly forcedTipoCita = computed<TipoCita | null>(() => {
+    if (this.authService.hasRole('DEFENSOR')) {
+      return 'LEGAL';
+    }
+    if (this.authService.hasRole('PSICOLOGO')) {
+      return 'PSICOLOGIA';
+    }
+    return null;
+  });
+
+  protected readonly forcedTipoLabel = computed(() => this.forcedTipoCita() === 'LEGAL' ? 'Legal' : 'Psicológica');
+
   protected readonly visibleCitas = computed(() => {
     const query = this.searchQuery().trim().toLowerCase();
-    const type = this.typeFilter();
+    const type = this.forcedTipoCita() ?? this.typeFilter();
 
     return this.appointmentsService.filteredCitas().filter((cita) => {
       const matchesSearch =
@@ -81,6 +95,21 @@ export class CitasComponent {
     this.cancelReason.set(cita.motivoCancelacion ?? '');
   }
 
+  protected openCreateModal(): void {
+    this.appointmentsService.openCreateModal();
+    this.applyForcedTipoCita();
+  }
+
+  protected openEditModal(cita: Cita): void {
+    this.appointmentsService.openEditModal(cita);
+    this.applyForcedTipoCita();
+  }
+
+  protected saveCita(): void {
+    this.applyForcedTipoCita();
+    this.appointmentsService.saveCita();
+  }
+
   protected closeCancelModal(): void {
     this.cancelingCita.set(null);
     this.cancelReason.set('');
@@ -107,9 +136,17 @@ export class CitasComponent {
 
   protected clearFilters(): void {
     this.searchQuery.set('');
-    this.typeFilter.set('TODAS');
+    this.typeFilter.set(this.forcedTipoCita() ?? 'TODAS');
     this.dateFromFilter.set('');
     this.dateToFilter.set('');
     this.appointmentsService.statusFilter.set('TODAS');
+  }
+
+  private applyForcedTipoCita(): void {
+    const tipo = this.forcedTipoCita();
+    if (tipo) {
+      this.appointmentsService.nuevaCita.tipoCita = tipo;
+      this.typeFilter.set(tipo);
+    }
   }
 }

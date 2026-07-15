@@ -5,6 +5,7 @@
       <p class="sz-page-description">Reportes filtrados por fecha, tipo de violencia y nivel de riesgo.</p>
     </div>
     <div class="sz-page-header-actions">
+      <button class="btn btn-outline btn-sm" type="button" [disabled]="isExporting() || isLoading()" (click)="exportarExcel()">Exportar Excel</button>
       <button class="btn btn-primary btn-sm" type="button" [disabled]="isLoading()" (click)="generarReporte()">Generar reporte</button>
     </div>
   </div>
@@ -21,7 +22,11 @@
       </div>
       <div class="form-group m-0">
         <label class="form-label" for="reporte-tipo">Tipo de violencia</label>
-        <input id="reporte-tipo" class="form-input" type="text" placeholder="Ej. FISICA" [ngModel]="tipoViolencia()" (ngModelChange)="tipoViolencia.set($event)">
+        <select id="reporte-tipo" class="form-select" [ngModel]="tipoViolencia()" (ngModelChange)="tipoViolencia.set($event)">
+          @for (tipo of tiposViolencia; track tipo.value) {
+            <option [value]="tipo.value">{{ tipo.label }}</option>
+          }
+        </select>
       </div>
       <div class="form-group m-0">
         <label class="form-label" for="reporte-riesgo">Nivel de riesgo</label>

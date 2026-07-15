@@ -13,4 +13,8 @@ export class ReportsService {
   generarMensual(request: ReporteMensualRequest): Observable<ReporteMensualResponse> {
     return this.api.post<ReporteMensualResponse>(`${API_ENDPOINTS.reportes}/mensual`, request);
   }
+
+  generarMensualExcel(request: ReporteMensualRequest): Observable<Blob> {
+    return this.api.postBlob(`${API_ENDPOINTS.reportes}/mensual/excel`, request);
+  }
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Chart from 'chart.js/auto';
@@ -29,6 +29,18 @@ export class ReportesComponent {
   protected readonly nivelRiesgo = signal<NivelRiesgo | ''>('');
   protected readonly reporte = signal<ReporteMensualResponse | null>(null);
   protected readonly isLoading = signal<boolean>(false);
+  protected readonly isExporting = signal<boolean>(false);
+
+  protected readonly tiposViolencia = [
+    { value: '', label: 'Todos los tipos' },
+    { value: 'FISICA', label: 'Física' },
+    { value: 'PSICOLOGICA', label: 'Psicológica' },
+    { value: 'SEXUAL', label: 'Sexual' },
+    { value: 'ECONOMICA', label: 'Económica' },
+    { value: 'PATRIMONIAL', label: 'Patrimonial' },
+    { value: 'DIGITAL', label: 'Digital' },
+    { value: 'OTRA', label: 'Otra' },
+  ];
 
   protected readonly riesgos: Array<{ value: NivelRiesgo | ''; label: string }> = [
     { value: '', label: 'Todos los riesgos' },
@@ -53,12 +65,7 @@ export class ReportesComponent {
 
   protected generarReporte(): void {
     this.isLoading.set(true);
-    this.reportsService.generarMensual({
-      fechaDesde: this.fechaDesde() ? `${this.fechaDesde()}T00:00:00-05:00` : null,
-      fechaHasta: this.fechaHasta() ? `${this.fechaHasta()}T23:59:59-05:00` : null,
-      tipoViolencia: this.tipoViolencia().trim() || null,
-      nivelRiesgo: this.nivelRiesgo() || null,
-    }).subscribe({
+    this.reportsService.generarMensual(this.buildRequest()).subscribe({
       next: (response) => {
         this.reporte.set(response);
         this.isLoading.set(false);
@@ -69,6 +76,37 @@ export class ReportesComponent {
         this.isLoading.set(false);
       },
     });
+  }
+
+  protected exportarExcel(): void {
+    this.isExporting.set(true);
+    this.reportsService.generarMensualExcel(this.buildRequest()).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `reporte-safezone-${this.fechaDesde() || 'inicio'}-${this.fechaHasta() || 'hoy'}.xlsx`;
+        link.click();
+        URL.revokeObjectURL(url);
+        this.isExporting.set(false);
+      },
+      error: () => {
+        this.toastService.show('No se pudo exportar el reporte en Excel.', 'error');
+        this.isExporting.set(false);
+      },
+    });
+  }
+
+  @HostListener('window:focus')
+  protected refreshOnFocus(): void {
+    this.generarReporte();
+  }
+
+  @HostListener('document:visibilitychange')
+  protected refreshOnVisibility(): void {
+    if (document.visibilityState === 'visible') {
+      this.generarReporte();
+    }
   }
 
   protected entries(record: Record<string, number> | undefined | null): Array<{ key: string; value: number }> {
@@ -203,5 +241,14 @@ export class ReportesComponent {
   private destroyCharts(): void {
     this.charts.forEach((chart) => chart.destroy());
     this.charts = [];
+  }
+
+  private buildRequest() {
+    return {
+      fechaDesde: this.fechaDesde() ? `${this.fechaDesde()}T00:00:00-05:00` : null,
+      fechaHasta: this.fechaHasta() ? `${this.fechaHasta()}T23:59:59-05:00` : null,
+      tipoViolencia: this.tipoViolencia().trim() || null,
+      nivelRiesgo: this.nivelRiesgo() || null,
+    };
   }
 }
