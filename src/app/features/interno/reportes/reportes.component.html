@@ -5,7 +5,7 @@
       <p class="sz-page-description">Reportes filtrados por fecha, tipo de violencia y nivel de riesgo.</p>
     </div>
     <div class="sz-page-header-actions">
-      <button class="btn btn-outline btn-sm" type="button" [disabled]="isExporting() || isLoading()" (click)="exportarExcel()">Generar reportes en Excel</button>
+      <button class="btn btn-outline btn-sm" type="button" [disabled]="isExporting() || isLoading()" (click)="exportarExcel()">Exportar Excel</button>
     </div>
   </div>
 
@@ -36,9 +36,48 @@
         </select>
       </div>
     </div>
+    <div class="sz-table-filters-right">
+      <span class="text-xs text-muted font-medium">
+        @if (isLoading()) {
+          Actualizando datos reales...
+        } @else if (updatedAt()) {
+          Datos reales actualizados {{ updatedAt() }}
+        } @else {
+          Datos reales de la base
+        }
+      </span>
+    </div>
   </div>
 
   @if (reporte(); as r) {
+    <section class="sz-report-stats mt-6" aria-label="Estadísticas del reporte">
+      <div class="sz-report-stat">
+        <span class="sz-report-stat-label">Denuncias</span>
+        <strong>{{ r.totalDenuncias }}</strong>
+        <small>filtradas</small>
+      </div>
+      <div class="sz-report-stat">
+        <span class="sz-report-stat-label">Casos</span>
+        <strong>{{ r.totalCasos }}</strong>
+        <small>relacionados</small>
+      </div>
+      <div class="sz-report-stat">
+        <span class="sz-report-stat-label">Citas</span>
+        <strong>{{ r.totalCitas }}</strong>
+        <small>en periodo</small>
+      </div>
+      <div class="sz-report-stat">
+        <span class="sz-report-stat-label">Atención</span>
+        <strong>{{ porcentaje(r.citasAtendidas, r.totalCitas) }}</strong>
+        <small>{{ r.citasAtendidas }} atendidas</small>
+      </div>
+      <div class="sz-report-stat">
+        <span class="sz-report-stat-label">Cancelación</span>
+        <strong>{{ porcentaje(r.citasCanceladas, r.totalCitas) }}</strong>
+        <small>{{ r.citasCanceladas }} canceladas</small>
+      </div>
+    </section>
+
     <div class="sz-grid-2 mt-6">
       <div class="card sz-report-chart-card">
         <div class="card-header">

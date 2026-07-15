@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Chart from 'chart.js/auto';
 import { ToastService } from '../../../core/services/toast.service';
 import { ReportsService } from '../../../core/services/reports.service';
-import type { NivelRiesgo, ReporteMensualResponse } from '../../../core/models/api.models';
+import type { NivelRiesgo, ReporteMensualRequest, ReporteMensualResponse } from '../../../core/models/api.models';
 
 @Component({
   selector: 'app-reportes',
@@ -21,6 +21,7 @@ export class ReportesComponent {
   @ViewChild('distritoChart') private distritoChart?: ElementRef<HTMLCanvasElement>;
   @ViewChild('citasChart') private citasChart?: ElementRef<HTMLCanvasElement>;
   private charts: Chart[] = [];
+  private refreshTimer?: ReturnType<typeof setTimeout>;
   private viewReady = false;
 
   protected readonly fechaDesde = signal<string>(new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10));
@@ -30,6 +31,7 @@ export class ReportesComponent {
   protected readonly reporte = signal<ReporteMensualResponse | null>(null);
   protected readonly isLoading = signal<boolean>(false);
   protected readonly isExporting = signal<boolean>(false);
+  protected readonly updatedAt = signal<string>('');
 
   protected readonly tiposViolencia = [
     { value: '', label: 'Todos los tipos' },
@@ -51,7 +53,9 @@ export class ReportesComponent {
   ];
 
   constructor() {
-    this.exportarExcel()
+    effect(() => {
+      this.scheduleAutoRefresh(this.buildRequest());
+    });
   }
 
   ngAfterViewInit(): void {
@@ -60,8 +64,28 @@ export class ReportesComponent {
   }
 
   ngOnDestroy(): void {
+    if (this.refreshTimer) {
+      clearTimeout(this.refreshTimer);
+    }
     this.destroyCharts();
   }
+
+  protected generarReporte(request: ReporteMensualRequest = this.buildRequest()): void {
+    this.isLoading.set(true);
+    this.reportsService.generarMensual(request).subscribe({
+      next: (response) => {
+        this.reporte.set(response);
+        this.updatedAt.set(new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }));
+        this.isLoading.set(false);
+        setTimeout(() => this.renderCharts());
+      },
+      error: () => {
+        this.toastService.show('No se pudo generar el reporte.', 'error');
+        this.isLoading.set(false);
+      },
+    });
+  }
+
   protected exportarExcel(): void {
     this.isExporting.set(true);
     this.reportsService.generarMensualExcel(this.buildRequest()).subscribe({
@@ -80,6 +104,26 @@ export class ReportesComponent {
       },
     });
   }
+
+  @HostListener('window:focus')
+  protected refreshOnFocus(): void {
+    this.generarReporte();
+  }
+
+  @HostListener('document:visibilitychange')
+  protected refreshOnVisibility(): void {
+    if (document.visibilityState === 'visible') {
+      this.generarReporte();
+    }
+  }
+
+  protected porcentaje(value: number, total: number): string {
+    if (!total) {
+      return '0%';
+    }
+    return `${Math.round((value / total) * 100)}%`;
+  }
+
   protected entries(record: Record<string, number> | undefined | null): Array<{ key: string; value: number }> {
     return Object.entries(record ?? {}).map(([key, value]) => ({ key, value }));
   }
@@ -214,7 +258,14 @@ export class ReportesComponent {
     this.charts = [];
   }
 
-  private buildRequest() {
+  private scheduleAutoRefresh(request: ReporteMensualRequest): void {
+    if (this.refreshTimer) {
+      clearTimeout(this.refreshTimer);
+    }
+    this.refreshTimer = setTimeout(() => this.generarReporte(request), 350);
+  }
+
+  private buildRequest(): ReporteMensualRequest {
     return {
       fechaDesde: this.fechaDesde() ? `${this.fechaDesde()}T00:00:00-05:00` : null,
       fechaHasta: this.fechaHasta() ? `${this.fechaHasta()}T23:59:59-05:00` : null,
