@@ -42,7 +42,7 @@ export class DenunciasComponent {
     edad: '',
     distrito: 'Lima',
     telefono: '',
-    tipoViolencia: 'Física',
+    tipoViolencia: 'FISICA',
     relacionAgresor: 'Cónyuge',
     detalleHechos: '',
     medidasInmediatas: false
@@ -103,6 +103,20 @@ export class DenunciasComponent {
   simulateFileUpload(event: Event) {
     this.evidenceService.onFileSelected(event);
   }
+
+  protected tipoViolenciaLabel(value: string): string {
+    const labels: Record<string, string> = {
+      FISICA: 'Física',
+      PSICOLOGICA: 'Psicológica',
+      ECONOMICA: 'Económica',
+      PATRIMONIAL: 'Patrimonial',
+      DIGITAL: 'Digital',
+      SEXUAL: 'Sexual',
+      OTRA: 'Otra',
+    };
+    return labels[value] ?? 'Otra';
+  }
+
   private normalizeForm() {
     this.denunciaForm = {
       ...this.denunciaForm,
@@ -233,7 +247,7 @@ export class DenunciasComponent {
       edad: '',
       distrito: 'Lima',
       telefono: '',
-      tipoViolencia: 'Física',
+      tipoViolencia: 'FISICA',
       relacionAgresor: 'Cónyuge',
       detalleHechos: '',
       medidasInmediatas: false

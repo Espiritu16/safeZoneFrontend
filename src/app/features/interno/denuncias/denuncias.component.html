@@ -108,13 +108,13 @@
             <div class="form-group">
               <label class="form-label">Tipo Principal de Violencia</label>
               <select class="form-select" [(ngModel)]="denunciaForm.tipoViolencia">
-                <option value="Violencia Física">Física</option>
-                <option value="Violencia Psicológica">Psicológica</option>
-                <option value="Violencia Económica">Económica </option>
-                <option value="Violencia Patrimonial">Patrimonial</option>
-                <option value="Violencia Digital">Digital</option>
-                <option value="Violencia Sexual">Sexual</option>
-                <option value="Otra">Otra</option>
+                <option value="FISICA">Física</option>
+                <option value="PSICOLOGICA">Psicológica</option>
+                <option value="ECONOMICA">Económica</option>
+                <option value="PATRIMONIAL">Patrimonial</option>
+                <option value="DIGITAL">Digital</option>
+                <option value="SEXUAL">Sexual</option>
+                <option value="OTRA">Otra</option>
               </select>
             </div>
             <div class="form-group">
@@ -175,7 +175,7 @@
           <p class="text-center text-secondary mb-6">Por favor, revise la información ingresada antes de enviar el caso al sistema judicial.</p>
           
           <div class="p-4 bg-brand-soft border-all rounded-lg text-sm">
-            <div class="mb-2"><strong>Tipo de Caso:</strong> Violencia {{ denunciaForm.tipoViolencia }}</div>
+            <div class="mb-2"><strong>Tipo de Caso:</strong> {{ tipoViolenciaLabel(denunciaForm.tipoViolencia) }}</div>
             <div class="mb-2"><strong>Víctima:</strong> {{ denunciaForm.anonimo ? 'Alias Protegido' : (denunciaForm.nombre || 'Ana María L.') }}</div>
             <div class="mb-2"><strong>Distrito:</strong> {{ denunciaForm.distrito }}</div>
             <div class="mb-2"><strong>Relación con Agresor:</strong> {{ denunciaForm.relacionAgresor }}</div>
