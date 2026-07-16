@@ -7,14 +7,20 @@ describe('lima district helpers', () => {
     expect(filterLimaDistricts('rimac')).toEqual(['Rímac']);
   });
 
-  it('only accepts official Lima district names', () => {
+  it('only accepts supported district names', () => {
     expect(isLimaDistrict('Comas')).toBe(true);
-    expect(isLimaDistrict('Lima norte')).toBe(false);
-    expect(isLimaDistrict('Lima Cercado')).toBe(false);
+    expect(isLimaDistrict('Ventanilla')).toBe(true);
+    expect(isLimaDistrict('Santa Fe')).toBe(false);
   });
 
   it('resolves a typed option to the canonical district name', () => {
     expect(resolveLimaDistrict(' los olivos ')).toBe('Los Olivos');
     expect(resolveLimaDistrict('Santa Fe')).toBeNull();
+  });
+
+  it('maps legacy Lima zone values to Lima for edit forms', () => {
+    expect(resolveLimaDistrict('Lima Cercado')).toBe('Lima');
+    expect(resolveLimaDistrict('Cercado de Lima')).toBe('Lima');
+    expect(resolveLimaDistrict('Lima norte')).toBe('Lima');
   });
 });

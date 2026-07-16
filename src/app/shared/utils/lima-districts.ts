@@ -40,6 +40,7 @@ export const LIMA_DISTRICTS = [
   'Santa Rosa',
   'Santiago de Surco',
   'Surquillo',
+  'Ventanilla',
   'Villa El Salvador',
   'Villa María del Triunfo',
 ] as const;
@@ -72,9 +73,22 @@ export function resolveLimaDistrict(value: string | null | undefined): LimaDistr
     return null;
   }
 
+  if (LEGACY_LIMA_ALIASES.has(normalizedValue)) {
+    return 'Lima';
+  }
+
   return LIMA_DISTRICTS.find((district) => normalizeDistrictSearch(district) === normalizedValue) ?? null;
 }
 
 export function isLimaDistrict(value: string | null | undefined): boolean {
   return resolveLimaDistrict(value) !== null;
 }
+
+const LEGACY_LIMA_ALIASES = new Set([
+  'cercado de lima',
+  'lima cercado',
+  'lima centro',
+  'lima este',
+  'lima norte',
+  'lima sur',
+]);
