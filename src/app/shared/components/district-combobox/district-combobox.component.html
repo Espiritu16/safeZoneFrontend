@@ -1,0 +1,44 @@
+<div class="district-combobox" [class.is-open]="isOpen()" [class.is-invalid]="isInvalid()">
+  <div class="district-field">
+    <input
+      [id]="id"
+      class="district-input"
+      type="text"
+      role="combobox"
+      autocomplete="off"
+      [attr.data-testid]="inputTestId || null"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="id + '-options'"
+      [attr.aria-activedescendant]="isOpen() && options().length ? optionId(activeIndex()) : null"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [value]="searchText()"
+      (focus)="openList()"
+      (input)="onInput($event)"
+      (keydown)="onKeydown($event)"
+      (blur)="onBlur()"
+    />
+    <span class="material-symbols-outlined district-icon" aria-hidden="true">search</span>
+  </div>
+
+  @if (isOpen()) {
+    <div class="district-options" [id]="id + '-options'" role="listbox">
+      @for (district of options(); track district; let index = $index) {
+        <button
+          type="button"
+          class="district-option"
+          role="option"
+          [id]="optionId(index)"
+          [class.is-active]="index === activeIndex()"
+          [attr.aria-selected]="district === selectedValue"
+          (mousedown)="$event.preventDefault()"
+          (click)="selectDistrict(district)"
+        >
+          {{ district }}
+        </button>
+      } @empty {
+        <div class="district-empty">Seleccione un distrito de Lima válido.</div>
+      }
+    </div>
+  }
+</div>

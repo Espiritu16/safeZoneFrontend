@@ -289,11 +289,15 @@
               <!-- Distrito -->
               <div class="form-group">
                 <label class="form-label">Distrito *</label>
-                <select #distritoSelect class="form-select" name="distrito" [ngModel]="caseItem.distrito" (ngModelChange)="updateEditingCase('distrito', $event)" required>
-                  @for (distrito of distritos; track distrito) {
-                    <option [value]="distrito">{{ distrito }}</option>
-                  }
-                </select>
+                <app-district-combobox
+                  #distritoControl="ngModel"
+                  name="distrito"
+                  [ngModel]="caseItem.distrito"
+                  (ngModelChange)="updateEditingCase('distrito', $event)"
+                  [required]="true"
+                  [invalid]="!!(distritoControl.invalid && distritoControl.touched)"
+                  placeholder="Buscar distrito"
+                />
               </div>
 
               <!-- Resumen -->
@@ -312,7 +316,7 @@
                 estado: estadoSelect.value,
                 psicologoId: psicologoSelect.value,
                 defensorId: defensorSelect.value,
-                distrito: distritoSelect.value,
+                distrito: caseItem.distrito,
                 resumen: resumenInput.value
               })"
               [disabled]="editForm.invalid || !caseItem.resumen"

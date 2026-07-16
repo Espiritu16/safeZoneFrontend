@@ -185,7 +185,12 @@
 
           <div class="form-group">
             <label class="form-label" for="distrito">Distrito</label>
-            <input id="distrito" class="form-input" type="text" name="distrito" appTrimOnBlur [(ngModel)]="formData.distrito" maxlength="120" placeholder="Ej. Comas">
+            <app-district-combobox
+              id="distrito"
+              name="distrito"
+              [(ngModel)]="formData.distrito"
+              placeholder="Buscar distrito"
+            />
           </div>
 
           @if (!editingUser()) {

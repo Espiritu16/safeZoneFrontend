@@ -11,6 +11,7 @@ import { NumbersOnlyDirective } from '../../../shared/directives/numbers-only.di
 import { TrimOnBlurDirective } from '../../../shared/directives/trim-on-blur.directive';
 import { sanitizeLettersOnly, sanitizeNumbersOnly } from '../../../shared/utils/input-sanitizers.util';
 import { VALIDATION_PATTERNS } from '../../../shared/utils/validation-rules';
+import { DistrictComboboxComponent } from '../../../shared/components/district-combobox/district-combobox.component';
 
 interface FormalizeForm {
   formalizarAnonima: boolean;
@@ -25,7 +26,7 @@ interface FormalizeForm {
 @Component({
   selector: 'app-predenuncias',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe, LettersOnlyDirective, NumbersOnlyDirective, TrimOnBlurDirective],
+  imports: [CommonModule, FormsModule, DatePipe, LettersOnlyDirective, NumbersOnlyDirective, TrimOnBlurDirective, DistrictComboboxComponent],
   templateUrl: './predenuncias.component.html',
   styleUrl: './predenuncias.component.scss',
 })

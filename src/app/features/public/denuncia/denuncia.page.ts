@@ -10,11 +10,12 @@ import { normalizeText, sanitizeLettersOnly, sanitizeNumbersOnly } from '../../.
 import { isValidBasicEmail, VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../../../shared/utils/validation-rules';
 import { PredenunciasService } from '../../../core/services/predenuncias.service';
 import { EvidenceService } from '../../../core/services/evidence.service';
+import { DistrictComboboxComponent } from '../../../shared/components/district-combobox/district-combobox.component';
 
 @Component({
   selector: 'app-denuncia-page',
   standalone: true,
-  imports: [FormsModule, RouterLink, PublicHeaderComponent, PublicFooterComponent, LettersOnlyDirective, TrimOnBlurDirective],
+  imports: [FormsModule, RouterLink, PublicHeaderComponent, PublicFooterComponent, LettersOnlyDirective, TrimOnBlurDirective, DistrictComboboxComponent],
   templateUrl: './denuncia.page.html',
   styleUrl: './denuncia.page.css'
 })
@@ -125,7 +126,7 @@ export class DenunciaPage {
         }).format(new Date(`${this.formData.incidentDate}T00:00:00-05:00`))
       : 'Fecha no registrada';
 
-    return `${date} - ${this.formData.location || 'Ubicación no registrada'}`;
+    return `${date} - ${this.formData.location || 'Distrito no registrado'}`;
   }
 
   get reviewContact(): string {
@@ -162,7 +163,7 @@ export class DenunciaPage {
       if (!this.formData.incidentDate || this.formData.incidentDate > today) {
         this.validationMessage = 'La fecha del incidente es obligatoria y no puede ser futura.';
       } else if (!this.formData.location) {
-        this.validationMessage = 'Ingrese la ubicación del incidente.';
+        this.validationMessage = 'Seleccione el distrito del incidente.';
       } else if (
         this.formData.description.length < VALIDATION_LIMITS.LONG_TEXT_MIN ||
         this.formData.description.length > VALIDATION_LIMITS.LONG_TEXT_MAX

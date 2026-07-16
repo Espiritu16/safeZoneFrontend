@@ -14,11 +14,12 @@ import { LettersOnlyDirective } from '../../../shared/directives/letters-only.di
 import { TrimOnBlurDirective } from '../../../shared/directives/trim-on-blur.directive';
 import { normalizeText, sanitizeLettersOnly, sanitizeNumbersOnly } from '../../../shared/utils/input-sanitizers.util';
 import { VALIDATION_LIMITS, VALIDATION_PATTERNS } from '../../../shared/utils/validation-rules';
+import { DistrictComboboxComponent } from '../../../shared/components/district-combobox/district-combobox.component';
 
 @Component({
   selector: 'app-denuncias',
   standalone: true,
-  imports: [CommonModule, FormsModule, NumbersOnlyDirective, LettersOnlyDirective, TrimOnBlurDirective],
+  imports: [CommonModule, FormsModule, NumbersOnlyDirective, LettersOnlyDirective, TrimOnBlurDirective, DistrictComboboxComponent],
   templateUrl: './denuncias.component.html',
   styleUrl: './denuncias.component.scss'
 })

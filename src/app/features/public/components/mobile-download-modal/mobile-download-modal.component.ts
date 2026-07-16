@@ -10,7 +10,7 @@ export class MobileDownloadModalComponent {
   @Input() open = false;
   @Output() closed = new EventEmitter<void>();
 
-  readonly androidApkUrl = '/downloads/safezone-android.apk?v=ba6cd569';
+  readonly androidApkUrl = '/downloads/safezone-android.apk?v=d597bb02';
 
   close(): void {
     this.closed.emit();

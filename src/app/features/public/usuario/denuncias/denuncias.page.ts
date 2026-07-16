@@ -6,6 +6,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { EvidenceService } from '../../../../core/services/evidence.service';
 import { PredenunciasService } from '../../../../core/services/predenuncias.service';
 import { UsuarioHistorialService } from '../../../../core/services/usuario-historial.service';
+import { DistrictComboboxComponent } from '../../../../shared/components/district-combobox/district-combobox.component';
 
 interface RegistroVictima {
   id: string;
@@ -27,7 +28,7 @@ interface RegistroVictima {
 @Component({
   selector: 'app-usuario-denuncias-page',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DistrictComboboxComponent],
   templateUrl: './denuncias.page.html',
   styleUrl: './denuncias.page.css'
 })

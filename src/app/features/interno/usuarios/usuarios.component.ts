@@ -11,6 +11,7 @@ import { NumbersOnlyDirective } from '../../../shared/directives/numbers-only.di
 import { TrimOnBlurDirective } from '../../../shared/directives/trim-on-blur.directive';
 import { sanitizeLettersOnly } from '../../../shared/utils/input-sanitizers.util';
 import { VALIDATION_LIMITS, VALIDATION_PATTERNS, isValidBasicEmail } from '../../../shared/utils/validation-rules';
+import { DistrictComboboxComponent } from '../../../shared/components/district-combobox/district-combobox.component';
 
 type UsuarioEstado = 'Activo' | 'Inactivo';
 type UsuarioRolFormulario = Exclude<FrontendRole, 'Soporte Técnico'>;
@@ -44,7 +45,7 @@ interface UsuarioFormData {
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule, LettersOnlyDirective, NumbersOnlyDirective, TrimOnBlurDirective],
+  imports: [CommonModule, FormsModule, LettersOnlyDirective, NumbersOnlyDirective, TrimOnBlurDirective, DistrictComboboxComponent],
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.scss',
 })

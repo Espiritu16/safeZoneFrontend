@@ -61,6 +61,18 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "mobile": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "public",
+                  "ignore": [
+                    "downloads/*.apk",
+                    "downloads/**/*.apk"
+                  ]
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"

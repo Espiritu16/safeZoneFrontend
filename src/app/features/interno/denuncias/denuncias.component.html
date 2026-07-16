@@ -81,15 +81,12 @@
             </div>
             <div class="form-group">
               <label class="form-label">Distrito de Residencia</label>
-              <select class="form-select" [(ngModel)]="denunciaForm.distrito">
-                <option value="Lima Cercado">Lima Cercado</option>
-                <option value="Comas">Comas</option>
-                <option value="Los Olivos">Los Olivos</option>
-                <option value="Puente Piedra">Puente Piedra</option>
-                <option value="Villa El Salvador">Villa El Salvador</option>
-                <option value="San Juan de Lurigancho">San Juan de Lurigancho</option>
-                <option value="San Martín de Porres">San Martín de Porres</option>
-              </select>
+              <app-district-combobox
+                name="distrito"
+                [(ngModel)]="denunciaForm.distrito"
+                [required]="true"
+                placeholder="Buscar distrito"
+              />
             </div>
             <div class="form-group">
               <label class="form-label">Teléfono de Contacto Seguro</label>

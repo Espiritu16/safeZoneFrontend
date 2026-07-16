@@ -214,12 +214,12 @@
                     </div>
                     <div class="form-group">
                       <label class="form-label" [for]="'distrito-' + predenuncia.id">Distrito</label>
-                      <input
+                      <app-district-combobox
                         [id]="'distrito-' + predenuncia.id"
-                        class="form-input"
                         name="distrito"
-                        appTrimOnBlur
                         [(ngModel)]="formalizeForms[predenuncia.id].distrito"
+                        [required]="true"
+                        placeholder="Buscar distrito"
                       />
                     </div>
                     <div class="form-group">

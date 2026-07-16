@@ -6,6 +6,8 @@ import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CasesService, Caso } from '../../../core/services/cases.service';
 import type { PrioridadCaso, EstadoCaso, ActualizarCasoRequest } from '../../../core/models/api.models';
 import { AuthService } from '../../../core/services/auth.service';
+import { DistrictComboboxComponent } from '../../../shared/components/district-combobox/district-combobox.component';
+import { LIMA_DISTRICTS } from '../../../shared/utils/lima-districts';
 interface KanbanColumn {
   title: string;
   status: string;
@@ -31,7 +33,7 @@ interface PendingStatusMove {
 @Component({
   selector: 'app-casos',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, DragDropModule],
+  imports: [CommonModule, FormsModule, RouterLink, DragDropModule, DistrictComboboxComponent],
   templateUrl: './casos.component.html',
   styleUrl: './casos.component.scss'
 })
@@ -68,22 +70,12 @@ export class CasosComponent {
   protected readonly defensores = computed(() =>
     this.casesService.profesionales().filter((usuario) => usuario.rol === 'DEFENSOR'),
   );
+  protected readonly distritos = LIMA_DISTRICTS;
 
   // Delete modal state
   protected readonly showDeleteModal = signal<boolean>(false);
   protected readonly caseToDelete = signal<Caso | null>(null);
   protected readonly pendingStatusMove = signal<PendingStatusMove | null>(null);
-
-  // Available districts
-  protected readonly distritos = [
-    'Lima Cercado',
-    'Comas',
-    'Los Olivos',
-    'Puente Piedra',
-    'Villa El Salvador',
-    'San Juan de Lurigancho',
-    'San Martín de Porres'
-  ];
 
   openDeleteModal(caso: Caso) {
     this.caseToDelete.set(caso);

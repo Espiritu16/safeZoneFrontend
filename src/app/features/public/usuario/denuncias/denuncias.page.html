@@ -134,7 +134,12 @@
 
               <label>
                 <span>Distrito</span>
-                <input data-testid="distrito" formControlName="distrito" maxlength="120" placeholder="Ej. Comas" type="text" />
+                <app-district-combobox
+                  formControlName="distrito"
+                  inputTestId="distrito"
+                  [required]="true"
+                  placeholder="Buscar distrito"
+                />
               </label>
 
               <label class="full-row">

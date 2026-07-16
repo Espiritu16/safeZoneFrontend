@@ -295,15 +295,14 @@
           <div class="sz-grid-2">
             <div class="form-group">
               <label class="form-label">Distrito *</label>
-              <select class="form-select" name="distrito" [(ngModel)]="formData.distrito" #distrito="ngModel" required [ngClass]="{'border-danger': distrito.invalid && distrito.touched}">
-                <option value="Lima Cercado">Lima Cercado</option>
-                <option value="Comas">Comas</option>
-                <option value="Los Olivos">Los Olivos</option>
-                <option value="Puente Piedra">Puente Piedra</option>
-                <option value="Villa El Salvador">Villa El Salvador</option>
-                <option value="San Juan de Lurigancho">San Juan de Lurigancho</option>
-                <option value="San Martín de Porres">San Martín de Porres</option>
-              </select>
+              <app-district-combobox
+                name="distrito"
+                [(ngModel)]="formData.distrito"
+                #distrito="ngModel"
+                [required]="true"
+                [invalid]="!!(distrito.invalid && distrito.touched)"
+                placeholder="Buscar distrito"
+              />
               @if (distrito.invalid && distrito.touched) {
                 <p class="text-xs text-danger mt-1">Seleccione un distrito válido.</p>
               }
