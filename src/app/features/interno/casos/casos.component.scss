@@ -27,29 +27,46 @@
 .sz-kanban-board {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: minmax(260px, 1fr);
   align-items: stretch;
   flex: 1;
-  gap: 14px;
+  column-gap: 18px;
+  row-gap: 28px;
   min-height: 0;
   overflow: auto;
+  padding: 2px 4px 18px;
 }
 
 .sz-kanban-column {
   min-width: 0;
-  height: auto;
-  max-height: none;
+  height: 100%;
+  max-height: 100%;
   min-height: 0;
-  padding: 12px 10px;
+  padding: 14px 12px;
+  overflow: hidden;
+}
+
+.sz-kanban-column-header {
+  min-height: 38px;
+  gap: 8px;
+
+  .column-title {
+    min-width: 0;
+    line-height: 1.2;
+    white-space: normal;
+  }
 }
 
 .sz-kanban-column-list {
-  min-height: 180px;
-  max-height: 320px;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
 }
 
 @media (max-width: 1180px) {
   .sz-kanban-board {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(280px, auto);
   }
 }
 
@@ -85,6 +102,7 @@
     min-height: auto;
     overflow: visible;
     touch-action: pan-y;
+    padding-inline: 0;
   }
 
   .sz-kanban-column-list {
@@ -101,6 +119,7 @@
 @media (max-width: 640px) {
   .sz-kanban-board {
     grid-template-columns: 1fr;
+    row-gap: 16px;
   }
 
   .sz-kanban-column-list {
