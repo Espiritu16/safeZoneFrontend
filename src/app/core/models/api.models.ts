@@ -314,6 +314,7 @@ export interface CitaResponse {
   estado: EstadoCita;
   motivoCancelacion?: string | null;
   observaciones?: string | null;
+  reprogramada: boolean;
   activo: boolean;
   fechaCreacion: string;
   fechaActualizacion: string;

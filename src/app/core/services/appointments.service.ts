@@ -34,6 +34,7 @@ export interface Cita {
   horaFin: string;
   estado: EstadoCita;
   estadoLabel: string;
+  reprogramada: boolean;
   motivoCancelacion?: string | null;
   observaciones?: string | null;
   color: string;
@@ -235,6 +236,7 @@ export class AppointmentsService {
       horaFin: fechaFin ? fechaFin.substring(11, 16) : 'Sin definir',
       estado: cita.estado,
       estadoLabel: this.estadoLabel(cita.estado),
+      reprogramada: Boolean(cita.reprogramada),
       motivoCancelacion: cita.motivoCancelacion,
       observaciones: cita.observaciones,
       color: cita.tipoCita === 'PSICOLOGIA' ? 'psychology' : 'legal',

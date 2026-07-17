@@ -92,18 +92,31 @@
               <div class="text-xs text-muted mt-1">{{ cita.profesional }}</div>
             </td>
             <td data-label="Estado">
-              <span class="badge" [ngClass]="{
-                'badge-success': cita.estado === 'ATENDIDA',
-                'badge-warning': cita.estado === 'PROGRAMADA' || cita.estado === 'CONFIRMADA',
-                'badge-danger': cita.estado === 'CANCELADA' || cita.estado === 'NO_ASISTIO'
-              }">{{ cita.estadoLabel }}</span>
+              <div class="sz-cita-status">
+                <span class="badge" [ngClass]="{
+                  'badge-success': cita.estado === 'ATENDIDA',
+                  'badge-warning': cita.estado === 'PROGRAMADA' || cita.estado === 'CONFIRMADA',
+                  'badge-danger': cita.estado === 'CANCELADA' || cita.estado === 'NO_ASISTIO'
+                }">{{ cita.estadoLabel }}</span>
+                @if (cita.reprogramada) {
+                  <span class="badge badge-info sz-cita-reprogrammed">Reprogramada</span>
+                }
+              </div>
             </td>
             <td class="sz-cita-observation" data-label="Observación">
               {{ cita.observaciones || cita.motivoCancelacion || 'Sin observaciones registradas.' }}
             </td>
             <td class="col-actions" data-label="Acciones">
               <div class="sz-cita-actions">
-                <button class="btn btn-outline btn-sm" type="button" (click)="openEditModal(cita)">Reprogramar</button>
+                <button
+                  class="btn btn-outline btn-sm"
+                  type="button"
+                  [disabled]="!canReprogram(cita)"
+                  [title]="canReprogram(cita) ? 'Cambiar horario o tipo de cita' : 'La cita ya tiene una atención cerrada'"
+                  (click)="openEditModal(cita)"
+                >
+                  Reprogramar
+                </button>
                 <select class="form-select" aria-label="Registrar atención" [ngModel]="''" (ngModelChange)="actualizarEstado(cita.id, $event)">
                   <option value="">Registrar atención</option>
                   @for (estado of estadosAtencion; track estado.value) {

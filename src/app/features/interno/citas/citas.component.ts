@@ -101,8 +101,16 @@ export class CitasComponent {
   }
 
   protected openEditModal(cita: Cita): void {
+    if (!this.canReprogram(cita)) {
+      this.toastService.show('Solo se pueden reprogramar citas pendientes o confirmadas.', 'error');
+      return;
+    }
     this.appointmentsService.openEditModal(cita);
     this.applyForcedTipoCita();
+  }
+
+  protected canReprogram(cita: Cita): boolean {
+    return cita.estado === 'PROGRAMADA' || cita.estado === 'CONFIRMADA';
   }
 
   protected saveCita(): void {
